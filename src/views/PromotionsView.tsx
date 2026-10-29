@@ -114,15 +114,15 @@ export const PromotionsView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#202428] tracking-tight">
+            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
               Promociones & Combos de Verano
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#FFD43B] text-[#202428]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#F68F57] text-white">
               {promotions.filter((p) => p.isActive).length} ACTIVAS
             </span>
           </div>
@@ -136,7 +136,7 @@ export const PromotionsView: React.FC = () => {
             resetForm();
             setShowNewModal(true);
           }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs shadow-md transition"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition"
         >
           <Plus className="w-4 h-4" />
           <span>Crear Promoción</span>
@@ -153,7 +153,7 @@ export const PromotionsView: React.FC = () => {
             <div
               key={promo.id}
               className={`bg-white rounded-3xl border shadow-xs overflow-hidden flex flex-col justify-between transition hover:shadow-md ${
-                promo.isActive ? 'border-gray-200' : 'border-gray-200 opacity-60'
+                promo.isActive ? 'border-[#E2E2E2]' : 'border-[#E2E2E2] opacity-60'
               }`}
             >
               <div>
@@ -165,12 +165,12 @@ export const PromotionsView: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
 
-                  {/* Amarillo sol badge for promos */}
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-xl bg-[#FFD43B] text-[#202428] font-black text-[10px] shadow-md uppercase tracking-wider">
+                  {/* Naranja gastronómico badge for promos */}
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-xl bg-[#F68F57] text-white font-black text-[10px] shadow-md uppercase tracking-wider">
                     {promo.badge}
                   </div>
 
-                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-lg bg-[#202428]/80 backdrop-blur-xs text-[#FFD43B] font-extrabold text-[10px]">
+                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-lg bg-[#34313A]/90 backdrop-blur-xs text-white font-extrabold text-[10px]">
                     -{discountPct}% OFF
                   </div>
 
@@ -188,7 +188,7 @@ export const PromotionsView: React.FC = () => {
                 </div>
 
                 <div className="p-4 space-y-3">
-                  <h3 className="font-black text-sm text-[#202428] leading-snug">
+                  <h3 className="font-black text-sm text-[#34313A] leading-snug">
                     {promo.name}
                   </h3>
                   <p className="text-xs text-gray-500 leading-relaxed">
@@ -197,8 +197,8 @@ export const PromotionsView: React.FC = () => {
 
                   {/* Included items */}
                   {promo.includedProductNames.length > 0 && (
-                    <div className="p-2.5 rounded-xl bg-gray-50 text-[11px] space-y-1">
-                      <span className="font-bold text-[#202428] block">Incluye:</span>
+                    <div className="p-2.5 rounded-xl bg-gray-50 text-[11px] space-y-1 border border-[#E2E2E2]">
+                      <span className="font-bold text-[#34313A] block">Incluye:</span>
                       <ul className="list-disc list-inside text-gray-600 space-y-0.5">
                         {promo.includedProductNames.map((it, i) => (
                           <li key={i}>{it}</li>
@@ -214,22 +214,22 @@ export const PromotionsView: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="p-4 pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+              <div className="p-4 pt-2 border-t border-[#E2E2E2] flex items-center justify-between gap-2">
                 <button
                   onClick={() => togglePromotion(promo.id)}
                   className={`p-2 rounded-xl border text-xs font-bold transition ${
                     promo.isActive
-                      ? 'border-[#55C7E8]/40 text-[#202428] bg-[#55C7E8]/20'
-                      : 'border-gray-200 text-gray-400 bg-gray-50'
+                      ? 'border-[#C1E7FF] text-[#34313A] bg-[#C1E7FF]/30'
+                      : 'border-[#E2E2E2] text-gray-400 bg-gray-50'
                   }`}
                   title={promo.isActive ? 'Desactivar promo' : 'Activar promo'}
                 >
-                  {promo.isActive ? <Eye className="w-4 h-4 text-[#202428]" /> : <EyeOff className="w-4 h-4" />}
+                  {promo.isActive ? <Eye className="w-4 h-4 text-[#34313A]" /> : <EyeOff className="w-4 h-4" />}
                 </button>
 
                 <button
                   onClick={() => handleOpenEdit(promo)}
-                  className="p-2 rounded-xl border border-gray-200 text-[#202428] hover:bg-gray-50"
+                  className="p-2 rounded-xl border border-[#E2E2E2] text-[#34313A] hover:bg-gray-50"
                   title="Editar promoción"
                 >
                   <Edit2 className="w-4 h-4" />
@@ -238,7 +238,7 @@ export const PromotionsView: React.FC = () => {
                 {promo.isActive && (
                   <button
                     onClick={() => handleAddPromoToCart(promo)}
-                    className="flex-1 py-2 px-3 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-1.5"
+                    className="flex-1 py-2 px-3 rounded-xl bg-[#F68F57] hover:bg-[#e07f4a] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-1.5"
                   >
                     <ShoppingBag className="w-3.5 h-3.5" />
                     <span>Agregar al Carrito</span>
@@ -252,12 +252,12 @@ export const PromotionsView: React.FC = () => {
 
       {/* Promo Create / Edit Modal */}
       {(showNewModal || editingPromo) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
           <form
             onSubmit={handleSavePromo}
-            className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-[#E2E2E2]"
           >
-            <h3 className="font-black text-base text-[#202428]">
+            <h3 className="font-black text-base text-[#34313A]">
               {editingPromo ? 'Editar Promoción' : 'Nueva Promoción Comercial'}
             </h3>
 
@@ -269,7 +269,7 @@ export const PromotionsView: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ej: Combo Playa Doble"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:border-[#C1E7FF] focus:outline-hidden"
               />
             </div>
 
@@ -279,7 +279,7 @@ export const PromotionsView: React.FC = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] resize-none"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] resize-none focus:border-[#C1E7FF] focus:outline-hidden"
               />
             </div>
 
@@ -291,7 +291,7 @@ export const PromotionsView: React.FC = () => {
                   required
                   value={promoPrice}
                   onChange={(e) => setPromoPrice(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-bold"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] font-bold focus:border-[#C1E7FF] focus:outline-hidden"
                 />
               </div>
               <div className="space-y-1">
@@ -301,7 +301,7 @@ export const PromotionsView: React.FC = () => {
                   required
                   value={regularPrice}
                   onChange={(e) => setRegularPrice(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:border-[#C1E7FF] focus:outline-hidden"
                 />
               </div>
             </div>
@@ -313,7 +313,7 @@ export const PromotionsView: React.FC = () => {
                 value={badge}
                 onChange={(e) => setBadge(e.target.value)}
                 placeholder="AHORRÁ $5.000 / 2x1"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:border-[#C1E7FF] focus:outline-hidden"
               />
             </div>
 
@@ -324,7 +324,7 @@ export const PromotionsView: React.FC = () => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 placeholder="https://..."
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:border-[#C1E7FF] focus:outline-hidden"
               />
             </div>
 
@@ -337,7 +337,7 @@ export const PromotionsView: React.FC = () => {
                 value={includedList}
                 onChange={(e) => setIncludedList(e.target.value)}
                 placeholder="Burger, Papas, Cerveza"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:border-[#C1E7FF] focus:outline-hidden"
               />
             </div>
 
@@ -354,7 +354,7 @@ export const PromotionsView: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white"
+                className="px-4 py-2 rounded-xl text-xs font-black bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] border border-[#a9dbfa]"
               >
                 Guardar Promoción
               </button>

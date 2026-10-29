@@ -8,14 +8,9 @@ import {
   MinusCircle,
   Lock,
   Unlock,
-  CheckCircle2,
   AlertTriangle,
-  Receipt,
   QrCode,
   CreditCard,
-  Building,
-  ArrowUpRight,
-  ArrowDownRight,
   History,
 } from 'lucide-react';
 
@@ -113,26 +108,26 @@ export const CashRegisterView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#202428] tracking-tight">
+            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
               Caja, Arqueos & Medios de Pago
             </h1>
             <span
               className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
                 cashRegister.isOpen
-                  ? 'bg-[#55C7E8]/20 text-[#202428]'
+                  ? 'bg-[#C1E7FF] text-[#34313A]'
                   : 'bg-rose-100 text-rose-800'
               }`}
             >
               {cashRegister.isOpen ? 'CAJA ABIERTA' : 'CAJA CERRADA'}
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Responsable: <strong>{cashRegister.cashierName}</strong> • {cashRegister.shiftName}
+          <p className="text-xs text-[#34313A]/70 mt-0.5">
+            Responsable: <strong className="text-[#34313A]">{cashRegister.cashierName}</strong> • {cashRegister.shiftName}
           </p>
         </div>
 
@@ -142,9 +137,9 @@ export const CashRegisterView: React.FC = () => {
             <>
               <button
                 onClick={() => setShowInflowModal(true)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#55C7E8]/15 text-[#202428] border border-[#55C7E8]/40 font-bold text-xs hover:bg-[#55C7E8]/25 transition"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] font-bold text-xs hover:bg-[#aee0ff] transition"
               >
-                <PlusCircle className="w-3.5 h-3.5 text-[#202428]" />
+                <PlusCircle className="w-3.5 h-3.5 text-[#34313A]" />
                 <span>Ingreso Manual</span>
               </button>
 
@@ -161,18 +156,18 @@ export const CashRegisterView: React.FC = () => {
                   setCountedCash(breakdown.expectedCashInDrawer);
                   setShowCloseModal(true);
                 }}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#202428] hover:bg-[#32383e] text-white font-bold text-xs shadow-md transition"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#34313A] hover:bg-[#45414d] text-white font-bold text-xs shadow-sm transition"
               >
-                <Lock className="w-3.5 h-3.5 text-[#FFD43B]" />
+                <Lock className="w-3.5 h-3.5 text-[#FBEEB9]" />
                 <span>Arqueo y Cierre</span>
               </button>
             </>
           ) : (
             <button
               onClick={() => setShowOpenModal(true)}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-black text-xs shadow-md transition"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#C1E7FF] hover:bg-[#aee0ff] text-[#34313A] border border-[#a9dbfa] font-black text-xs shadow-sm transition"
             >
-              <Unlock className="w-4 h-4" />
+              <Unlock className="w-4 h-4 text-[#34313A]" />
               <span>Abrir Nuevo Turno de Caja</span>
             </button>
           )}
@@ -184,9 +179,9 @@ export const CashRegisterView: React.FC = () => {
         <div
           className={`p-4 rounded-3xl border text-xs flex items-center justify-between gap-3 ${
             closeResult.status === 'exact'
-              ? 'bg-[#55C7E8]/10 border-[#55C7E8]/30 text-[#202428]'
+              ? 'bg-[#C1E7FF]/30 border-[#C1E7FF] text-[#34313A]'
               : closeResult.status === 'surplus'
-              ? 'bg-[#FFD43B]/15 border-[#FFD43B]/40 text-[#202428]'
+              ? 'bg-[#FBEEB9] border-[#e8d799] text-[#34313A]'
               : 'bg-rose-50 border-rose-200 text-rose-900'
           }`}
         >
@@ -199,7 +194,7 @@ export const CashRegisterView: React.FC = () => {
           </div>
           <button
             onClick={() => setCloseResult(null)}
-            className="text-xs font-bold underline shrink-0"
+            className="text-xs font-bold underline shrink-0 text-[#34313A]"
           >
             Entendido
           </button>
@@ -209,71 +204,71 @@ export const CashRegisterView: React.FC = () => {
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Efectivo Esperado en Cajón */}
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-500">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold uppercase text-[#34313A]/60">
             <span>Efectivo en Cajón</span>
-            <Wallet className="w-4 h-4 text-[#55C7E8]" />
+            <Wallet className="w-4 h-4 text-[#34313A]" />
           </div>
-          <div className="text-2xl font-black text-[#202428]">
+          <div className="text-2xl font-black text-[#34313A]">
             {formatCurrencyARS(breakdown.expectedCashInDrawer)}
           </div>
-          <div className="text-[11px] text-gray-400">
+          <div className="text-[11px] text-[#34313A]/60">
             Fondo inicial: {formatCurrencyARS(cashRegister.initialCash)}
           </div>
         </div>
 
         {/* Mercado Pago QR */}
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-500">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold uppercase text-[#34313A]/60">
             <span>Mercado Pago QR</span>
-            <QrCode className="w-4 h-4 text-[#55C7E8]" />
+            <QrCode className="w-4 h-4 text-[#34313A]" />
           </div>
-          <div className="text-2xl font-black text-[#202428]">
+          <div className="text-2xl font-black text-[#34313A]">
             {formatCurrencyARS(breakdown.mpSales)}
           </div>
-          <div className="text-[11px] text-[#202428] font-semibold">
+          <div className="text-[11px] text-[#34313A] font-semibold">
             Acreditación instantánea
           </div>
         </div>
 
         {/* Tarjetas Débito y Crédito */}
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-500">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold uppercase text-[#34313A]/60">
             <span>Tarjetas de Playa</span>
-            <CreditCard className="w-4 h-4 text-[#F47B35]" />
+            <CreditCard className="w-4 h-4 text-[#F68F57]" />
           </div>
-          <div className="text-2xl font-black text-[#202428]">
+          <div className="text-2xl font-black text-[#34313A]">
             {formatCurrencyARS(breakdown.cardSales)}
           </div>
-          <div className="text-[11px] text-gray-400">POS inalámbrico de parador</div>
+          <div className="text-[11px] text-[#34313A]/60">POS inalámbrico de parador</div>
         </div>
 
         {/* Total Facturado del Turno */}
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-500">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold uppercase text-[#34313A]/60">
             <span>Recaudación Total</span>
-            <DollarSign className="w-4 h-4 text-[#202428]" />
+            <DollarSign className="w-4 h-4 text-[#34313A]" />
           </div>
-          <div className="text-2xl font-black text-[#202428]">
+          <div className="text-2xl font-black text-[#34313A]">
             {formatCurrencyARS(breakdown.totalRevenue)}
           </div>
-          <div className="text-[11px] text-gray-400">Suma de todos los canales</div>
+          <div className="text-[11px] text-[#34313A]/60">Suma de todos los canales</div>
         </div>
       </div>
 
       {/* Movements Table */}
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-5 space-y-4">
-        <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+      <div className="bg-white rounded-3xl border border-[#E2E2E2] shadow-sm p-5 space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
           <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-[#202428]" />
-            <h3 className="font-black text-base text-[#202428]">Historial Cronológico de Movimientos</h3>
+            <History className="w-4 h-4 text-[#34313A]" />
+            <h3 className="font-black text-base text-[#34313A]">Historial Cronológico de Movimientos</h3>
           </div>
-          <span className="text-xs text-gray-400">{cashMovements.length} movimientos auditados</span>
+          <span className="text-xs text-[#34313A]/60">{cashMovements.length} movimientos auditados</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 text-gray-500 font-bold uppercase text-[10px]">
+            <thead className="bg-[#FBEEB9]/40 text-[#34313A] font-bold uppercase text-[10px]">
               <tr>
                 <th className="py-2.5 px-3">Hora</th>
                 <th className="py-2.5 px-3">Tipo</th>
@@ -283,24 +278,24 @@ export const CashRegisterView: React.FC = () => {
                 <th className="py-2.5 px-3 text-right">Importe</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#E2E2E2]">
               {cashMovements.map((move) => {
                 const isSale = move.type === 'venta';
                 const isInflow = move.type === 'ingreso' || move.type === 'apertura';
                 const isOutflow = move.type === 'egreso';
 
                 return (
-                  <tr key={move.id} className="hover:bg-gray-50/70 transition">
-                    <td className="py-2.5 px-3 font-mono text-gray-400">
+                  <tr key={move.id} className="hover:bg-[#FBEEB9]/15 transition">
+                    <td className="py-2.5 px-3 font-mono text-[#34313A]/60">
                       {new Date(move.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td className="py-2.5 px-3">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                           isSale
-                            ? 'bg-[#55C7E8]/20 text-[#202428]'
+                            ? 'bg-[#C1E7FF] text-[#34313A]'
                             : isInflow
-                            ? 'bg-[#FFD43B]/30 text-[#202428]'
+                            ? 'bg-[#FBEEB9] text-[#34313A] border border-[#e8d799]'
                             : isOutflow
                             ? 'bg-rose-100 text-rose-800'
                             : 'bg-gray-100 text-gray-700'
@@ -309,14 +304,14 @@ export const CashRegisterView: React.FC = () => {
                         {move.type}
                       </span>
                     </td>
-                    <td className="py-2.5 px-3 font-medium text-[#202428]">{move.concept}</td>
-                    <td className="py-2.5 px-3 text-gray-500 uppercase text-[11px]">
+                    <td className="py-2.5 px-3 font-medium text-[#34313A]">{move.concept}</td>
+                    <td className="py-2.5 px-3 text-[#34313A]/70 uppercase text-[11px]">
                       {move.paymentMethod || 'Efectivo'}
                     </td>
-                    <td className="py-2.5 px-3 text-gray-600">{move.cashierName}</td>
+                    <td className="py-2.5 px-3 text-[#34313A]/70">{move.cashierName}</td>
                     <td
                       className={`py-2.5 px-3 text-right font-black ${
-                        isOutflow ? 'text-rose-600' : 'text-[#202428]'
+                        isOutflow ? 'text-rose-600' : 'text-[#34313A]'
                       }`}
                     >
                       {isOutflow ? '-' : '+'}
@@ -332,30 +327,30 @@ export const CashRegisterView: React.FC = () => {
 
       {/* Manual Movement Modal (Inflow / Outflow) */}
       {(showInflowModal || showOutflowModal) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4">
-            <h3 className="font-black text-base text-[#202428]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+            <h3 className="font-black text-base text-[#34313A]">
               {showInflowModal ? 'Registrar Ingreso Manual' : 'Registrar Egreso / Gasto Menor'}
             </h3>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Monto en Pesos ($):</label>
+              <label className="text-xs font-bold text-[#34313A]">Monto en Pesos ($):</label>
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-lg font-black text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-lg font-black text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Concepto / Motivo:</label>
+              <label className="text-xs font-bold text-[#34313A]">Concepto / Motivo:</label>
               <input
                 type="text"
                 value={concept}
                 onChange={(e) => setConcept(e.target.value)}
                 placeholder={showInflowModal ? 'Ej: Aporte para cambio' : 'Ej: Bolsas de hielo, propinas'}
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
@@ -365,14 +360,14 @@ export const CashRegisterView: React.FC = () => {
                   setShowInflowModal(false);
                   setShowOutflowModal(false);
                 }}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Cancelar
               </button>
               <button
                 onClick={() => handleManualMovement(showInflowModal ? 'ingreso' : 'egreso')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold text-white ${
-                  showInflowModal ? 'bg-[#55C7E8] text-[#202428] font-black hover:bg-[#43b5d6]' : 'bg-rose-600 hover:bg-rose-700'
+                className={`px-4 py-2 rounded-xl text-xs font-black ${
+                  showInflowModal ? 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] hover:bg-[#aee0ff]' : 'bg-rose-600 text-white hover:bg-rose-700'
                 }`}
               >
                 Confirmar {showInflowModal ? 'Ingreso' : 'Egreso'}
@@ -384,38 +379,38 @@ export const CashRegisterView: React.FC = () => {
 
       {/* Close Register Modal */}
       {showCloseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4">
-            <h3 className="font-black text-base text-[#202428]">Arqueo y Cierre de Turno</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+            <h3 className="font-black text-base text-[#34313A]">Arqueo y Cierre de Turno</h3>
 
-            <div className="p-3 rounded-2xl bg-gray-50 border border-gray-100 text-xs space-y-1">
+            <div className="p-3 rounded-2xl bg-[#FBEEB9]/30 border border-[#E2E2E2] text-xs space-y-1">
               <div className="flex justify-between">
-                <span className="text-gray-500">Efectivo esperado según sistema:</span>
-                <strong className="text-[#202428]">{formatCurrencyARS(breakdown.expectedCashInDrawer)}</strong>
+                <span className="text-[#34313A]/70">Efectivo esperado según sistema:</span>
+                <strong className="text-[#34313A]">{formatCurrencyARS(breakdown.expectedCashInDrawer)}</strong>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">
+              <label className="text-xs font-bold text-[#34313A]">
                 Efectivo Contado Físicamente en Cajón ($):
               </label>
               <input
                 type="number"
                 value={countedCash}
                 onChange={(e) => setCountedCash(Number(e.target.value))}
-                className="w-full p-3 rounded-xl border border-gray-200 text-xl font-black text-center text-[#202428]"
+                className="w-full p-3 rounded-xl border border-[#E2E2E2] text-xl font-black text-center text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
             {/* Live difference preview */}
             <div className="text-center text-xs">
-              <span className="text-gray-500">Diferencia calculada: </span>
+              <span className="text-[#34313A]/70">Diferencia calculada: </span>
               <strong
                 className={`font-black ${
                   countedCash - breakdown.expectedCashInDrawer === 0
-                    ? 'text-[#202428]'
+                    ? 'text-[#34313A]'
                     : countedCash - breakdown.expectedCashInDrawer > 0
-                    ? 'text-[#55C7E8]'
+                    ? 'text-emerald-700'
                     : 'text-rose-700'
                 }`}
               >
@@ -425,26 +420,26 @@ export const CashRegisterView: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Observaciones de cierre:</label>
+              <label className="text-xs font-bold text-[#34313A]">Observaciones de cierre:</label>
               <input
                 type="text"
                 value={closeNotes}
                 onChange={(e) => setCloseNotes(e.target.value)}
                 placeholder="Ej: Turno mediodía cerrado sin novedades..."
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowCloseModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleCloseRegister}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#202428] text-white hover:bg-[#32383e]"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#34313A] text-white hover:bg-[#45414d]"
               >
                 Cerrar Caja
               </button>
@@ -455,40 +450,40 @@ export const CashRegisterView: React.FC = () => {
 
       {/* Open Register Modal */}
       {showOpenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4">
-            <h3 className="font-black text-base text-[#202428]">Apertura de Turno de Caja</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+            <h3 className="font-black text-base text-[#34313A]">Apertura de Turno de Caja</h3>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Fondo Inicial de Cambio ($):</label>
+              <label className="text-xs font-bold text-[#34313A]">Fondo Inicial de Cambio ($):</label>
               <input
                 type="number"
                 value={initialCashInput}
                 onChange={(e) => setInitialCashInput(Number(e.target.value))}
-                className="w-full p-3 rounded-xl border border-gray-200 text-lg font-black text-center text-[#202428]"
+                className="w-full p-3 rounded-xl border border-[#E2E2E2] text-lg font-black text-center text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Nombre del Turno:</label>
+              <label className="text-xs font-bold text-[#34313A]">Nombre del Turno:</label>
               <input
                 type="text"
                 value={shiftNameInput}
                 onChange={(e) => setShiftNameInput(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowOpenModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleOpenRegister}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white"
+                className="px-4 py-2 rounded-xl text-xs font-black bg-[#C1E7FF] hover:bg-[#aee0ff] text-[#34313A] border border-[#a9dbfa]"
               >
                 Abrir Caja
               </button>

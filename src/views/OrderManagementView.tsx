@@ -55,29 +55,29 @@ export const OrderManagementView: React.FC = () => {
     switch (status) {
       case 'pendiente_confirmacion':
         return (
-          <span className="px-2.5 py-1 rounded-full bg-[#FFD43B]/20 text-[#202428] border border-[#FFD43B] text-xs font-bold flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 text-[#202428] animate-spin" />
+          <span className="px-2.5 py-1 rounded-full bg-[#F68F57]/15 text-[#34313A] border border-[#F68F57] text-xs font-bold flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-[#34313A] animate-spin" />
             <span>Paso 3: Espera Aprobación</span>
           </span>
         );
       case 'confirmado_en_cocina':
         return (
-          <span className="px-2.5 py-1 rounded-full bg-[#55C7E8]/20 text-[#202428] border border-[#55C7E8] text-xs font-bold flex items-center gap-1">
-            <ChefHat className="w-3.5 h-3.5 text-[#202428]" />
+          <span className="px-2.5 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold flex items-center gap-1">
+            <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
             <span>Paso 6: En Cocina KDS</span>
           </span>
         );
       case 'en_preparacion':
         return (
-          <span className="px-2.5 py-1 rounded-full bg-[#55C7E8]/30 text-[#202428] border border-[#55C7E8] text-xs font-bold flex items-center gap-1">
-            <ChefHat className="w-3.5 h-3.5 text-[#202428]" />
+          <span className="px-2.5 py-1 rounded-full bg-[#C1E7FF]/50 text-[#34313A] border border-[#a9dbfa] text-xs font-bold flex items-center gap-1">
+            <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
             <span>Paso 8: Cocinando</span>
           </span>
         );
       case 'listo_para_entrega':
         return (
-          <span className="px-2.5 py-1 rounded-full bg-[#FFD43B] text-[#202428] border border-[#FFD43B] text-xs font-black flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#202428]" />
+          <span className="px-2.5 py-1 rounded-full bg-[#FBEEB9] text-[#34313A] border border-[#e8d799] text-xs font-black flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#34313A]" />
             <span>Paso 8: Listo p/ Entrega</span>
           </span>
         );
@@ -98,15 +98,15 @@ export const OrderManagementView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#202428] tracking-tight">
+            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
               Flujo de Pedidos & Comandas
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#FFD43B] text-[#202428]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]">
               CIRCUITO DE 10 PASOS
             </span>
           </div>
@@ -116,8 +116,8 @@ export const OrderManagementView: React.FC = () => {
         </div>
 
         {/* 10-step explainer card trigger */}
-        <div className="p-3 rounded-2xl bg-[#55C7E8]/10 border border-[#55C7E8]/30 text-xs text-[#202428] flex items-center gap-2">
-          <Layers className="w-4 h-4 text-[#202428] shrink-0" />
+        <div className="p-3 rounded-2xl bg-[#C1E7FF]/25 border border-[#C1E7FF]/60 text-xs text-[#34313A] flex items-center gap-2">
+          <Layers className="w-4 h-4 text-[#34313A] shrink-0" />
           <span className="text-[11px] font-semibold">
             Separación estricta: <strong>Aprobación Comercial</strong> → <strong>Cocina KDS</strong> → <strong>Cobro POS</strong>.
           </span>
@@ -141,14 +141,14 @@ export const OrderManagementView: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition flex items-center gap-2 ${
                 isSelected
-                  ? 'bg-[#55C7E8] text-[#202428] shadow-sm font-black'
-                  : 'bg-white text-[#202428] hover:bg-gray-50 border border-gray-200'
+                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-xs font-black border border-[#a9dbfa]'
+                  : 'bg-white text-[#34313A] hover:bg-gray-50 border border-[#E2E2E2]'
               }`}
             >
               <span>{tab.label}</span>
               <span
                 className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  isSelected ? 'bg-[#202428] text-white' : 'bg-gray-100 text-gray-700'
+                  isSelected ? 'bg-[#34313A] text-white' : 'bg-gray-100 text-[#34313A]'
                 }`}
               >
                 {tab.count}
@@ -177,31 +177,31 @@ export const OrderManagementView: React.FC = () => {
               key={ord.id}
               className={`bg-white rounded-3xl p-5 border shadow-xs flex flex-col justify-between transition hover:shadow-md ${
                 isPending
-                  ? 'border-[#FFD43B] ring-2 ring-[#FFD43B]/20'
+                  ? 'border-[#F68F57] ring-2 ring-[#F68F57]/20'
                   : isReady
-                  ? 'border-[#55C7E8] ring-2 ring-[#55C7E8]/20'
-                  : 'border-gray-200'
+                  ? 'border-[#C1E7FF] ring-2 ring-[#C1E7FF]/30'
+                  : 'border-[#E2E2E2]'
               }`}
             >
               <div className="space-y-4">
                 {/* Top: Order #, Status, Location */}
-                <div className="flex items-start justify-between gap-2 pb-3 border-b border-gray-100">
+                <div className="flex items-start justify-between gap-2 pb-3 border-b border-[#E2E2E2]">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-black text-base text-[#202428]">{ord.orderNumber}</span>
+                      <span className="font-black text-base text-[#34313A]">{ord.orderNumber}</span>
                       <span className="text-[10px] text-gray-400 font-mono">
                         hace {elapsedMin}m
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-xs font-black text-[#202428] mt-1">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-[#34313A] mt-1">
                       {ord.locationType === 'carpa' ? (
-                        <Umbrella className="w-3.5 h-3.5 text-[#FFD43B]" />
+                        <Umbrella className="w-3.5 h-3.5 text-[#FBEEB9]" />
                       ) : (
-                        <Utensils className="w-3.5 h-3.5 text-[#55C7E8]" />
+                        <Utensils className="w-3.5 h-3.5 text-[#C1E7FF]" />
                       )}
                       <span>{ord.locationName}</span>
-                      <span className="text-[10px] font-mono bg-[#55C7E8]/20 text-[#202428] px-1.5 py-0.5 rounded font-bold">
+                      <span className="text-[10px] font-mono bg-[#C1E7FF]/30 text-[#34313A] border border-[#a9dbfa] px-1.5 py-0.5 rounded font-bold">
                         {ord.locationCode}
                       </span>
                     </div>
@@ -215,10 +215,10 @@ export const OrderManagementView: React.FC = () => {
                 </div>
 
                 {/* Items breakdown with modifications */}
-                <div className="space-y-2 bg-gray-50/80 p-3 rounded-2xl border border-gray-100 text-xs">
+                <div className="space-y-2 bg-gray-50/80 p-3 rounded-2xl border border-[#E2E2E2] text-xs">
                   {ord.items.map((item, idx) => (
-                    <div key={idx} className="pb-1.5 border-b border-gray-100 last:border-0 space-y-1">
-                      <div className="flex justify-between font-bold text-[#202428]">
+                    <div key={idx} className="pb-1.5 border-b border-[#E2E2E2] last:border-0 space-y-1">
+                      <div className="flex justify-between font-bold text-[#34313A]">
                         <span>
                           {item.quantity}x {item.productName}
                         </span>
@@ -233,7 +233,7 @@ export const OrderManagementView: React.FC = () => {
                           {item.removedIngredients.map((r) => (
                             <span
                               key={r}
-                              className="px-1.5 py-0.2 bg-rose-100 text-rose-800 font-bold rounded line-through"
+                              className="px-1.5 py-0.2 bg-rose-50 text-rose-800 border border-rose-200 font-bold rounded line-through"
                             >
                               Sin {r}
                             </span>
@@ -241,7 +241,7 @@ export const OrderManagementView: React.FC = () => {
                           {item.selectedAddons.map((a) => (
                             <span
                               key={a.id}
-                              className="px-1.5 py-0.2 bg-[#55C7E8]/20 text-[#202428] font-bold rounded"
+                              className="px-1.5 py-0.2 bg-[#C1E7FF]/30 text-[#34313A] border border-[#a9dbfa] font-bold rounded"
                             >
                               +{a.name}
                             </span>
@@ -257,7 +257,7 @@ export const OrderManagementView: React.FC = () => {
                   ))}
 
                   {ord.notes && (
-                    <div className="text-[11px] text-[#202428] bg-[#FFD43B]/15 p-2 rounded-xl font-medium border border-[#FFD43B]/30">
+                    <div className="text-[11px] text-[#34313A] bg-[#FBEEB9]/30 p-2 rounded-xl font-medium border border-[#E2E2E2]">
                       <strong>Nota de entrega:</strong> {ord.notes}
                     </div>
                   )}
@@ -267,12 +267,12 @@ export const OrderManagementView: React.FC = () => {
                 <div className="flex items-center justify-between text-xs pt-1">
                   <span className="text-gray-500 font-medium">Total de la Comanda</span>
                   <div className="text-right">
-                    <span className="text-base font-black text-[#202428]">
+                    <span className="text-base font-black text-[#34313A]">
                       {formatCurrencyARS(ord.total)}
                     </span>
                     <span
                       className={`block text-[10px] font-bold ${
-                        isPaid ? 'text-[#202428]' : 'text-[#F47B35]'
+                        isPaid ? 'text-[#34313A]' : 'text-[#F68F57]'
                       }`}
                     >
                       {isPaid ? `Cobrado (${ord.paymentMethod})` : 'Pendiente de cobro'}
@@ -282,12 +282,12 @@ export const OrderManagementView: React.FC = () => {
               </div>
 
               {/* Action Buttons depending on 10-step state */}
-              <div className="pt-4 mt-3 border-t border-gray-100 space-y-2">
+              <div className="pt-4 mt-3 border-t border-[#E2E2E2] space-y-2">
                 {isPending && (
                   <div className="space-y-2">
                     <button
                       onClick={() => confirmAndSendToKitchen(ord.id)}
-                      className="w-full flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl bg-[#F47B35] text-white font-extrabold text-xs hover:bg-[#e06824] shadow-md shadow-[#F47B35]/20 transition"
+                      className="w-full flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#a9dbfa] border border-[#a9dbfa] shadow-xs transition"
                     >
                       <ChefHat className="w-4 h-4" />
                       <span>PASO 6: CONFIRMAR Y ENVIAR A COCINA</span>
@@ -305,7 +305,7 @@ export const OrderManagementView: React.FC = () => {
                 {isConfirmed && (
                   <button
                     onClick={() => updateOrderStatus(ord.id, 'en_preparacion')}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#55C7E8] text-[#202428] font-black text-xs hover:bg-[#43b5d6] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#a9dbfa] border border-[#a9dbfa] transition"
                   >
                     <span>Iniciar Preparación en Cocina</span>
                   </button>
@@ -314,7 +314,7 @@ export const OrderManagementView: React.FC = () => {
                 {isPreparing && (
                   <button
                     onClick={() => updateOrderStatus(ord.id, 'listo_para_entrega')}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#FFD43B] text-[#202428] font-black text-xs hover:bg-[#ebd532] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#FBEEB9] text-[#34313A] font-black text-xs hover:bg-[#fae498] border border-[#e8d799] transition"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Marcar Listo para Despacho</span>
@@ -324,7 +324,7 @@ export const OrderManagementView: React.FC = () => {
                 {isReady && (
                   <button
                     onClick={() => updateOrderStatus(ord.id, 'entregado')}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#202428] text-white font-extrabold text-xs hover:bg-[#32383e] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#34313A] text-white font-extrabold text-xs hover:bg-[#484450] transition"
                   >
                     <span>PASO 9: ENTREGAR EN {ord.locationCode}</span>
                   </button>
@@ -337,9 +337,9 @@ export const OrderManagementView: React.FC = () => {
                       setSelectedLocationCode(ord.locationCode);
                       setActiveView('pos');
                     }}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#55C7E8]/15 hover:bg-[#55C7E8]/25 text-[#202428] font-black text-xs transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#C1E7FF]/30 hover:bg-[#C1E7FF] text-[#34313A] font-black text-xs border border-[#a9dbfa] transition"
                   >
-                    <CreditCard className="w-3.5 h-3.5 text-[#202428]" />
+                    <CreditCard className="w-3.5 h-3.5 text-[#34313A]" />
                     <span>PASO 10: IR AL POS PARA COBRAR</span>
                   </button>
                 )}
@@ -349,9 +349,9 @@ export const OrderManagementView: React.FC = () => {
         })}
 
         {filteredOrders.length === 0 && (
-          <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-3xl border border-gray-100">
+          <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-3xl border border-[#E2E2E2]">
             <ClipboardList className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-            <p className="text-sm font-bold text-[#202428]">No hay pedidos en esta pestaña</p>
+            <p className="text-sm font-bold text-[#34313A]">No hay pedidos en esta pestaña</p>
             <p className="text-xs text-gray-400 mt-0.5">
               Los nuevos pedidos desde la playa aparecerán aquí automáticamente.
             </p>
@@ -375,12 +375,12 @@ export const OrderManagementView: React.FC = () => {
               onChange={(e) => setCancellationReason(e.target.value)}
               placeholder="Ej: Cliente canceló antes de preparar, falta de insumo..."
               rows={3}
-              className="w-full p-3 rounded-xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-rose-500"
+              className="w-full p-3 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-rose-500"
             />
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setCancellationOrderId(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Volver
               </button>

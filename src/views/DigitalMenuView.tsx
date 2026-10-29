@@ -140,22 +140,22 @@ export const DigitalMenuView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] pb-32">
-      {/* Maximum Mobile/Tablet Centered Frame */}
-      <div className="max-w-xl mx-auto bg-[#FFFFFF] shadow-xl min-h-screen relative overflow-hidden border-x border-gray-100">
+    <div className="min-h-screen bg-[#FBEEB9] pb-32">
+      {/* Maximum Mobile/Tablet Centered Frame in Blanco (#FFFFFF) */}
+      <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen relative overflow-hidden border-x border-[#E2E2E2]">
         {/* Hero Section with Gastronomic Atmosphere */}
-        <div className="relative h-64 sm:h-72 w-full bg-[#202428]">
+        <div className="relative h-64 sm:h-72 w-full bg-[#34313A]">
           <img
             src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80"
             alt="Balneario Gastronomía"
             className="w-full h-full object-cover brightness-95"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#202428] via-[#202428]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#34313A] via-[#34313A]/40 to-transparent" />
 
           {/* Top floating chips */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#202428] text-[11px] font-bold shadow-md">
-              <span className="w-2 h-2 rounded-full bg-[#F47B35] animate-pulse" />
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#34313A] text-[11px] font-bold shadow-md border border-[#E2E2E2]">
+              <span className="w-2 h-2 rounded-full bg-[#F68F57] animate-pulse" />
               <span>
                 Powered by <strong className="font-black">{config.name}</strong>
               </span>
@@ -163,7 +163,7 @@ export const DigitalMenuView: React.FC = () => {
 
             <button
               onClick={handleShare}
-              className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#202428]/80 backdrop-blur-md text-white text-[11px] font-bold hover:bg-[#202428] transition"
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#34313A]/85 backdrop-blur-md text-white text-[11px] font-bold hover:bg-[#34313A] transition border border-[#34313A]/20"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Compartir</span>
@@ -176,17 +176,17 @@ export const DigitalMenuView: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setIsLocationSelectorOpen(!isLocationSelectorOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#202428]/90 backdrop-blur-md text-white text-xs font-bold border border-white/20 hover:bg-[#202428] transition shadow-lg"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#34313A]/90 backdrop-blur-md text-white text-xs font-bold border border-white/20 hover:bg-[#34313A] transition shadow-lg"
               >
-                <Utensils className="w-3.5 h-3.5 text-[#55C7E8]" />
+                <Utensils className="w-3.5 h-3.5 text-[#C1E7FF]" />
                 <span>
                   Estás en: <strong>{selectedLocationCode}</strong>
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-gray-300" />
               </button>
 
               {isLocationSelectorOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-200 p-2 z-50 text-[#202428] max-h-60 overflow-y-auto">
+                <div className="absolute bottom-full left-0 mb-2 w-64 bg-white rounded-2xl shadow-2xl border border-[#E2E2E2] p-2 z-50 text-[#34313A] max-h-60 overflow-y-auto">
                   <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 px-2 py-1">
                     Cambiar tu Carpa o Mesa
                   </div>
@@ -200,12 +200,12 @@ export const DigitalMenuView: React.FC = () => {
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-bold ${
                           selectedLocationCode === loc.code
-                            ? 'bg-[#55C7E8]/20 text-[#202428]'
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'bg-[#C1E7FF] text-[#34313A]'
+                            : 'hover:bg-[#FBEEB9]/40 text-[#34313A]'
                         }`}
                       >
                         <span>{loc.name}</span>
-                        <span className="font-mono text-[10px] text-gray-400">{loc.code}</span>
+                        <span className="font-mono text-[10px] text-gray-500 font-bold">{loc.code}</span>
                       </button>
                     ))}
                   </div>
@@ -214,10 +214,10 @@ export const DigitalMenuView: React.FC = () => {
             </div>
 
             {/* Cocina Activa Badge */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-[#202428] text-xs font-black shadow-lg">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-[#34313A] text-xs font-black shadow-lg border border-[#E2E2E2]">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD43B] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F47B35]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F68F57] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F68F57]"></span>
               </span>
               <span className="tracking-wider text-[11px] uppercase">COCINA ACTIVA</span>
             </div>
@@ -225,13 +225,13 @@ export const DigitalMenuView: React.FC = () => {
         </div>
 
         {/* Parador Info Header */}
-        <div className="p-4 sm:p-5 border-b border-gray-100 bg-white">
+        <div className="p-4 sm:p-5 border-b border-[#E2E2E2] bg-white">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#F47B35]">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#F68F57]">
                 GASTRONOMÍA & PARADOR DE PLAYA
               </span>
-              <h1 className="text-xl sm:text-2xl font-black text-[#202428] tracking-tight leading-tight mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-black text-[#34313A] tracking-tight leading-tight mt-0.5">
                 {config.branchName.toUpperCase()}
               </h1>
               <p className="text-xs text-gray-500 font-medium">
@@ -239,13 +239,13 @@ export const DigitalMenuView: React.FC = () => {
               </p>
             </div>
 
-            {/* Rating badge: Amarillo sol #FFD43B con texto #202428 */}
-            <div className="px-3 py-2 rounded-2xl bg-[#FFD43B] border border-[#FFD43B] text-center shrink-0 shadow-xs">
-              <div className="flex items-center justify-center gap-1 text-[#202428] font-black text-base leading-none">
-                <Star className="w-4 h-4 fill-[#202428] text-[#202428]" />
+            {/* Rating badge in #FBEEB9 with border #E2E2E2 */}
+            <div className="px-3 py-2 rounded-2xl bg-[#FBEEB9]/70 border border-[#E2E2E2] text-center shrink-0 shadow-xs">
+              <div className="flex items-center justify-center gap-1 text-[#34313A] font-black text-base leading-none">
+                <Star className="w-4 h-4 fill-[#F68F57] text-[#F68F57]" />
                 <span>4.9</span>
               </div>
-              <span className="text-[10px] font-black text-[#202428] mt-0.5 block">
+              <span className="text-[10px] font-black text-[#34313A] mt-0.5 block">
                 1.2k+ reseñas
               </span>
             </div>
@@ -253,8 +253,8 @@ export const DigitalMenuView: React.FC = () => {
 
           {/* Schedule & Address */}
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-[#202428] font-bold text-[11px] border border-gray-200">
-              <Clock className="w-3 h-3 text-[#F47B35]" />
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-[#34313A] font-bold text-[11px] border border-[#E2E2E2]">
+              <Clock className="w-3 h-3 text-[#F68F57]" />
               <span>{config.schedule}</span>
             </div>
             <div className="flex items-center gap-1.5 text-gray-500 text-[11px]">
@@ -264,15 +264,15 @@ export const DigitalMenuView: React.FC = () => {
           </div>
 
           {/* Order Mode Selection */}
-          <div className="mt-4 flex items-center justify-between gap-2 pt-3 border-t border-gray-100">
-            <div className="flex items-center gap-1.5 bg-gray-100 p-1 rounded-2xl">
+          <div className="mt-4 flex items-center justify-between gap-2 pt-3 border-t border-[#E2E2E2]">
+            <div className="flex items-center gap-1.5 bg-[#FBEEB9]/40 p-1 rounded-2xl border border-[#E2E2E2]">
               <button
                 type="button"
                 onClick={() => setOrderMode('mesa')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                   orderMode === 'mesa'
-                    ? 'bg-[#202428] text-white shadow-xs'
-                    : 'text-gray-600 hover:text-[#202428]'
+                    ? 'bg-[#C1E7FF] text-[#34313A] shadow-xs'
+                    : 'text-[#34313A] hover:bg-white/60'
                 }`}
               >
                 En Carpa / Mesa
@@ -282,8 +282,8 @@ export const DigitalMenuView: React.FC = () => {
                 onClick={() => setOrderMode('retirar')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                   orderMode === 'retirar'
-                    ? 'bg-[#202428] text-white shadow-xs'
-                    : 'text-gray-600 hover:text-[#202428]'
+                    ? 'bg-[#C1E7FF] text-[#34313A] shadow-xs'
+                    : 'text-[#34313A] hover:bg-white/60'
                 }`}
               >
                 Para Retirar (Barra)
@@ -295,11 +295,11 @@ export const DigitalMenuView: React.FC = () => {
               onClick={handleRequestAssistance}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition shadow-xs ${
                 assistanceRequested
-                  ? 'bg-[#FFD43B] text-[#202428] border-[#FFD43B] font-black'
-                  : 'bg-white border-gray-200 text-[#202428] hover:bg-gray-50'
+                  ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] font-black'
+                  : 'bg-white border-[#E2E2E2] text-[#34313A] hover:bg-gray-50'
               }`}
             >
-              <BellRing className={`w-3.5 h-3.5 ${assistanceRequested ? 'animate-bounce text-[#202428]' : 'text-[#F47B35]'}`} />
+              <BellRing className={`w-3.5 h-3.5 ${assistanceRequested ? 'animate-bounce text-[#34313A]' : 'text-[#F68F57]'}`} />
               <span className="hidden sm:inline">
                 {assistanceRequested ? '¡Mozo notificado!' : 'Llamar Mozo'}
               </span>
@@ -310,15 +310,15 @@ export const DigitalMenuView: React.FC = () => {
           </div>
 
           {assistanceRequested && (
-            <div className="mt-2 text-xs font-bold text-[#202428] bg-[#FFD43B]/30 p-2.5 rounded-2xl border border-[#FFD43B] flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#202428] shrink-0" />
+            <div className="mt-2 text-xs font-bold text-[#34313A] bg-[#C1E7FF]/40 p-2.5 rounded-2xl border border-[#a9dbfa] flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#34313A] shrink-0" />
               <span>El mozo del sector {selectedLocationCode} se acerca a tu ubicación.</span>
             </div>
           )}
         </div>
 
         {/* Search Bar & Voice Input */}
-        <div className="p-4 bg-white sticky top-14 z-20 shadow-xs border-b border-gray-100">
+        <div className="p-4 bg-white sticky top-14 z-20 shadow-xs border-b border-[#E2E2E2]">
           <div className="relative flex items-center">
             <Search className="w-4 h-4 text-gray-400 absolute left-3.5" />
             <input
@@ -326,7 +326,7 @@ export const DigitalMenuView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar hamburguesas, rabas, licuados, pizzas..."
-              className="w-full bg-gray-50 hover:bg-gray-100/70 focus:bg-white pl-10 pr-12 py-2.5 rounded-2xl border border-gray-200 text-xs font-semibold text-[#202428] focus:outline-hidden focus:border-[#55C7E8] focus:ring-1 focus:ring-[#55C7E8] transition"
+              className="w-full bg-[#FBEEB9]/20 hover:bg-[#FBEEB9]/35 focus:bg-white pl-10 pr-12 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-semibold text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] transition"
             />
             {/* Voice Search Button */}
             <button
@@ -334,8 +334,8 @@ export const DigitalMenuView: React.FC = () => {
               onClick={handleVoiceSearch}
               className={`absolute right-2.5 p-1.5 rounded-xl transition ${
                 isListeningVoice
-                  ? 'bg-[#F47B35] text-white animate-pulse'
-                  : 'text-gray-400 hover:text-[#202428] hover:bg-gray-100'
+                  ? 'bg-[#F68F57] text-white animate-pulse'
+                  : 'text-gray-400 hover:text-[#34313A] hover:bg-gray-100'
               }`}
               title="Buscar por voz"
               aria-label="Buscar por voz"
@@ -345,23 +345,23 @@ export const DigitalMenuView: React.FC = () => {
           </div>
 
           {voiceError && (
-            <div className="mt-2 text-[11px] text-[#F47B35] font-bold px-2">
+            <div className="mt-2 text-[11px] text-[#F68F57] font-bold px-2">
               {voiceError}
             </div>
           )}
         </div>
 
-        {/* Horizontal Categories Scroll: Celeste Mar #55C7E8 para categoría activa con texto #202428 */}
-        <div className="bg-white px-4 py-2.5 border-b border-gray-100 overflow-x-auto flex items-center gap-2 scrollbar-none">
+        {/* Horizontal Categories Scroll: #C1E7FF para categoría activa con texto #34313A */}
+        <div className="bg-white px-4 py-2.5 border-b border-[#E2E2E2] overflow-x-auto flex items-center gap-2 scrollbar-none">
           <button
             onClick={() => setSelectedCategory('todos')}
             className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition flex items-center gap-1.5 ${
               selectedCategory === 'todos'
-                ? 'bg-[#55C7E8] text-[#202428] shadow-xs'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-[#C1E7FF] text-[#34313A] shadow-xs border border-[#a9dbfa]'
+                : 'bg-white text-[#34313A] border border-[#E2E2E2] hover:bg-[#FBEEB9]/30'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#202428]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#34313A]" />
             <span>Destacados</span>
           </button>
 
@@ -373,8 +373,8 @@ export const DigitalMenuView: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
                   isSelected
-                    ? 'bg-[#55C7E8] text-[#202428] font-black shadow-xs'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-[#C1E7FF] text-[#34313A] font-black shadow-xs border border-[#a9dbfa]'
+                    : 'bg-white text-[#34313A] border border-[#E2E2E2] hover:bg-[#FBEEB9]/30'
                 }`}
               >
                 <span>{cat.emoji}</span>
@@ -384,19 +384,19 @@ export const DigitalMenuView: React.FC = () => {
           })}
         </div>
 
-        {/* Section: LOS 5 MÁS ELEGIDOS (Amarillo Sol #FFD43B para destacados/llamados de atención con texto #202428) */}
+        {/* Section: LOS 5 MÁS ELEGIDOS (Destacados en #F68F57 / fondo cálido) */}
         {selectedCategory === 'todos' && !searchQuery.trim() && (
-          <div className="p-4 sm:p-5 bg-[#FFD43B]/10 border-b border-[#FFD43B]/30">
+          <div className="p-4 sm:p-5 bg-[#FBEEB9]/40 border-b border-[#E2E2E2]">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-[#FFD43B] text-[#202428] font-black text-xs flex items-center justify-center shadow-xs">
+                <span className="w-6 h-6 rounded-lg bg-[#F68F57] text-white font-black text-xs flex items-center justify-center shadow-xs">
                   ★
                 </span>
                 <div>
-                  <h3 className="text-sm font-black text-[#202428] tracking-tight leading-tight">
+                  <h3 className="text-sm font-black text-[#34313A] tracking-tight leading-tight">
                     LOS 5 MÁS ELEGIDOS DEL BALNEARIO
                   </h3>
-                  <p className="text-[10px] text-[#202428]/80 font-bold">
+                  <p className="text-[10px] text-gray-600 font-bold">
                     {isDemonstrationOnly
                       ? 'Ranking recomendado por los chefs del parador'
                       : 'Calculado en vivo según unidades vendidas y valoraciones'}
@@ -404,8 +404,8 @@ export const DigitalMenuView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-[10px] text-[#202428]/60 font-bold" title="Métrica transparente">
-                <Info className="w-3.5 h-3.5 text-[#202428]" />
+              <div className="flex items-center gap-1 text-[10px] text-[#34313A]/70 font-bold" title="Métrica transparente">
+                <Info className="w-3.5 h-3.5 text-[#34313A]" />
                 <span>Top 5</span>
               </div>
             </div>
@@ -415,7 +415,7 @@ export const DigitalMenuView: React.FC = () => {
               {top5List.map((item, index) => (
                 <div
                   key={item.id}
-                  className="w-56 shrink-0 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition"
+                  className="w-56 shrink-0 bg-white rounded-2xl border border-[#E2E2E2] shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition"
                 >
                   <div className="relative h-28 w-full bg-gray-100">
                     <img
@@ -423,11 +423,11 @@ export const DigitalMenuView: React.FC = () => {
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-[#202428] text-[#FFD43B] text-[10px] font-black shadow-xs">
+                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-[#34313A] text-[#FBEEB9] text-[10px] font-black shadow-xs">
                       #{index + 1}
                     </div>
                     {item.tag && (
-                      <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-[#202428]/80 backdrop-blur-xs text-white text-[9px] font-bold">
+                      <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-[#F68F57] text-white text-[9px] font-bold">
                         {item.tag}
                       </div>
                     )}
@@ -435,7 +435,7 @@ export const DigitalMenuView: React.FC = () => {
 
                   <div className="p-3 flex-1 flex flex-col justify-between">
                     <div>
-                      <h4 className="font-black text-xs text-[#202428] line-clamp-1">
+                      <h4 className="font-black text-xs text-[#34313A] line-clamp-1">
                         {item.name}
                       </h4>
                       <p className="text-[10px] text-gray-500 line-clamp-2 mt-0.5 font-medium">
@@ -443,14 +443,14 @@ export const DigitalMenuView: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between pt-2 border-t border-gray-100">
-                      <span className="font-black text-xs text-[#202428]">
+                    <div className="mt-3 flex items-center justify-between pt-2 border-t border-[#E2E2E2]">
+                      <span className="font-black text-xs text-[#34313A]">
                         {formatCurrencyARS(item.price)}
                       </span>
-                      {/* Naranja gastronómico #F47B35 para agregar producto */}
+                      {/* Naranja #F68F57 para destacados gastronómicos */}
                       <button
                         onClick={() => setProductBeingCustomized(item)}
-                        className="px-2.5 py-1 rounded-xl bg-[#F47B35] hover:bg-[#e06822] text-white text-[11px] font-black shadow-xs flex items-center gap-1 active:scale-95 transition"
+                        className="px-2.5 py-1 rounded-xl bg-[#F68F57] hover:bg-[#e27c45] text-white text-[11px] font-black shadow-xs flex items-center gap-1 active:scale-95 transition"
                       >
                         <Plus className="w-3 h-3 stroke-[3]" />
                         <span>AGREGAR</span>
@@ -464,9 +464,9 @@ export const DigitalMenuView: React.FC = () => {
         )}
 
         {/* Main Gastronomic Products List */}
-        <div className="p-4 sm:p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4 bg-white">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold px-1">
-            <span className="text-[#202428]">
+            <span className="text-[#34313A]">
               {filteredProducts.length} productos gastronómicos disponibles
             </span>
             <span>Precios con IVA incluido</span>
@@ -476,7 +476,7 @@ export const DigitalMenuView: React.FC = () => {
             {filteredProducts.map((product) => (
               <article
                 key={product.id}
-                className="bg-white rounded-3xl border border-gray-200 p-3 sm:p-3.5 shadow-xs hover:shadow-md transition flex gap-3.5 items-stretch"
+                className="bg-white rounded-3xl border border-[#E2E2E2] p-3 sm:p-3.5 shadow-xs hover:shadow-md transition flex gap-3.5 items-stretch"
               >
                 {/* Gastronomic Photo Protagonist */}
                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
@@ -486,12 +486,12 @@ export const DigitalMenuView: React.FC = () => {
                     className="w-full h-full object-cover"
                   />
                   {product.tag && (
-                    <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-[#202428]/90 text-[#FFD43B] text-[9px] font-black uppercase">
+                    <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-[#F68F57] text-white text-[9px] font-black uppercase">
                       {product.tag}
                     </div>
                   )}
                   {product.isVeggie && (
-                    <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-[#55C7E8] text-[#202428] text-[9px] font-black">
+                    <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-[#C1E7FF] text-[#34313A] text-[9px] font-black border border-[#a9dbfa]">
                       Veggie
                     </div>
                   )}
@@ -501,11 +501,11 @@ export const DigitalMenuView: React.FC = () => {
                 <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div>
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-black text-sm sm:text-base text-[#202428] leading-snug line-clamp-2">
+                      <h3 className="font-black text-sm sm:text-base text-[#34313A] leading-snug line-clamp-2">
                         {product.name}
                       </h3>
-                      <div className="flex items-center gap-1 text-[11px] font-black text-[#202428] bg-[#FFD43B]/30 px-2 py-0.5 rounded-md shrink-0">
-                        <Star className="w-3 h-3 fill-[#202428] text-[#202428]" />
+                      <div className="flex items-center gap-1 text-[11px] font-black text-[#34313A] bg-[#FBEEB9] px-2 py-0.5 rounded-md shrink-0 border border-[#E2E2E2]">
+                        <Star className="w-3 h-3 fill-[#F68F57] text-[#F68F57]" />
                         <span>{product.rating}</span>
                       </div>
                     </div>
@@ -515,9 +515,9 @@ export const DigitalMenuView: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-[#E2E2E2]">
                     <div>
-                      <span className="font-black text-sm sm:text-base text-[#202428]">
+                      <span className="font-black text-sm sm:text-base text-[#34313A]">
                         {formatCurrencyARS(product.price)}
                       </span>
                       <span className="text-[10px] text-gray-400 block -mt-0.5 font-medium">
@@ -525,11 +525,11 @@ export const DigitalMenuView: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Naranja gastronómico (#F47B35) para agregar productos con texto blanco #FFFFFF */}
+                    {/* Naranja gastronómico #F68F57 para agregar productos */}
                     <button
                       type="button"
                       onClick={() => setProductBeingCustomized(product)}
-                      className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-xl bg-[#F47B35] hover:bg-[#e06822] text-white font-black text-xs shadow-md shadow-[#F47B35]/25 active:scale-95 transition"
+                      className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-xl bg-[#F68F57] hover:bg-[#e27c45] text-white font-black text-xs shadow-xs active:scale-95 transition"
                     >
                       <Plus className="w-3.5 h-3.5 stroke-[3]" />
                       <span>AGREGAR</span>
@@ -543,13 +543,13 @@ export const DigitalMenuView: React.FC = () => {
           {filteredProducts.length === 0 && (
             <div className="py-12 text-center text-gray-400">
               <Utensils className="w-10 h-10 mx-auto text-gray-300 mb-2" />
-              <p className="text-xs font-bold text-[#202428]">No se encontraron platos con ese nombre.</p>
+              <p className="text-xs font-bold text-[#34313A]">No se encontraron platos con ese nombre.</p>
               <button
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('todos');
                 }}
-                className="mt-2 text-xs font-bold text-[#55C7E8] underline"
+                className="mt-2 text-xs font-bold text-[#34313A] underline"
               >
                 Ver todos los productos
               </button>
@@ -557,30 +557,30 @@ export const DigitalMenuView: React.FC = () => {
           )}
 
           {/* Footer Official Seal */}
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center pb-6 space-y-2">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-black text-[#202428]">
-              <CheckCircle2 className="w-4 h-4 text-[#55C7E8]" />
+          <div className="mt-8 pt-6 border-t border-[#E2E2E2] text-center pb-6 space-y-2">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-black text-[#34313A]">
+              <CheckCircle2 className="w-4 h-4 text-[#F68F57]" />
               <span>Carta digital oficial • Identidad Oficial Gestión Balnearia</span>
             </div>
-            <p className="text-[11px] text-gray-400">
+            <p className="text-[11px] text-gray-500">
               {config.branchName} • Mar del Plata, Argentina. Los precios incluyen IVA.
             </p>
           </div>
         </div>
 
-        {/* Sticky Floating Bottom Bar: Negro grafito #202428 + Naranja gastronómico #F47B35 + Amarillo sol #FFD43B */}
+        {/* Sticky Floating Bottom Bar: #34313A + #C1E7FF + #F68F57 */}
         {totalCartCount > 0 && (
           <aside className="fixed bottom-0 left-0 right-0 z-30 flex justify-center p-3 pointer-events-none">
-            <div className="max-w-xl w-full bg-[#202428] text-white rounded-3xl shadow-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3 pointer-events-auto border border-[#30363d] animate-in slide-in-from-bottom duration-200">
+            <div className="max-w-xl w-full bg-[#34313A] text-white rounded-3xl shadow-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3 pointer-events-auto border border-[#484450] animate-in slide-in-from-bottom duration-200">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 text-[#55C7E8]" />
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#FFD43B] text-[#202428] font-black text-xs flex items-center justify-center shadow-xs">
+                  <ShoppingBag className="w-5 h-5 text-[#C1E7FF]" />
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#F68F57] text-white font-black text-xs flex items-center justify-center shadow-xs">
                     {totalCartCount}
                   </span>
                 </div>
                 <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-[#55C7E8]">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-[#C1E7FF]">
                     {totalCartCount} {totalCartCount === 1 ? 'PRODUCTO' : 'PRODUCTOS'} SELECCIONADOS
                   </div>
                   <div className="text-base font-black text-white leading-tight">
@@ -589,10 +589,10 @@ export const DigitalMenuView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Botón de acción: Naranja gastronómico #F47B35 con texto blanco */}
+              {/* Botón de acción principal: #C1E7FF con texto oscuro #34313A */}
               <button
                 onClick={() => setActiveView('personalizar')}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#F47B35] hover:bg-[#e06822] text-white font-black text-xs shadow-lg shadow-[#F47B35]/30 transition active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-lg transition active:scale-95"
               >
                 <span>VER PEDIDO ({totalCartCount})</span>
                 <ArrowRight className="w-4 h-4" />

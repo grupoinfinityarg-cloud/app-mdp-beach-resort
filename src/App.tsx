@@ -51,25 +51,24 @@ const AppContent: React.FC = () => {
     }
   }, [setActiveView, setSelectedLocationCode]);
 
-  // When on customer digital menu or kitchen KDS, we can give a dedicated immersive layout
   const isImmersiveView = activeView === 'cocina';
 
   return (
-    <div className="min-h-screen bg-[#f4f7f5] text-gray-900 flex flex-col font-sans selection:bg-emerald-600 selection:text-white">
+    <div className="min-h-screen sand-textured-bg text-[#34313A] flex flex-col font-sans selection:bg-[#C1E7FF] selection:text-[#34313A]">
       {/* Offline PWA Banner */}
       {!isOnline && (
-        <div className="bg-amber-500 text-white text-xs font-bold py-1.5 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md">
+        <div className="bg-[#F68F57] text-white text-xs font-bold py-1.5 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md">
           <WifiOff className="w-3.5 h-3.5" />
           <span>Modo Sin Conexión — La aplicación continúa funcionando con datos locales en caché.</span>
         </div>
       )}
 
-      {/* Top Experience Switcher Bar (Matches reference header) */}
+      {/* Top Experience Switcher Bar */}
       <HeaderTopBar onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} />
 
       {/* Main Container with Sidebar + Content */}
       <div className="flex-1 flex w-full">
-        {/* Left Sidebar (Hidden in full-screen kitchen or mobile unless toggled) */}
+        {/* Left Sidebar */}
         {!isImmersiveView && (
           <Sidebar
             isOpenMobile={isMobileSidebarOpen}
@@ -77,8 +76,8 @@ const AppContent: React.FC = () => {
           />
         )}
 
-        {/* Dynamic Main View */}
-        <main className="flex-1 overflow-x-hidden min-w-0">
+        {/* Dynamic Main View with sand texture */}
+        <main className="flex-1 overflow-x-hidden min-w-0 sand-textured-bg">
           {activeView === 'panel' && <DashboardView />}
           {activeView === 'sectores' && <SectorsView />}
           {activeView === 'carpas' && <BeachSpotsView />}

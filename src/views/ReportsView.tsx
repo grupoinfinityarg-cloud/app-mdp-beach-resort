@@ -76,11 +76,11 @@ export const ReportsView: React.FC = () => {
   }, [paidOrders]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-[#202428] tracking-tight">
+          <h1 className="text-xl font-black text-[#34313A] tracking-tight">
             Reportes & Rendimiento Comercial
           </h1>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -100,8 +100,8 @@ export const ReportsView: React.FC = () => {
               onClick={() => setPeriod(tab.id as any)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                 period === tab.id
-                  ? 'bg-white text-[#202428] shadow-xs'
-                  : 'text-gray-600 hover:text-[#202428]'
+                  ? 'bg-[#C1E7FF] text-[#34313A] font-black border border-[#a9dbfa] shadow-xs'
+                  : 'text-gray-600 hover:text-[#34313A]'
               }`}
             >
               {tab.label}
@@ -112,47 +112,47 @@ export const ReportsView: React.FC = () => {
 
       {/* Financial Breakdown Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-xs space-y-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Ventas Brutas
           </span>
-          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(grossSales)}</div>
+          <div className="text-2xl font-black text-[#34313A]">{formatCurrencyARS(grossSales)}</div>
           <p className="text-[11px] text-gray-500">{paidOrders.length} transacciones</p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#F47B35]">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-xs space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#F68F57]">
             Descuentos Otorgados
           </span>
-          <div className="text-2xl font-black text-[#F47B35]">-{formatCurrencyARS(totalDiscounts)}</div>
+          <div className="text-2xl font-black text-[#F68F57]">-{formatCurrencyARS(totalDiscounts)}</div>
           <p className="text-[11px] text-gray-500">Promociones y cortesías</p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-xs space-y-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Servicio de Mesa / Playa
           </span>
-          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(totalServiceFees)}</div>
+          <div className="text-2xl font-black text-[#34313A]">{formatCurrencyARS(totalServiceFees)}</div>
           <p className="text-[11px] text-gray-500">Adicional de cubierto</p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#202428]">
+        <div className="p-5 rounded-3xl bg-white border border-[#E2E2E2] shadow-xs space-y-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#34313A]">
             Recaudación Neta
           </span>
-          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(netRevenue)}</div>
-          <p className="text-[11px] text-[#202428]/80 font-bold">Total cobrado efectivo y digital</p>
+          <div className="text-2xl font-black text-[#34313A]">{formatCurrencyARS(netRevenue)}</div>
+          <p className="text-[11px] text-[#34313A]/80 font-bold">Total cobrado efectivo y digital</p>
         </div>
       </div>
 
       {/* 2-Column charts: Top Ranked & Category performance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Dynamic Top 5 Products */}
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+        <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
             <div className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-[#FFD43B]" />
-              <h3 className="font-black text-base text-[#202428]">
+              <Award className="w-5 h-5 text-[#F68F57]" />
+              <h3 className="font-black text-base text-[#34313A]">
                 Ranking Oficial: Los 5 Más Elegidos
               </h3>
             </div>
@@ -169,18 +169,18 @@ export const ReportsView: React.FC = () => {
               return (
                 <div key={item.id} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#202428]">
+                    <span className="font-bold text-[#34313A]">
                       #{index + 1} {item.name}
                     </span>
-                    <span className="font-black text-[#202428]">
+                    <span className="font-black text-[#34313A]">
                       {item.dynamicUnitsSold || item.salesCount} vendidos ({formatCurrencyARS(item.price)})
                     </span>
                   </div>
 
-                  {/* Progress bar in Amarillo sol */}
+                  {/* Progress bar in Arena Cálida */}
                   <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#FFD43B] rounded-full transition-all duration-500"
+                      className="h-full bg-[#FBEEB9] border border-[#e8d799] rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -191,11 +191,11 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Sales by Category */}
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+        <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-[#55C7E8]" />
-              <h3 className="font-black text-base text-[#202428]">Ventas por Categoría</h3>
+              <BarChart3 className="w-5 h-5 text-[#34313A]" />
+              <h3 className="font-black text-base text-[#34313A]">Ventas por Categoría</h3>
             </div>
             <span className="text-[11px] font-semibold text-gray-400">Distribución</span>
           </div>
@@ -208,18 +208,18 @@ export const ReportsView: React.FC = () => {
               return (
                 <div key={cat.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#202428]">
+                    <span className="font-bold text-[#34313A]">
                       {cat.emoji} {cat.name}
                     </span>
-                    <span className="font-black text-[#202428]">
+                    <span className="font-black text-[#34313A]">
                       {formatCurrencyARS(cat.revenue)} ({cat.units} unid.)
                     </span>
                   </div>
 
-                  {/* Progress bar in Celeste mar */}
+                  {/* Progress bar in Celeste Interactivo */}
                   <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#55C7E8] rounded-full transition-all duration-500"
+                      className="h-full bg-[#C1E7FF] border border-[#a9dbfa] rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -231,13 +231,13 @@ export const ReportsView: React.FC = () => {
       </div>
 
       {/* Payment methods breakdown bar */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
-        <h3 className="font-black text-base text-[#202428]">Canales de Cobro Utilizados</h3>
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-xs space-y-4">
+        <h3 className="font-black text-base text-[#34313A]">Canales de Cobro Utilizados</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {paymentBreakdown.map((pm) => (
-            <div key={pm.name} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-1">
+            <div key={pm.name} className="p-4 rounded-2xl bg-gray-50 border border-[#E2E2E2] space-y-1">
               <span className="text-xs font-bold text-gray-600 block">{pm.name}</span>
-              <div className="text-xl font-black text-[#202428]">{formatCurrencyARS(pm.amount)}</div>
+              <div className="text-xl font-black text-[#34313A]">{formatCurrencyARS(pm.amount)}</div>
               <div className="text-[10px] text-gray-400">
                 {netRevenue > 0 ? Math.round((pm.amount / netRevenue) * 100) : 0}% del volumen
               </div>

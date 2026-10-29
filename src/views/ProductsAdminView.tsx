@@ -3,13 +3,10 @@ import { useBalneario } from '../context/BalnearioContext';
 import { Product } from '../types';
 import { formatCurrencyARS } from '../utils/balnearioLogic';
 import {
-  UtensilsCrossed,
   Plus,
   Edit2,
   Search,
-  Check,
   X,
-  Sparkles,
   Eye,
   EyeOff,
   FolderPlus,
@@ -138,19 +135,19 @@ export const ProductsAdminView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#202428] tracking-tight">
+            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
               Menú & Administración de Productos
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#55C7E8]/20 text-[#202428]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A]">
               {products.length} PLATOS & BEBIDAS
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-[#34313A]/70 mt-0.5">
             Configuración de precios, stock, modificadores de cocina e ingredientes personalizables.
           </p>
         </div>
@@ -158,9 +155,9 @@ export const ProductsAdminView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowCategoryModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-[#FBEEB9]/20 transition"
           >
-            <FolderPlus className="w-4 h-4 text-[#F47B35]" />
+            <FolderPlus className="w-4 h-4 text-[#F68F57]" />
             <span>Nueva Categoría</span>
           </button>
           <button
@@ -168,9 +165,9 @@ export const ProductsAdminView: React.FC = () => {
               resetForm();
               setShowNewModal(true);
             }}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F47B35] text-white font-extrabold text-xs hover:bg-[#e06824] shadow-md transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#C1E7FF] hover:bg-[#aee0ff] text-[#34313A] border border-[#a9dbfa] font-black text-xs shadow-sm transition"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-[#34313A]" />
             <span>Crear Producto</span>
           </button>
         </div>
@@ -179,13 +176,13 @@ export const ProductsAdminView: React.FC = () => {
       {/* Filter and Search */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-[#34313A]/50 absolute left-3.5 top-3" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por nombre o SKU..."
-            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-[#55C7E8] shadow-2xs"
+            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] shadow-sm"
           />
         </div>
 
@@ -194,8 +191,8 @@ export const ProductsAdminView: React.FC = () => {
             onClick={() => setSelectedCategory('todos')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
               selectedCategory === 'todos'
-                ? 'bg-[#55C7E8] text-[#202428] shadow-xs font-black'
-                : 'bg-white border border-gray-200 text-[#202428]'
+                ? 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] shadow-sm font-black'
+                : 'bg-white border border-[#E2E2E2] text-[#34313A]'
             }`}
           >
             Todos
@@ -206,8 +203,8 @@ export const ProductsAdminView: React.FC = () => {
               onClick={() => setSelectedCategory(c.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
                 selectedCategory === c.id
-                  ? 'bg-[#55C7E8] text-[#202428] shadow-xs font-black'
-                  : 'bg-white border border-gray-200 text-[#202428]'
+                  ? 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] shadow-sm font-black'
+                  : 'bg-white border border-[#E2E2E2] text-[#34313A]'
               }`}
             >
               {c.emoji} {c.name}
@@ -217,10 +214,10 @@ export const ProductsAdminView: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-3xl border border-[#E2E2E2] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold uppercase text-[10px]">
+            <thead className="bg-[#FBEEB9]/40 border-b border-[#E2E2E2] text-[#34313A] font-bold uppercase text-[10px]">
               <tr>
                 <th className="py-3 px-4">Producto</th>
                 <th className="py-3 px-4">Categoría</th>
@@ -231,11 +228,11 @@ export const ProductsAdminView: React.FC = () => {
                 <th className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#E2E2E2]">
               {filteredProducts.map((p) => {
                 const cat = categories.find((c) => c.id === p.categoryId);
                 return (
-                  <tr key={p.id} className="hover:bg-gray-50/70 transition">
+                  <tr key={p.id} className="hover:bg-[#FBEEB9]/15 transition">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
                         <img
@@ -244,8 +241,8 @@ export const ProductsAdminView: React.FC = () => {
                           className="w-10 h-10 rounded-xl object-cover bg-gray-100 shrink-0"
                         />
                         <div>
-                          <div className="font-bold text-[#202428]">{p.name}</div>
-                          <div className="text-[10px] text-gray-400 font-mono">
+                          <div className="font-bold text-[#34313A]">{p.name}</div>
+                          <div className="text-[10px] text-[#34313A]/60 font-mono">
                             {p.sku} • {p.prepTimeMinutes}m cocina
                           </div>
                         </div>
@@ -253,16 +250,16 @@ export const ProductsAdminView: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className="font-semibold text-[#202428]">
+                      <span className="font-semibold text-[#34313A]">
                         {cat?.emoji} {cat?.name}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-black text-[#202428]">
+                    <td className="py-3 px-4 font-black text-[#34313A]">
                       {formatCurrencyARS(p.price)}
                     </td>
 
-                    <td className="py-3 px-4 text-gray-500">
+                    <td className="py-3 px-4 text-[#34313A]/60">
                       {p.cost ? formatCurrencyARS(p.cost) : '—'}
                     </td>
 
@@ -272,7 +269,7 @@ export const ProductsAdminView: React.FC = () => {
                         onClick={() => toggleProductAvailable(p.id)}
                         className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition ${
                           p.isAvailable
-                            ? 'bg-[#55C7E8]/20 text-[#202428]'
+                            ? 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]'
                             : 'bg-rose-100 text-rose-800'
                         }`}
                       >
@@ -286,12 +283,12 @@ export const ProductsAdminView: React.FC = () => {
                         onClick={() => toggleProductActive(p.id)}
                         className={`p-1.5 rounded-lg transition ${
                           p.isActive
-                            ? 'text-[#202428] hover:bg-[#55C7E8]/20'
+                            ? 'text-[#34313A] hover:bg-[#C1E7FF]'
                             : 'text-gray-400 hover:bg-gray-100'
                         }`}
                         title={p.isActive ? 'Activo en la carta' : 'Desactivado (oculto)'}
                       >
-                        {p.isActive ? <Eye className="w-4 h-4 text-[#202428]" /> : <EyeOff className="w-4 h-4" />}
+                        {p.isActive ? <Eye className="w-4 h-4 text-[#34313A]" /> : <EyeOff className="w-4 h-4" />}
                       </button>
                     </td>
 
@@ -299,9 +296,9 @@ export const ProductsAdminView: React.FC = () => {
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => handleOpenEdit(p)}
-                        className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:text-[#202428] hover:bg-[#55C7E8]/20 transition"
+                        className="p-1.5 rounded-lg border border-[#E2E2E2] text-[#34313A] hover:bg-[#C1E7FF] transition"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-3.5 h-3.5 text-[#34313A]" />
                       </button>
                     </td>
                   </tr>
@@ -314,13 +311,13 @@ export const ProductsAdminView: React.FC = () => {
 
       {/* Product Form Modal (Create or Edit) */}
       {(showNewModal || editingProduct) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
           <form
             onSubmit={handleSaveProduct}
-            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-[#E2E2E2]"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <h3 className="font-black text-base text-[#202428]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
+              <h3 className="font-black text-base text-[#34313A]">
                 {editingProduct ? 'Editar Producto Gastronómico' : 'Crear Nuevo Producto'}
               </h3>
               <button
@@ -329,7 +326,7 @@ export const ProductsAdminView: React.FC = () => {
                   setEditingProduct(null);
                   setShowNewModal(false);
                 }}
-                className="text-gray-400 hover:text-gray-700"
+                className="text-[#34313A]/60 hover:text-[#34313A]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -337,34 +334,34 @@ export const ProductsAdminView: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1 col-span-2">
-                <label className="text-xs font-bold text-gray-700">Nombre del plato o bebida:</label>
+                <label className="text-xs font-bold text-[#34313A]">Nombre del plato o bebida:</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej: Hamburguesa de Novillo con Papas"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-semibold"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] font-semibold focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1 col-span-2">
-                <label className="text-xs font-bold text-gray-700">Descripción apetitosa:</label>
+                <label className="text-xs font-bold text-[#34313A]">Descripción apetitosa:</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Detalle de ingredientes y preparación..."
                   rows={2}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] resize-none"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] resize-none focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-700">Categoría:</label>
+                <label className="text-xs font-bold text-[#34313A]">Categoría:</label>
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-semibold"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] font-semibold focus:outline-none focus:border-[#C1E7FF]"
                 >
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -375,50 +372,50 @@ export const ProductsAdminView: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-700">Código / SKU:</label>
+                <label className="text-xs font-bold text-[#34313A]">Código / SKU:</label>
                 <input
                   type="text"
                   value={sku}
                   onChange={(e) => setSku(e.target.value)}
                   placeholder="BUR-05"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-mono text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs font-mono text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-700">Precio Venta (ARS):</label>
+                <label className="text-xs font-bold text-[#34313A]">Precio Venta (ARS):</label>
                 <input
                   type="number"
                   required
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-black text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs font-black text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-700">Costo (ARS opcional):</label>
+                <label className="text-xs font-bold text-[#34313A]">Costo (ARS opcional):</label>
                 <input
                   type="number"
                   value={cost}
                   onChange={(e) => setCost(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1 col-span-2">
-                <label className="text-xs font-bold text-gray-700">URL Fotografía:</label>
+                <label className="text-xs font-bold text-[#34313A]">URL Fotografía:</label>
                 <input
                   type="url"
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
 
               <div className="space-y-1 col-span-2">
-                <label className="text-xs font-bold text-gray-700">
+                <label className="text-xs font-bold text-[#34313A]">
                   Ingredientes que el cliente puede quitar (separados por coma):
                 </label>
                 <input
@@ -426,25 +423,25 @@ export const ProductsAdminView: React.FC = () => {
                   value={removableList}
                   onChange={(e) => setRemovableList(e.target.value)}
                   placeholder="Cebolla, Tomate, Panceta, Salsa"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#E2E2E2]">
               <button
                 type="button"
                 onClick={() => {
                   setEditingProduct(null);
                   setShowNewModal(false);
                 }}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white shadow-md"
+                className="px-5 py-2.5 rounded-xl text-xs font-black bg-[#C1E7FF] hover:bg-[#aee0ff] text-[#34313A] border border-[#a9dbfa] shadow-sm"
               >
                 Guardar Producto
               </button>
@@ -455,44 +452,44 @@ export const ProductsAdminView: React.FC = () => {
 
       {/* Category Creation Modal */}
       {showCategoryModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
           <form
             onSubmit={handleCreateCategory}
-            className="w-full max-w-xs bg-white rounded-3xl p-6 shadow-2xl space-y-4"
+            className="w-full max-w-xs bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]"
           >
-            <h3 className="font-black text-base text-[#202428]">Nueva Categoría Gastronómica</h3>
+            <h3 className="font-black text-base text-[#34313A]">Nueva Categoría Gastronómica</h3>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Nombre:</label>
+              <label className="text-xs font-bold text-[#34313A]">Nombre:</label>
               <input
                 type="text"
                 required
                 value={newCatName}
                 onChange={(e) => setNewCatName(e.target.value)}
                 placeholder="Ej: Mariscos, Tragos, Minutas"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700">Emoji representativo:</label>
+              <label className="text-xs font-bold text-[#34313A]">Emoji representativo:</label>
               <input
                 type="text"
                 value={newCatEmoji}
                 onChange={(e) => setNewCatEmoji(e.target.value)}
                 placeholder="🍤"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-center text-lg"
+                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-center text-lg text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               />
             </div>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowCategoryModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#34313A]/70 hover:bg-gray-100"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white"
+                className="px-4 py-2 rounded-xl text-xs font-black bg-[#C1E7FF] hover:bg-[#aee0ff] text-[#34313A] border border-[#a9dbfa]"
               >
                 Crear Categoría
               </button>

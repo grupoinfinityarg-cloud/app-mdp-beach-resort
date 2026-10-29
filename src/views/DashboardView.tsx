@@ -60,19 +60,19 @@ export const DashboardView: React.FC = () => {
   const { products: top5Products, isDemonstrationOnly } = calculateTop5Products(products, orders);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
       {/* Top Banner & Status bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-xl">
+          <div className="w-12 h-12 rounded-2xl bg-[#FFD43B]/20 text-[#202428] flex items-center justify-center font-black text-xl">
             🏖️
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight">
+              <h1 className="text-lg sm:text-xl font-black text-[#202428] tracking-tight">
                 {config.branchName}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#55C7E8]/20 text-[#202428] border border-[#55C7E8]/40">
                 TEMPORADA ACTIVA
               </span>
             </div>
@@ -86,51 +86,51 @@ export const DashboardView: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setActiveView('pos')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow-md shadow-emerald-700/20 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#F47B35] text-white font-extrabold text-xs hover:bg-[#e06824] shadow-md shadow-[#F47B35]/20 transition"
           >
             <CreditCard className="w-3.5 h-3.5" />
             <span>Cobro Rápido POS</span>
           </button>
           <button
             onClick={() => setActiveView('comandas')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
           >
-            <Clock className="w-3.5 h-3.5 text-amber-500" />
+            <Clock className="w-3.5 h-3.5 text-[#F47B35]" />
             <span>Ver Comandas ({pendingApprovalOrders.length})</span>
           </button>
           <button
             onClick={() => setActiveView('cocina')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
           >
-            <ChefHat className="w-3.5 h-3.5 text-emerald-600" />
+            <ChefHat className="w-3.5 h-3.5 text-[#55C7E8]" />
             <span>KDS Cocina</span>
           </button>
           <button
             onClick={() => setActiveView('caja')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 transition"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
           >
-            <Wallet className="w-3.5 h-3.5 text-gray-600" />
+            <Wallet className="w-3.5 h-3.5 text-[#202428]" />
             <span>Arqueo de Caja</span>
           </button>
         </div>
       </div>
 
-      {/* Primary KPI Grid (Ref style matching ref-panel-view.png) */}
+      {/* Primary KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Ventas del día */}
         <div className="p-4 sm:p-5 rounded-3xl bg-white border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider">
             <span>Ventas del Turno</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#FFD43B]/20 text-[#202428] flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl font-black text-[#202428] tracking-tight">
               {formatCurrencyARS(totalSalesToday)}
             </div>
-            <div className="text-xs text-emerald-700 font-bold flex items-center gap-1 mt-1">
-              <TrendingUp className="w-3.5 h-3.5" />
+            <div className="text-xs text-[#202428] font-bold flex items-center gap-1 mt-1">
+              <TrendingUp className="w-3.5 h-3.5 text-[#55C7E8]" />
               <span>{paidOrdersCount} pedidos cobrados</span>
             </div>
           </div>
@@ -143,16 +143,16 @@ export const DashboardView: React.FC = () => {
         <div className="p-4 sm:p-5 rounded-3xl bg-white border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider">
             <span>Ocupación de Playa</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#55C7E8]/20 text-[#202428] flex items-center justify-center">
               <Umbrella className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl font-black text-[#202428] tracking-tight">
               {occupiedTents.length + occupiedUmbrellas.length} / {tents.length + umbrellas.length}
             </div>
             <div className="text-xs text-gray-600 font-semibold mt-1">
-              Carpas: <strong className="text-emerald-700">{occupiedTents.length}/{tents.length}</strong> • Sombrillas: <strong className="text-emerald-700">{occupiedUmbrellas.length}/{umbrellas.length}</strong>
+              Carpas: <strong className="text-[#202428]">{occupiedTents.length}/{tents.length}</strong> • Sombrillas: <strong className="text-[#202428]">{occupiedUmbrellas.length}/{umbrellas.length}</strong>
             </div>
           </div>
           <div className="pt-2 border-t border-gray-50 text-[11px] text-gray-400">
@@ -164,12 +164,12 @@ export const DashboardView: React.FC = () => {
         <div className="p-4 sm:p-5 rounded-3xl bg-white border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider">
             <span>Mesas Salón & Deck</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-gray-100 text-[#202428] flex items-center justify-center">
               <Utensils className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl font-black text-[#202428] tracking-tight">
               {occupiedTables.length} / {tables.length}
             </div>
             <div className="text-xs text-gray-600 font-semibold mt-1">
@@ -185,15 +185,15 @@ export const DashboardView: React.FC = () => {
         <div className="p-4 sm:p-5 rounded-3xl bg-white border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-gray-500 font-bold uppercase tracking-wider">
             <span>Ticket Promedio</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#F47B35]/15 text-[#F47B35] flex items-center justify-center">
               <Receipt className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
-            <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl font-black text-[#202428] tracking-tight">
               {formatCurrencyARS(averageTicket)}
             </div>
-            <div className="text-xs text-purple-700 font-bold mt-1">
+            <div className="text-xs text-[#202428] font-bold mt-1">
               {readyOrders.length} listos para entrega inmediata
             </div>
           </div>
@@ -203,20 +203,20 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Main 2-column layout: Left Live Orders / Right Beach Sector Map */}
+      {/* Main 2-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Pedidos Digitales Recientes & Comandas */}
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
               <div>
-                <h3 className="font-black text-base text-gray-900 tracking-tight">
+                <h3 className="font-black text-base text-[#202428] tracking-tight">
                   Pedidos Digitales Recientes & Comandas
                 </h3>
                 <p className="text-xs text-gray-500">Gestión en vivo de órdenes por QR de playa y restaurante</p>
               </div>
 
-              <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold">
+              <span className="px-3 py-1 rounded-full bg-[#FFD43B]/20 text-[#202428] border border-[#FFD43B] text-xs font-bold">
                 {pendingApprovalOrders.length} pendientes de confirmación
               </span>
             </div>
@@ -235,13 +235,13 @@ export const DashboardView: React.FC = () => {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-2.5">
-                        <span className="font-black text-sm px-2.5 py-1 rounded-xl bg-emerald-700 text-white">
+                        <span className="font-black text-sm px-2.5 py-1 rounded-xl bg-[#202428] text-white">
                           {ord.orderNumber}
                         </span>
                         <div>
-                          <div className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                          <div className="text-xs font-bold text-[#202428] flex items-center gap-1.5">
                             <span>{ord.locationName}</span>
-                            <span className="text-[10px] font-mono text-gray-500 bg-white px-1.5 py-0.2 rounded border">
+                            <span className="text-[10px] font-mono text-gray-600 bg-white px-1.5 py-0.2 rounded border font-bold">
                               {ord.locationCode}
                             </span>
                           </div>
@@ -252,17 +252,17 @@ export const DashboardView: React.FC = () => {
                       </div>
 
                       <div className="text-right">
-                        <div className="font-black text-sm text-gray-900">
+                        <div className="font-black text-sm text-[#202428]">
                           {formatCurrencyARS(ord.total)}
                         </div>
                         <span
                           className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold mt-0.5 ${
                             isPending
-                              ? 'bg-amber-100 text-amber-800'
+                              ? 'bg-[#FFD43B]/20 text-[#202428] border border-[#FFD43B]'
                               : isKitchen
-                              ? 'bg-blue-100 text-blue-800'
+                              ? 'bg-[#55C7E8]/20 text-[#202428]'
                               : isReady
-                              ? 'bg-emerald-100 text-emerald-800'
+                              ? 'bg-[#FFD43B] text-[#202428]'
                               : 'bg-gray-100 text-gray-700'
                           }`}
                         >
@@ -278,7 +278,7 @@ export const DashboardView: React.FC = () => {
                           <span>
                             <strong>{it.quantity}x</strong> {it.productName}
                           </span>
-                          <span className="font-semibold text-gray-700">
+                          <span className="font-semibold text-[#202428]">
                             {formatCurrencyARS(it.subtotal)}
                           </span>
                         </div>
@@ -304,7 +304,7 @@ export const DashboardView: React.FC = () => {
                             </button>
                             <button
                               onClick={() => confirmAndSendToKitchen(ord.id)}
-                              className="px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow-xs transition"
+                              className="px-3.5 py-1.5 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs shadow-xs transition"
                             >
                               ✓ Enviar a Cocina
                             </button>
@@ -314,7 +314,7 @@ export const DashboardView: React.FC = () => {
                         {ord.paymentStatus === 'pendiente' && !isPending && (
                           <button
                             onClick={() => setActiveView('pos')}
-                            className="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs hover:bg-emerald-200 transition"
+                            className="px-3 py-1.5 rounded-xl bg-[#55C7E8] text-[#202428] font-black text-xs hover:bg-[#43b5d6] transition"
                           >
                             Cobrar en POS
                           </button>
@@ -334,7 +334,7 @@ export const DashboardView: React.FC = () => {
 
             <button
               onClick={() => setActiveView('comandas')}
-              className="w-full py-2 rounded-xl text-center text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition flex items-center justify-center gap-1"
+              className="w-full py-2 rounded-xl text-center text-xs font-bold text-[#202428] hover:bg-gray-50 transition flex items-center justify-center gap-1"
             >
               <span>Ver todas las comandas</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -348,8 +348,8 @@ export const DashboardView: React.FC = () => {
           <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-gray-100">
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <h3 className="font-black text-sm text-gray-900">
+                <Sparkles className="w-4 h-4 text-[#FFD43B]" />
+                <h3 className="font-black text-sm text-[#202428]">
                   Top 5 Más Vendidos
                 </h3>
               </div>
@@ -365,7 +365,7 @@ export const DashboardView: React.FC = () => {
                   className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 transition"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-black text-[11px] flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-[#FFD43B] text-[#202428] font-black text-[11px] flex items-center justify-center">
                       {i + 1}
                     </span>
                     <img
@@ -374,11 +374,11 @@ export const DashboardView: React.FC = () => {
                       className="w-9 h-9 rounded-lg object-cover"
                     />
                     <div>
-                      <div className="text-xs font-bold text-gray-900 line-clamp-1">{p.name}</div>
+                      <div className="text-xs font-bold text-[#202428] line-clamp-1">{p.name}</div>
                       <div className="text-[10px] text-gray-400">{formatCurrencyARS(p.price)}</div>
                     </div>
                   </div>
-                  <span className="text-xs font-extrabold text-emerald-700">
+                  <span className="text-xs font-black text-[#F47B35]">
                     {p.dynamicUnitsSold || p.salesCount} vend.
                   </span>
                 </div>
@@ -389,10 +389,10 @@ export const DashboardView: React.FC = () => {
           {/* Quick Spots Matrix */}
           <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <h3 className="font-black text-sm text-gray-900">Estado Rápido de Ubicaciones</h3>
+              <h3 className="font-black text-sm text-[#202428]">Estado Rápido de Ubicaciones</h3>
               <button
                 onClick={() => setActiveView('sectores')}
-                className="text-[11px] font-bold text-emerald-700 hover:underline"
+                className="text-[11px] font-bold text-[#55C7E8] hover:underline"
               >
                 Ver Mapa
               </button>
@@ -408,12 +408,12 @@ export const DashboardView: React.FC = () => {
                     key={loc.id}
                     className={`p-2 rounded-xl text-center border text-[10px] font-bold transition ${
                       isOccupied
-                        ? 'bg-emerald-700 text-white border-emerald-800'
+                        ? 'bg-[#F47B35] text-white border-[#F47B35]'
                         : isReserved
-                        ? 'bg-amber-100 text-amber-900 border-amber-300'
+                        ? 'bg-[#FFD43B] text-[#202428] border-[#FFD43B]'
                         : isCleaning
-                        ? 'bg-blue-50 text-blue-800 border-blue-200'
-                        : 'bg-gray-50 text-gray-700 border-gray-200'
+                        ? 'bg-[#55C7E8] text-[#202428] border-[#55C7E8]'
+                        : 'bg-gray-50 text-[#202428] border-gray-200'
                     }`}
                     title={`${loc.name}: ${loc.status}`}
                   >

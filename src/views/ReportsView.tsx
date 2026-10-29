@@ -68,19 +68,19 @@ export const ReportsView: React.FC = () => {
     }
 
     return [
-      { name: 'Mercado Pago QR', amount: map.mercadopago_qr, color: 'bg-blue-600' },
-      { name: 'Efectivo', amount: map.efectivo, color: 'bg-emerald-600' },
-      { name: 'Tarjetas (Débito/Crédito)', amount: map.tarjeta_credito + map.tarjeta_debito, color: 'bg-purple-600' },
-      { name: 'Transferencias', amount: map.transferencia, color: 'bg-amber-600' },
+      { name: 'Mercado Pago QR', amount: map.mercadopago_qr },
+      { name: 'Efectivo', amount: map.efectivo },
+      { name: 'Tarjetas (Débito/Crédito)', amount: map.tarjeta_credito + map.tarjeta_debito },
+      { name: 'Transferencias', amount: map.transferencia },
     ];
   }, [paidOrders]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
       {/* Header */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl font-black text-[#202428] tracking-tight">
             Reportes & Rendimiento Comercial
           </h1>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -100,8 +100,8 @@ export const ReportsView: React.FC = () => {
               onClick={() => setPeriod(tab.id as any)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                 period === tab.id
-                  ? 'bg-white text-gray-900 shadow-xs'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-white text-[#202428] shadow-xs'
+                  : 'text-gray-600 hover:text-[#202428]'
               }`}
             >
               {tab.label}
@@ -116,15 +116,15 @@ export const ReportsView: React.FC = () => {
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Ventas Brutas
           </span>
-          <div className="text-2xl font-black text-gray-900">{formatCurrencyARS(grossSales)}</div>
+          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(grossSales)}</div>
           <p className="text-[11px] text-gray-500">{paidOrders.length} transacciones</p>
         </div>
 
         <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#F47B35]">
             Descuentos Otorgados
           </span>
-          <div className="text-2xl font-black text-amber-700">-{formatCurrencyARS(totalDiscounts)}</div>
+          <div className="text-2xl font-black text-[#F47B35]">-{formatCurrencyARS(totalDiscounts)}</div>
           <p className="text-[11px] text-gray-500">Promociones y cortesías</p>
         </div>
 
@@ -132,16 +132,16 @@ export const ReportsView: React.FC = () => {
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
             Servicio de Mesa / Playa
           </span>
-          <div className="text-2xl font-black text-gray-700">{formatCurrencyARS(totalServiceFees)}</div>
+          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(totalServiceFees)}</div>
           <p className="text-[11px] text-gray-500">Adicional de cubierto</p>
         </div>
 
         <div className="p-5 rounded-3xl bg-white border border-gray-100 shadow-xs space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#202428]">
             Recaudación Neta
           </span>
-          <div className="text-2xl font-black text-emerald-800">{formatCurrencyARS(netRevenue)}</div>
-          <p className="text-[11px] text-emerald-700 font-semibold">Total cobrado efectivo y digital</p>
+          <div className="text-2xl font-black text-[#202428]">{formatCurrencyARS(netRevenue)}</div>
+          <p className="text-[11px] text-[#202428]/80 font-bold">Total cobrado efectivo y digital</p>
         </div>
       </div>
 
@@ -151,8 +151,8 @@ export const ReportsView: React.FC = () => {
         <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-500" />
-              <h3 className="font-black text-base text-gray-900">
+              <Award className="w-5 h-5 text-[#FFD43B]" />
+              <h3 className="font-black text-base text-[#202428]">
                 Ranking Oficial: Los 5 Más Elegidos
               </h3>
             </div>
@@ -169,18 +169,18 @@ export const ReportsView: React.FC = () => {
               return (
                 <div key={item.id} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-gray-900">
+                    <span className="font-bold text-[#202428]">
                       #{index + 1} {item.name}
                     </span>
-                    <span className="font-black text-emerald-800">
+                    <span className="font-black text-[#202428]">
                       {item.dynamicUnitsSold || item.salesCount} vendidos ({formatCurrencyARS(item.price)})
                     </span>
                   </div>
 
-                  {/* Progress bar */}
+                  {/* Progress bar in Amarillo sol */}
                   <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                      className="h-full bg-[#FFD43B] rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -194,8 +194,8 @@ export const ReportsView: React.FC = () => {
         <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-emerald-700" />
-              <h3 className="font-black text-base text-gray-900">Ventas por Categoría</h3>
+              <BarChart3 className="w-5 h-5 text-[#55C7E8]" />
+              <h3 className="font-black text-base text-[#202428]">Ventas por Categoría</h3>
             </div>
             <span className="text-[11px] font-semibold text-gray-400">Distribución</span>
           </div>
@@ -208,17 +208,18 @@ export const ReportsView: React.FC = () => {
               return (
                 <div key={cat.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-gray-800">
+                    <span className="font-bold text-[#202428]">
                       {cat.emoji} {cat.name}
                     </span>
-                    <span className="font-black text-gray-900">
+                    <span className="font-black text-[#202428]">
                       {formatCurrencyARS(cat.revenue)} ({cat.units} unid.)
                     </span>
                   </div>
 
+                  {/* Progress bar in Celeste mar */}
                   <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-emerald-700 rounded-full transition-all duration-500"
+                      className="h-full bg-[#55C7E8] rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -231,12 +232,12 @@ export const ReportsView: React.FC = () => {
 
       {/* Payment methods breakdown bar */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs space-y-4">
-        <h3 className="font-black text-base text-gray-900">Canales de Cobro Utilizados</h3>
+        <h3 className="font-black text-base text-[#202428]">Canales de Cobro Utilizados</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {paymentBreakdown.map((pm) => (
             <div key={pm.name} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-1">
               <span className="text-xs font-bold text-gray-600 block">{pm.name}</span>
-              <div className="text-xl font-black text-gray-900">{formatCurrencyARS(pm.amount)}</div>
+              <div className="text-xl font-black text-[#202428]">{formatCurrencyARS(pm.amount)}</div>
               <div className="text-[10px] text-gray-400">
                 {netRevenue > 0 ? Math.round((pm.amount / netRevenue) * 100) : 0}% del volumen
               </div>

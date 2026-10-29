@@ -1,32 +1,47 @@
 @import "tailwindcss";
 
+@theme {
+  --color-sol: #FFD43B;
+  --color-mar: #55C7E8;
+  --color-blanco: #FFFFFF;
+  --color-naranja: #F47B35;
+  --color-grafito: #202428;
+
+  /* Semantic aliases matching guidelines */
+  --color-amarillo-sol: #FFD43B;
+  --color-celeste-mar: #55C7E8;
+  --color-naranja-gastro: #F47B35;
+  --color-negro-grafito: #202428;
+}
+
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    background-color: #FFFFFF;
+    color: #202428;
   }
 }
 
-/* Custom scrollbars for POS and kitchen display */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(32, 36, 40, 0.04);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(32, 36, 40, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(32, 36, 40, 0.35);
 }
 
-/* Prevent unwanted pull-to-refresh on mobile web app */
 html, body {
   overscroll-behavior-y: contain;
 }

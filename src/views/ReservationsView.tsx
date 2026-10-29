@@ -82,15 +82,15 @@ export const ReservationsView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
       {/* Header */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-gray-900 tracking-tight">
+            <h1 className="text-xl font-black text-[#202428] tracking-tight">
               Clientes & Reservas de Sombra
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#55C7E8]/20 text-[#202428]">
               {reservations.length} REGISTRADAS
             </span>
           </div>
@@ -101,7 +101,7 @@ export const ReservationsView: React.FC = () => {
 
         <button
           onClick={() => setShowNewModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs shadow-md transition"
         >
           <Plus className="w-4 h-4" />
           <span>Nueva Reserva</span>
@@ -117,17 +117,17 @@ export const ReservationsView: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por cliente, teléfono o carpa..."
-            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-gray-200 text-xs text-gray-900 focus:outline-hidden focus:border-emerald-600 shadow-2xs"
+            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-[#55C7E8] shadow-2xs"
           />
         </div>
 
-        <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-2xl border border-gray-200 text-xs font-bold text-gray-700">
-          <Calendar className="w-4 h-4 text-emerald-700" />
+        <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-2xl border border-gray-200 text-xs font-bold text-[#202428]">
+          <Calendar className="w-4 h-4 text-[#F47B35]" />
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="text-xs font-bold bg-transparent outline-hidden"
+            className="text-xs font-bold bg-transparent outline-hidden text-[#202428]"
           />
         </div>
       </div>
@@ -146,11 +146,11 @@ export const ReservationsView: React.FC = () => {
               <div>
                 <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-100">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-black text-sm px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="font-mono font-black text-sm px-2.5 py-1 rounded-xl bg-[#55C7E8]/15 text-[#202428] border border-[#55C7E8]/40">
                       {res.locationCode}
                     </span>
                     <div>
-                      <h4 className="font-black text-sm text-gray-900">{res.customerName}</h4>
+                      <h4 className="font-black text-sm text-[#202428]">{res.customerName}</h4>
                       <span className="text-[10px] text-gray-400 font-medium">{res.date}</span>
                     </div>
                   </div>
@@ -158,9 +158,9 @@ export const ReservationsView: React.FC = () => {
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                       isConfirmed
-                        ? 'bg-blue-100 text-blue-800'
+                        ? 'bg-[#55C7E8]/20 text-[#202428]'
                         : isInUse
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-[#FFD43B] text-[#202428]'
                         : 'bg-gray-100 text-gray-600'
                     }`}
                   >
@@ -189,11 +189,11 @@ export const ReservationsView: React.FC = () => {
                 <div className="mt-3 p-2.5 rounded-xl bg-gray-50 flex items-center justify-between text-xs">
                   <div>
                     <span className="text-gray-400 block text-[10px]">Seña abonada</span>
-                    <strong className="text-emerald-700">{formatCurrencyARS(res.depositAmount)}</strong>
+                    <strong className="text-[#202428]">{formatCurrencyARS(res.depositAmount)}</strong>
                   </div>
                   <div className="text-right">
                     <span className="text-gray-400 block text-[10px]">Total estadía</span>
-                    <strong className="text-gray-900">{formatCurrencyARS(res.totalAmount)}</strong>
+                    <strong className="text-[#202428]">{formatCurrencyARS(res.totalAmount)}</strong>
                   </div>
                 </div>
 
@@ -209,7 +209,7 @@ export const ReservationsView: React.FC = () => {
                 {isConfirmed && (
                   <button
                     onClick={() => updateReservationStatus(res.id, 'en_uso')}
-                    className="flex-1 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800"
+                    className="flex-1 py-1.5 rounded-xl bg-[#55C7E8] text-[#202428] font-bold text-xs hover:bg-[#43b5d6]"
                   >
                     Marcar En Uso
                   </button>
@@ -217,7 +217,7 @@ export const ReservationsView: React.FC = () => {
                 {isInUse && (
                   <button
                     onClick={() => updateReservationStatus(res.id, 'finalizada')}
-                    className="flex-1 py-1.5 rounded-xl border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-100"
+                    className="flex-1 py-1.5 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-100"
                   >
                     Finalizar Estadía
                   </button>
@@ -236,7 +236,7 @@ export const ReservationsView: React.FC = () => {
         {filteredReservations.length === 0 && (
           <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-3xl border border-gray-100">
             <CalendarCheck2 className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-            <p className="text-sm font-bold text-gray-700">No hay reservas para esta fecha</p>
+            <p className="text-sm font-bold text-[#202428]">No hay reservas para esta fecha</p>
           </div>
         )}
       </div>
@@ -248,7 +248,7 @@ export const ReservationsView: React.FC = () => {
             onSubmit={handleCreateReservation}
             className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
           >
-            <h3 className="font-black text-base text-gray-900">Registrar Nueva Reserva</h3>
+            <h3 className="font-black text-base text-[#202428]">Registrar Nueva Reserva</h3>
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700">Nombre del Huésped:</label>
@@ -258,7 +258,7 @@ export const ReservationsView: React.FC = () => {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Ej: Laura Domínguez"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
               />
             </div>
 
@@ -271,7 +271,7 @@ export const ReservationsView: React.FC = () => {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="+54 9 223..."
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 />
               </div>
               <div className="space-y-1">
@@ -281,7 +281,7 @@ export const ReservationsView: React.FC = () => {
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
                   placeholder="laura@gmail.com"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 />
               </div>
             </div>
@@ -292,7 +292,7 @@ export const ReservationsView: React.FC = () => {
                 <select
                   value={locationCode}
                   onChange={(e) => setLocationCode(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900 font-bold"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-bold"
                 >
                   {locations.map((l) => (
                     <option key={l.id} value={l.code}>
@@ -307,7 +307,7 @@ export const ReservationsView: React.FC = () => {
                 <select
                   value={timeSlot}
                   onChange={(e) => setTimeSlot(e.target.value as any)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 >
                   <option value="dia_completo">Día Completo (08:30 a 20:30)</option>
                   <option value="turno_manana">Turno Mañana (08:30 a 14:30)</option>
@@ -325,7 +325,7 @@ export const ReservationsView: React.FC = () => {
                   type="number"
                   value={guestsCount}
                   onChange={(e) => setGuestsCount(Number(e.target.value))}
-                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-center"
+                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-center text-[#202428]"
                 />
               </div>
               <div className="space-y-1">
@@ -334,7 +334,7 @@ export const ReservationsView: React.FC = () => {
                   type="number"
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(Number(e.target.value))}
-                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-right font-bold"
+                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-right font-bold text-[#202428]"
                 />
               </div>
               <div className="space-y-1">
@@ -343,7 +343,7 @@ export const ReservationsView: React.FC = () => {
                   type="number"
                   value={totalAmount}
                   onChange={(e) => setTotalAmount(Number(e.target.value))}
-                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-right font-black"
+                  className="w-full p-2 rounded-xl border border-gray-200 text-xs text-right font-black text-[#202428]"
                 />
               </div>
             </div>
@@ -355,7 +355,7 @@ export const ReservationsView: React.FC = () => {
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Ej: Reposera adicional cerca del mar..."
                 rows={2}
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900 resize-none"
+                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] resize-none"
               />
             </div>
 
@@ -369,7 +369,7 @@ export const ReservationsView: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white hover:bg-emerald-800"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#F47B35] text-white hover:bg-[#e06824]"
               >
                 Guardar Reserva
               </button>

@@ -138,15 +138,15 @@ export const ProductsAdminView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#202428]">
       {/* Header */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-gray-900 tracking-tight">
+            <h1 className="text-xl font-black text-[#202428] tracking-tight">
               Menú & Administración de Productos
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#55C7E8]/20 text-[#202428]">
               {products.length} PLATOS & BEBIDAS
             </span>
           </div>
@@ -158,9 +158,9 @@ export const ProductsAdminView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowCategoryModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50"
           >
-            <FolderPlus className="w-4 h-4 text-emerald-700" />
+            <FolderPlus className="w-4 h-4 text-[#F47B35]" />
             <span>Nueva Categoría</span>
           </button>
           <button
@@ -168,7 +168,7 @@ export const ProductsAdminView: React.FC = () => {
               resetForm();
               setShowNewModal(true);
             }}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow-md transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F47B35] text-white font-extrabold text-xs hover:bg-[#e06824] shadow-md transition"
           >
             <Plus className="w-4 h-4" />
             <span>Crear Producto</span>
@@ -185,7 +185,7 @@ export const ProductsAdminView: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por nombre o SKU..."
-            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-gray-200 text-xs text-gray-900 focus:outline-hidden focus:border-emerald-600 shadow-2xs"
+            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-[#55C7E8] shadow-2xs"
           />
         </div>
 
@@ -194,8 +194,8 @@ export const ProductsAdminView: React.FC = () => {
             onClick={() => setSelectedCategory('todos')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
               selectedCategory === 'todos'
-                ? 'bg-emerald-700 text-white'
-                : 'bg-white border border-gray-200 text-gray-700'
+                ? 'bg-[#55C7E8] text-[#202428] shadow-xs font-black'
+                : 'bg-white border border-gray-200 text-[#202428]'
             }`}
           >
             Todos
@@ -206,8 +206,8 @@ export const ProductsAdminView: React.FC = () => {
               onClick={() => setSelectedCategory(c.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
                 selectedCategory === c.id
-                  ? 'bg-emerald-700 text-white'
-                  : 'bg-white border border-gray-200 text-gray-700'
+                  ? 'bg-[#55C7E8] text-[#202428] shadow-xs font-black'
+                  : 'bg-white border border-gray-200 text-[#202428]'
               }`}
             >
               {c.emoji} {c.name}
@@ -216,7 +216,7 @@ export const ProductsAdminView: React.FC = () => {
         </div>
       </div>
 
-      {/* Products Table / Cards */}
+      {/* Products Table */}
       <div className="bg-white rounded-3xl border border-gray-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
@@ -244,7 +244,7 @@ export const ProductsAdminView: React.FC = () => {
                           className="w-10 h-10 rounded-xl object-cover bg-gray-100 shrink-0"
                         />
                         <div>
-                          <div className="font-bold text-gray-900">{p.name}</div>
+                          <div className="font-bold text-[#202428]">{p.name}</div>
                           <div className="text-[10px] text-gray-400 font-mono">
                             {p.sku} • {p.prepTimeMinutes}m cocina
                           </div>
@@ -253,12 +253,12 @@ export const ProductsAdminView: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className="font-semibold text-gray-700">
+                      <span className="font-semibold text-[#202428]">
                         {cat?.emoji} {cat?.name}
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-black text-emerald-800">
+                    <td className="py-3 px-4 font-black text-[#202428]">
                       {formatCurrencyARS(p.price)}
                     </td>
 
@@ -272,7 +272,7 @@ export const ProductsAdminView: React.FC = () => {
                         onClick={() => toggleProductAvailable(p.id)}
                         className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition ${
                           p.isAvailable
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-[#55C7E8]/20 text-[#202428]'
                             : 'bg-rose-100 text-rose-800'
                         }`}
                       >
@@ -286,12 +286,12 @@ export const ProductsAdminView: React.FC = () => {
                         onClick={() => toggleProductActive(p.id)}
                         className={`p-1.5 rounded-lg transition ${
                           p.isActive
-                            ? 'text-emerald-700 hover:bg-emerald-50'
+                            ? 'text-[#202428] hover:bg-[#55C7E8]/20'
                             : 'text-gray-400 hover:bg-gray-100'
                         }`}
                         title={p.isActive ? 'Activo en la carta' : 'Desactivado (oculto)'}
                       >
-                        {p.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        {p.isActive ? <Eye className="w-4 h-4 text-[#202428]" /> : <EyeOff className="w-4 h-4" />}
                       </button>
                     </td>
 
@@ -299,7 +299,7 @@ export const ProductsAdminView: React.FC = () => {
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => handleOpenEdit(p)}
-                        className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 transition"
+                        className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:text-[#202428] hover:bg-[#55C7E8]/20 transition"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
@@ -320,7 +320,7 @@ export const ProductsAdminView: React.FC = () => {
             className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <h3 className="font-black text-base text-gray-900">
+              <h3 className="font-black text-base text-[#202428]">
                 {editingProduct ? 'Editar Producto Gastronómico' : 'Crear Nuevo Producto'}
               </h3>
               <button
@@ -344,7 +344,7 @@ export const ProductsAdminView: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ej: Hamburguesa de Novillo con Papas"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900 font-semibold"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-semibold"
                 />
               </div>
 
@@ -355,7 +355,7 @@ export const ProductsAdminView: React.FC = () => {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Detalle de ingredientes y preparación..."
                   rows={2}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900 resize-none"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] resize-none"
                 />
               </div>
 
@@ -364,7 +364,7 @@ export const ProductsAdminView: React.FC = () => {
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900 font-semibold"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428] font-semibold"
                 >
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -381,7 +381,7 @@ export const ProductsAdminView: React.FC = () => {
                   value={sku}
                   onChange={(e) => setSku(e.target.value)}
                   placeholder="BUR-05"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-mono text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-mono text-[#202428]"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export const ProductsAdminView: React.FC = () => {
                   required
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-black text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs font-black text-[#202428]"
                 />
               </div>
 
@@ -402,7 +402,7 @@ export const ProductsAdminView: React.FC = () => {
                   type="number"
                   value={cost}
                   onChange={(e) => setCost(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 />
               </div>
 
@@ -413,7 +413,7 @@ export const ProductsAdminView: React.FC = () => {
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 />
               </div>
 
@@ -426,7 +426,7 @@ export const ProductsAdminView: React.FC = () => {
                   value={removableList}
                   onChange={(e) => setRemovableList(e.target.value)}
                   placeholder="Cebolla, Tomate, Panceta, Salsa"
-                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
                 />
               </div>
             </div>
@@ -444,7 +444,7 @@ export const ProductsAdminView: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-700 text-white hover:bg-emerald-800 shadow-md"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white shadow-md"
               >
                 Guardar Producto
               </button>
@@ -460,7 +460,7 @@ export const ProductsAdminView: React.FC = () => {
             onSubmit={handleCreateCategory}
             className="w-full max-w-xs bg-white rounded-3xl p-6 shadow-2xl space-y-4"
           >
-            <h3 className="font-black text-base text-gray-900">Nueva Categoría Gastronómica</h3>
+            <h3 className="font-black text-base text-[#202428]">Nueva Categoría Gastronómica</h3>
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700">Nombre:</label>
               <input
@@ -469,7 +469,7 @@ export const ProductsAdminView: React.FC = () => {
                 value={newCatName}
                 onChange={(e) => setNewCatName(e.target.value)}
                 placeholder="Ej: Mariscos, Tragos, Minutas"
-                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-gray-900"
+                className="w-full p-2.5 rounded-xl border border-gray-200 text-xs text-[#202428]"
               />
             </div>
             <div className="space-y-1.5">
@@ -492,7 +492,7 @@ export const ProductsAdminView: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white hover:bg-emerald-800"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#F47B35] hover:bg-[#e06824] text-white"
               >
                 Crear Categoría
               </button>

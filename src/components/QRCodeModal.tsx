@@ -17,7 +17,6 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
   useEffect(() => {
     if (!location) return;
 
-    // Build the URL that a customer scans
     const origin = window.location.origin;
     const url = `${origin}/?mesa=${encodeURIComponent(location.code)}`;
 
@@ -25,8 +24,8 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
       width: 320,
       margin: 2,
       color: {
-        dark: '#064e3b', // Brand deep emerald
-        light: '#ffffff',
+        dark: '#202428', // Negro grafito oficial
+        light: '#FFFFFF', // Blanco oficial
       },
       errorCorrectionLevel: 'H',
     })
@@ -59,21 +58,21 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-gray-100 text-gray-900 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#202428]/70 backdrop-blur-xs p-4">
+      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-gray-100 text-[#202428] animate-in fade-in zoom-in-95 duration-150">
         <div className="flex items-center justify-between pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <QrIcon className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-[#55C7E8]/20 text-[#202428] flex items-center justify-center">
+              <QrIcon className="w-5 h-5 text-[#202428]" />
             </div>
             <div>
-              <h3 className="font-bold text-base leading-tight">Código QR Oficial</h3>
+              <h3 className="font-black text-base text-[#202428] leading-tight">Código QR Oficial</h3>
               <p className="text-xs text-gray-500">{location.sectorName}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition"
+            className="p-1.5 rounded-xl hover:bg-gray-100 text-gray-400 hover:text-[#202428] transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -81,18 +80,18 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
 
         {/* QR Card Preview */}
         <div className="my-5 flex flex-col items-center">
-          <div className="p-4 rounded-2xl bg-gradient-to-b from-emerald-50/50 to-white border-2 border-emerald-500/20 shadow-inner flex flex-col items-center text-center">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 mb-1 flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-emerald-600" />
+          <div className="p-4 rounded-2xl bg-gray-50 border-2 border-gray-200 shadow-inner flex flex-col items-center text-center">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[#202428] mb-1 flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-[#F47B35]" />
               <span>{location.name} • {location.code}</span>
             </div>
-            <div className="text-[10px] text-gray-500 mb-2">Escaneá para ver la carta y pedir</div>
+            <div className="text-[10px] text-gray-500 mb-2 font-medium">Escaneá para ver la carta y pedir</div>
 
             {qrDataUrl ? (
               <img
                 src={qrDataUrl}
                 alt={`QR ${location.code}`}
-                className="w-52 h-52 rounded-xl shadow-xs border border-gray-100 bg-white p-2"
+                className="w-52 h-52 rounded-xl shadow-xs border border-gray-200 bg-white p-2"
               />
             ) : (
               <div className="w-52 h-52 rounded-xl bg-gray-100 flex items-center justify-center text-xs text-gray-400">
@@ -100,17 +99,18 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
               </div>
             )}
 
-            <div className="mt-2 text-[10px] font-mono text-emerald-700 bg-emerald-100/60 px-2.5 py-0.5 rounded-full font-semibold">
-              ID ORIGEN: {location.code}
+            <div className="mt-2 text-[10px] font-mono text-[#202428] bg-[#FFD43B] px-3 py-1 rounded-full font-black">
+              ORIGEN VINCULADO: {location.code}
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="space-y-2">
+          {/* Celeste mar: elemento interactivo / navegación */}
           <button
             onClick={handleSimulateScan}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 shadow-md transition"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#55C7E8] text-[#202428] font-black text-xs hover:bg-[#43badc] shadow-xs transition"
           >
             <ExternalLink className="w-4 h-4" />
             <span>Simular Escaneo (Abrir Carta como {location.code})</span>
@@ -119,7 +119,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleDownload}
-              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-xs hover:bg-gray-50 transition"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
             >
               <Download className="w-3.5 h-3.5 text-gray-500" />
               <span>Descargar PNG</span>
@@ -127,12 +127,12 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
 
             <button
               onClick={handleCopyLink}
-              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-xs hover:bg-gray-50 transition"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="text-emerald-700">¡Copiado!</span>
+                  <Check className="w-3.5 h-3.5 text-[#F47B35]" />
+                  <span className="text-[#F47B35]">¡Copiado!</span>
                 </>
               ) : (
                 <>

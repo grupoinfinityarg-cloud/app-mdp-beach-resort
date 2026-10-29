@@ -70,7 +70,6 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
   };
 
   const handleConfirm = () => {
-    // Include cooking point in notes if applicable
     const completeNotes = [
       isMeatDish ? `Punto de cocción: ${doneness}` : null,
       notes.trim() ? notes.trim() : null,
@@ -99,27 +98,28 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
-      <div className="w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl bg-white shadow-2xl border border-gray-100 overflow-hidden text-gray-900 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#202428]/75 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+      <div className="w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl bg-white shadow-2xl border border-gray-100 overflow-hidden text-[#202428] animate-in fade-in zoom-in-95 duration-150">
         {/* Top Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-white sticky top-0 z-10">
           <button
             onClick={onClose}
-            className="flex items-center gap-1.5 text-xs font-bold text-gray-600 hover:text-emerald-700 transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#202428] hover:text-[#F47B35] transition"
           >
-            <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+            <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[#202428]">
               ←
             </span>
             <span>Volver a la Carta</span>
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+            {/* Celeste mar para indicador de ubicación */}
+            <span className="px-2.5 py-0.5 rounded-full bg-[#55C7E8]/20 text-[#202428] border border-[#55C7E8]/50 text-xs font-black">
               ● {selectedLocationCode}
             </span>
             <button
               onClick={onClose}
-              className="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition"
+              className="p-1 rounded-full text-gray-400 hover:text-[#202428] hover:bg-gray-100 transition"
             >
               <X className="w-5 h-5" />
             </button>
@@ -129,50 +129,50 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {/* Hero Image & Badge */}
-          <div className="relative rounded-2xl overflow-hidden shadow-md bg-gray-900 h-56 sm:h-64">
+          <div className="relative rounded-3xl overflow-hidden shadow-md bg-[#202428] h-56 sm:h-64">
             <img
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#202428] via-[#202428]/30 to-transparent" />
 
-            {/* Tag over image */}
-            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            {/* Tag over image: Amarillo sol #FFD43B */}
+            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFD43B] text-[#202428] text-xs font-black shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-[#202428]" />
               <span>{product.tag || 'Plato Recomendado'}</span>
             </div>
 
-            {/* Price badge & Title over image */}
+            {/* Price badge & Title over image: Naranja gastronómico #F47B35 */}
             <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#55C7E8]">
                   {product.sku} • {product.prepTimeMinutes} min
                 </span>
                 <h2 className="text-lg sm:text-xl font-black text-white leading-tight">
                   {product.name}
                 </h2>
               </div>
-              <div className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold text-sm sm:text-base shadow-lg">
+              <div className="px-3 py-1.5 rounded-2xl bg-[#F47B35] text-white font-black text-sm sm:text-base shadow-lg">
                 {formatCurrencyARS(unitPrice)}
               </div>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
             {product.description}
           </p>
 
-          {/* Variants (if any) */}
+          {/* Variants */}
           {product.variants && product.variants.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                  <Utensils className="w-3.5 h-3.5 text-emerald-700" />
+                <label className="text-xs font-black uppercase tracking-wider text-[#202428] flex items-center gap-1.5">
+                  <Utensils className="w-3.5 h-3.5 text-[#F47B35]" />
                   <span>Presentación / Tamaño</span>
                 </label>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-black text-[#202428] bg-[#55C7E8]/20 px-2 py-0.5 rounded-full">
                   Requerido
                 </span>
               </div>
@@ -186,7 +186,7 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                       onClick={() => setSelectedVariant(v)}
                       className={`flex items-center justify-between p-3 rounded-2xl border text-left transition ${
                         isSelected
-                          ? 'border-emerald-600 bg-emerald-50/60 shadow-xs ring-1 ring-emerald-600'
+                          ? 'border-[#55C7E8] bg-[#55C7E8]/15 shadow-xs ring-1 ring-[#55C7E8]'
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -194,17 +194,17 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                         <div
                           className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                             isSelected
-                              ? 'border-emerald-600 bg-emerald-600 text-white'
+                              ? 'border-[#202428] bg-[#202428] text-white'
                               : 'border-gray-300'
                           }`}
                         >
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
-                        <span className="text-xs sm:text-sm font-bold text-gray-900">
+                        <span className="text-xs sm:text-sm font-bold text-[#202428]">
                           {v.name}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm font-extrabold text-emerald-800">
+                      <span className="text-xs sm:text-sm font-black text-[#202428]">
                         {formatCurrencyARS(v.price)}
                       </span>
                     </button>
@@ -218,11 +218,11 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
           {isMeatDish && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-amber-500" />
+                <label className="text-xs font-black uppercase tracking-wider text-[#202428] flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-[#F47B35]" />
                   <span>Punto de cocción de la carne</span>
                 </label>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-black text-[#202428] bg-[#55C7E8]/20 px-2 py-0.5 rounded-full">
                   Requerido
                 </span>
               </div>
@@ -241,7 +241,7 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                       onClick={() => setDoneness(item.title)}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition ${
                         isSelected
-                          ? 'border-emerald-600 bg-emerald-50/70 shadow-xs ring-1 ring-emerald-600'
+                          ? 'border-[#55C7E8] bg-[#55C7E8]/15 shadow-xs ring-1 ring-[#55C7E8]'
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -249,20 +249,20 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                         <div
                           className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                             isSelected
-                              ? 'border-emerald-600 bg-emerald-600 text-white'
+                              ? 'border-[#202428] bg-[#202428] text-white'
                               : 'border-gray-300'
                           }`}
                         >
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
                         <div>
-                          <div className="text-xs sm:text-sm font-bold text-gray-900">
+                          <div className="text-xs sm:text-sm font-bold text-[#202428]">
                             {item.title}
                           </div>
                           <div className="text-[11px] text-gray-500">{item.desc}</div>
                         </div>
                       </div>
-                      {isSelected && <Check className="w-4 h-4 text-emerald-700" />}
+                      {isSelected && <Check className="w-4 h-4 text-[#202428]" />}
                     </button>
                   );
                 })}
@@ -273,8 +273,8 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
           {/* Removable ingredients */}
           {product.removableIngredients && product.removableIngredients.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                <Utensils className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="text-xs font-black uppercase tracking-wider text-[#202428] flex items-center gap-1.5">
+                <Utensils className="w-3.5 h-3.5 text-[#F47B35]" />
                 <span>¿Deseás quitar algún ingrediente?</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -285,18 +285,18 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                       key={ing}
                       type="button"
                       onClick={() => toggleRemoveIngredient(ing)}
-                      className={`flex items-center justify-between p-3 rounded-xl border text-left transition ${
+                      className={`flex items-center justify-between p-3 rounded-2xl border text-left transition ${
                         isRemoved
-                          ? 'border-rose-300 bg-rose-50/70 text-rose-900'
+                          ? 'border-gray-400 bg-gray-100 text-[#202428]'
                           : 'border-gray-200 hover:bg-gray-50 text-gray-700'
                       }`}
                     >
-                      <span className="text-xs font-semibold">
+                      <span className="text-xs font-bold">
                         {isRemoved ? `Sin ${ing}` : `Quitar ${ing}`}
                       </span>
                       <span
-                        className={`text-xs font-bold px-2 py-0.5 rounded-md ${
-                          isRemoved ? 'bg-rose-200 text-rose-900' : 'bg-gray-100 text-gray-500'
+                        className={`text-[10px] font-black px-2 py-0.5 rounded-md ${
+                          isRemoved ? 'bg-[#202428] text-white' : 'bg-gray-100 text-gray-500'
                         }`}
                       >
                         {isRemoved ? 'QUITADO' : 'INCLUIDO'}
@@ -311,8 +311,8 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
           {/* Available Addons */}
           {product.availableAddons && product.availableAddons.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                <Plus className="w-3.5 h-3.5 text-emerald-700" />
+              <label className="text-xs font-black uppercase tracking-wider text-[#202428] flex items-center gap-1.5">
+                <Plus className="w-3.5 h-3.5 text-[#F47B35]" />
                 <span>Adicionales con costo</span>
               </label>
               <div className="space-y-2">
@@ -323,9 +323,9 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                       key={addon.id}
                       type="button"
                       onClick={() => toggleAddon(addon)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition ${
+                      className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition ${
                         isSelected
-                          ? 'border-emerald-600 bg-emerald-50/80 ring-1 ring-emerald-600'
+                          ? 'border-[#55C7E8] bg-[#55C7E8]/15 ring-1 ring-[#55C7E8]'
                           : 'border-gray-200 hover:bg-gray-50'
                       }`}
                     >
@@ -333,17 +333,17 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
                         <div
                           className={`w-4 h-4 rounded-md border flex items-center justify-center ${
                             isSelected
-                              ? 'bg-emerald-600 border-emerald-600 text-white'
+                              ? 'bg-[#202428] border-[#202428] text-white'
                               : 'border-gray-300 bg-white'
                           }`}
                         >
                           {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                         </div>
-                        <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                        <span className="text-xs sm:text-sm font-bold text-[#202428]">
                           {addon.name}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold text-emerald-800">
+                      <span className="text-xs sm:text-sm font-black text-[#F47B35]">
                         +{formatCurrencyARS(addon.price)}
                       </span>
                     </button>
@@ -355,7 +355,7 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
 
           {/* Special notes */}
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-gray-700">
+            <label className="text-xs font-black uppercase tracking-wider text-[#202428]">
               Observaciones especiales para la cocina
             </label>
             <textarea
@@ -363,7 +363,7 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Ej: Salsa aparte, pan bien tostado, sin hielo..."
               rows={2}
-              className="w-full rounded-xl border border-gray-200 p-3 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-hidden resize-none"
+              className="w-full rounded-2xl border border-gray-200 p-3 text-xs focus:border-[#55C7E8] focus:ring-1 focus:ring-[#55C7E8] outline-hidden resize-none font-medium"
             />
           </div>
         </div>
@@ -371,35 +371,35 @@ export const ProductCustomizeModal: React.FC<ProductCustomizeModalProps> = ({
         {/* Bottom Sticky Action Bar */}
         <div className="p-4 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center gap-3">
           {/* Stepper */}
-          <div className="flex items-center justify-between w-full sm:w-auto bg-white border border-gray-200 rounded-xl p-1 shrink-0">
+          <div className="flex items-center justify-between w-full sm:w-auto bg-white border border-gray-200 rounded-2xl p-1 shrink-0">
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               disabled={quantity <= 1}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
               aria-label="Disminuir cantidad"
             >
               <Minus className="w-4 h-4" />
             </button>
-            <span className="px-4 text-sm font-bold text-gray-900">{quantity}</span>
+            <span className="px-4 text-sm font-black text-[#202428]">{quantity}</span>
             <button
               type="button"
               onClick={() => setQuantity((q) => q + 1)}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-100"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-100"
               aria-label="Aumentar cantidad"
             >
               <Plus className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Confirm Button */}
+          {/* Confirm Button: Naranja gastronómico #F47B35 */}
           <button
             type="button"
             onClick={handleConfirm}
-            className="w-full flex-1 flex items-center justify-between py-3 px-5 rounded-2xl bg-emerald-700 text-white font-extrabold text-sm hover:bg-emerald-800 shadow-lg shadow-emerald-700/25 transition active:scale-[0.99]"
+            className="w-full flex-1 flex items-center justify-between py-3 px-5 rounded-2xl bg-[#F47B35] text-white font-black text-sm hover:bg-[#e06822] shadow-lg shadow-[#F47B35]/25 transition active:scale-[0.99]"
           >
             <span>AGREGAR AL PEDIDO</span>
-            <span className="bg-emerald-800/80 px-3 py-1 rounded-xl text-emerald-100">
+            <span className="bg-[#202428]/20 px-3 py-1 rounded-xl text-white text-xs font-black">
               {formatCurrencyARS(subtotal)}
             </span>
           </button>

@@ -63,20 +63,20 @@ export const CartView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f6f4] pb-24">
-      <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen flex flex-col justify-between">
+    <div className="min-h-screen bg-white pb-24 text-[#202428]">
+      <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen flex flex-col justify-between border-x border-gray-100">
         {/* Top Header */}
-        <div className="sticky top-14 z-20 bg-white border-b border-gray-100 px-4 py-3.5 flex items-center justify-between">
+        <div className="sticky top-14 z-20 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3.5 flex items-center justify-between">
           <button
             onClick={() => setActiveView('carta')}
-            className="flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-emerald-700 transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#202428] hover:text-[#F47B35] transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a la Carta</span>
           </button>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
-            <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#55C7E8]/15 text-[#202428] border border-[#55C7E8]/40 text-xs font-bold">
+            <MapPin className="w-3.5 h-3.5 text-[#202428]" />
             <span>{locationDisplayName}</span>
           </div>
         </div>
@@ -86,15 +86,15 @@ export const CartView: React.FC = () => {
           {placedOrderNumber ? (
             /* Success confirmation screen (Step 3 completed) */
             <div className="py-8 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-md">
+              <div className="w-16 h-16 rounded-full bg-[#FFD43B] text-[#202428] flex items-center justify-center mx-auto shadow-md">
                 <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
               </div>
 
               <div>
-                <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-700">
+                <span className="text-xs font-black uppercase tracking-widest text-[#F47B35]">
                   PASO 3 DEL CIRCUITO DE PEDIDO
                 </span>
-                <h2 className="text-2xl font-black text-gray-900 mt-1">
+                <h2 className="text-2xl font-black text-[#202428] mt-1">
                   ¡Pedido {placedOrderNumber} Enviado!
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-600 max-w-sm mx-auto mt-2 leading-relaxed">
@@ -103,13 +103,13 @@ export const CartView: React.FC = () => {
               </div>
 
               {/* Status explanation card */}
-              <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 text-left text-xs space-y-2.5 max-w-sm mx-auto">
-                <div className="flex items-center gap-2 text-emerald-900 font-bold">
-                  <Clock className="w-4 h-4 text-emerald-700" />
+              <div className="p-4 rounded-2xl bg-[#55C7E8]/10 border border-[#55C7E8]/30 text-left text-xs space-y-2.5 max-w-sm mx-auto text-[#202428]">
+                <div className="flex items-center gap-2 font-bold">
+                  <Clock className="w-4 h-4 text-[#202428]" />
                   <span>Estado: Pendiente de confirmación</span>
                 </div>
-                <p className="text-gray-600 leading-normal text-[11px]">
-                  1. El personal confirma disponibilidad y precios.<br />
+                <p className="text-gray-700 leading-normal text-[11px]">
+                  1. El personal confirma disponibilidad y comanda.<br />
                   2. Ingresa a la pantalla KDS de la cocina.<br />
                   3. El runner o mozo te lo acerca a tu carpa o mesa.
                 </p>
@@ -121,7 +121,7 @@ export const CartView: React.FC = () => {
                     setPlacedOrderNumber(null);
                     setActiveView('comandas');
                   }}
-                  className="w-full py-3 px-4 rounded-xl bg-emerald-700 text-white font-extrabold text-xs hover:bg-emerald-800 transition shadow-md"
+                  className="w-full py-3 px-4 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs transition shadow-md"
                 >
                   Ver en Panel de Comandas
                 </button>
@@ -130,7 +130,7 @@ export const CartView: React.FC = () => {
                     setPlacedOrderNumber(null);
                     setActiveView('carta');
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 transition"
+                  className="w-full py-2.5 px-4 rounded-xl border border-gray-200 text-[#202428] font-bold text-xs hover:bg-gray-50 transition"
                 >
                   Seguir explorando la carta
                 </button>
@@ -140,13 +140,13 @@ export const CartView: React.FC = () => {
             /* Empty Cart */
             <div className="py-20 text-center space-y-3">
               <ShoppingBag className="w-14 h-14 mx-auto text-gray-300" />
-              <h3 className="text-base font-bold text-gray-800">Tu carrito está vacío</h3>
+              <h3 className="text-base font-bold text-[#202428]">Tu carrito está vacío</h3>
               <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                Explorá nuestra carta gastronómica y elegí tus platos y bebidas favoritos.
+                Explorá nuestra carta gastronómica y elegí tus platos y bebidas favoritos de la playa.
               </p>
               <button
                 onClick={() => setActiveView('carta')}
-                className="mt-3 px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-extrabold text-xs hover:bg-emerald-800 shadow-md transition"
+                className="mt-3 px-5 py-2.5 rounded-xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-xs shadow-md transition"
               >
                 Explorar Menú
               </button>
@@ -155,7 +155,7 @@ export const CartView: React.FC = () => {
             /* Cart with Items */
             <>
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-black text-gray-900">
+                <h2 className="text-base font-black text-[#202428]">
                   Resumen de tu Pedido ({cart.reduce((s, i) => s + i.quantity, 0)} productos)
                 </h2>
                 <button
@@ -171,7 +171,7 @@ export const CartView: React.FC = () => {
                 {cart.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-xs space-y-2.5"
+                    className="p-3.5 rounded-2xl bg-white border border-gray-200 shadow-xs space-y-2.5"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex gap-3">
@@ -181,15 +181,15 @@ export const CartView: React.FC = () => {
                           className="w-14 h-14 rounded-xl object-cover bg-gray-100 shrink-0"
                         />
                         <div>
-                          <h4 className="text-xs sm:text-sm font-extrabold text-gray-900 leading-snug">
+                          <h4 className="text-xs sm:text-sm font-extrabold text-[#202428] leading-snug">
                             {item.productName}
                           </h4>
                           {item.variant && (
-                            <span className="text-[11px] font-bold text-emerald-700 block">
+                            <span className="text-[11px] font-bold text-[#202428]/80 block">
                               {item.variant.name}
                             </span>
                           )}
-                          <span className="text-xs font-extrabold text-gray-900 block mt-0.5">
+                          <span className="text-xs font-extrabold text-[#202428] block mt-0.5">
                             {formatCurrencyARS(item.unitPrice)} c/u
                           </span>
                         </div>
@@ -208,7 +208,7 @@ export const CartView: React.FC = () => {
                     {(item.removedIngredients.length > 0 ||
                       item.selectedAddons.length > 0 ||
                       item.notes) && (
-                      <div className="pt-2 border-t border-gray-50 flex flex-wrap gap-1 text-[10px]">
+                      <div className="pt-2 border-t border-gray-100 flex flex-wrap gap-1 text-[10px]">
                         {item.removedIngredients.map((r) => (
                           <span
                             key={r}
@@ -220,7 +220,7 @@ export const CartView: React.FC = () => {
                         {item.selectedAddons.map((a) => (
                           <span
                             key={a.id}
-                            className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 font-bold border border-emerald-200"
+                            className="px-2 py-0.5 rounded-md bg-[#55C7E8]/15 text-[#202428] font-bold border border-[#55C7E8]/40"
                           >
                             +{a.name} ({formatCurrencyARS(a.price)})
                           </span>
@@ -242,7 +242,7 @@ export const CartView: React.FC = () => {
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="px-3 text-xs font-bold text-gray-900">
+                        <span className="px-3 text-xs font-bold text-[#202428]">
                           {item.quantity}
                         </span>
                         <button
@@ -253,7 +253,7 @@ export const CartView: React.FC = () => {
                         </button>
                       </div>
 
-                      <span className="text-xs sm:text-sm font-black text-gray-900">
+                      <span className="text-xs sm:text-sm font-black text-[#202428]">
                         {formatCurrencyARS(item.subtotal)}
                       </span>
                     </div>
@@ -263,8 +263,8 @@ export const CartView: React.FC = () => {
 
               {/* Customer details for delivery */}
               <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-gray-700">
-                  <FileText className="w-4 h-4 text-emerald-700" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#202428]">
+                  <FileText className="w-4 h-4 text-[#F47B35]" />
                   <span>Datos de Entrega en el Balneario</span>
                 </div>
 
@@ -277,7 +277,7 @@ export const CartView: React.FC = () => {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder="Ej: Familia Rossi, Carlos M."
-                    className="w-full bg-white px-3 py-2 rounded-xl border border-gray-200 text-xs text-gray-900 focus:outline-hidden focus:border-emerald-600"
+                    className="w-full bg-white px-3 py-2 rounded-xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-[#55C7E8] focus:ring-1 focus:ring-[#55C7E8]"
                   />
                 </div>
 
@@ -290,7 +290,7 @@ export const CartView: React.FC = () => {
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
                     placeholder="Ej: Sombrilla azul con toallas rojas, dejar en mesita..."
-                    className="w-full bg-white px-3 py-2 rounded-xl border border-gray-200 text-xs text-gray-900 focus:outline-hidden focus:border-emerald-600"
+                    className="w-full bg-white px-3 py-2 rounded-xl border border-gray-200 text-xs text-[#202428] focus:outline-hidden focus:border-[#55C7E8] focus:ring-1 focus:ring-[#55C7E8]"
                   />
                 </div>
               </div>
@@ -299,15 +299,15 @@ export const CartView: React.FC = () => {
               <div className="p-4 rounded-2xl bg-white border border-gray-100 space-y-2 text-xs">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal productos</span>
-                  <span className="font-semibold text-gray-900">{formatCurrencyARS(subtotal)}</span>
+                  <span className="font-semibold text-[#202428]">{formatCurrencyARS(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Servicio de playa / IVA</span>
-                  <span className="font-semibold text-emerald-700">Incluido</span>
+                  <span className="font-semibold text-[#202428]">Incluido</span>
                 </div>
                 <div className="pt-2 border-t border-gray-100 flex justify-between items-baseline text-sm">
-                  <span className="font-extrabold text-gray-900">Total a Pagar</span>
-                  <span className="font-black text-lg text-emerald-800">
+                  <span className="font-extrabold text-[#202428]">Total a Pagar</span>
+                  <span className="font-black text-lg text-[#202428]">
                     {formatCurrencyARS(total)}
                   </span>
                 </div>
@@ -321,13 +321,13 @@ export const CartView: React.FC = () => {
           <div className="sticky bottom-0 z-20 bg-white border-t border-gray-100 p-4 shadow-lg">
             <button
               onClick={handlePlaceOrder}
-              className="w-full flex items-center justify-between py-3.5 px-5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm shadow-lg shadow-emerald-700/25 transition active:scale-[0.99]"
+              className="w-full flex items-center justify-between py-3.5 px-5 rounded-2xl bg-[#F47B35] hover:bg-[#e06824] text-white font-extrabold text-sm shadow-lg shadow-[#F47B35]/25 transition active:scale-[0.99]"
             >
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
                 <span>CONFIRMAR Y ENVIAR PEDIDO</span>
               </div>
-              <span className="bg-emerald-800/80 px-3 py-1 rounded-xl text-emerald-100 text-xs">
+              <span className="bg-[#202428]/25 px-3 py-1 rounded-xl text-white text-xs font-black">
                 {formatCurrencyARS(total)}
               </span>
             </button>

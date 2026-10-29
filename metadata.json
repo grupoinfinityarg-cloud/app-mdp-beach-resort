@@ -1,0 +1,6 @@
+{
+  "name": "Gestión Balnearia - Sistema Integral para Balnearios y Paradores",
+  "description": "Aplicación comercial PWA para balnearios y paradores gastronómicos de playa: carpas, sombrillas, carta digital QR, comandas de cocina KDS, punto de venta POS y caja.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

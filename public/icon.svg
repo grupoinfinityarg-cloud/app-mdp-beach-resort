@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="sun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <!-- Background with rounded squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  
+  <!-- Sun in background -->
+  <circle cx="360" cy="150" r="48" fill="url(#sun)" opacity="0.9" />
+  
+  <!-- Beach umbrella / parasol -->
+  <path d="M256 120 C180 120 120 180 110 240 L402 240 C392 180 332 120 256 120 Z" fill="#ffffff" />
+  <!-- Umbrella stripes -->
+  <path d="M180 145 C155 170 135 200 125 240 L195 240 C195 200 190 165 180 145 Z" fill="#059669" />
+  <path d="M332 145 C357 170 377 200 387 240 L317 240 C317 200 322 165 332 145 Z" fill="#059669" />
+  <!-- Center pole -->
+  <path d="M252 230 L252 380 Q252 396 236 396" stroke="#fbbf24" stroke-width="12" stroke-linecap="round" fill="none" />
+  
+  <!-- Sea waves -->
+  <path d="M70 370 Q130 340 190 370 T310 370 T430 370" fill="none" stroke="url(#gold)" stroke-width="14" stroke-linecap="round" opacity="0.85" />
+  <path d="M100 410 Q160 385 220 410 T340 410 T460 410" fill="none" stroke="#6ee7b7" stroke-width="10" stroke-linecap="round" opacity="0.6" />
+</svg>

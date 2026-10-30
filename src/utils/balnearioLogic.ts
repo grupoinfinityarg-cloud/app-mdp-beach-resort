@@ -225,3 +225,197 @@ export function parseLocationCode(code: string): {
 
   return { type, number: num, isValid: true };
 }
+
+/**
+ * Validates Argentine cellphone numbers with area code and international prefix.
+ * Accepts formats like:
+ * - "+54 9 223 555-1234"
+ * - "223 5551234"
+ * - "011 15-4444-3333"
+ * - "1144443333"
+ * - "+5491144443333"
+ */
+export function validateArgentinePhone(phoneInput: string): {
+  isValid: boolean;
+  cleanForWhatsApp: string;
+  formattedDisplay: string;
+  error?: string;
+} {
+  const raw = (phoneInput || '').trim();
+  if (!raw) {
+    return {
+      isValid: false,
+      cleanForWhatsApp: '',
+      formattedDisplay: '',
+      error: 'Ingresá tu número de teléfono celular con código de área.',
+    };
+  }
+
+  // Remove non-digit characters
+  let digits = raw.replace(/\D/g, '');
+
+  // Strip international prefix if present (54 or 549)
+  if (digits.startsWith('549')) {
+    digits = digits.slice(3);
+  } else if (digits.startsWith('54')) {
+    digits = digits.slice(2);
+  }
+
+  // Strip leading 0 from trunk code (e.g. 0223 -> 223, 011 -> 11)
+  if (digits.startsWith('0')) {
+    digits = digits.slice(1);
+  }
+
+  // Strip mobile prefix 15 if present after area code (e.g. 223 15 xxxxxxx or 11 15 xxxxxxx)
+  // Common area codes: 11 (Bs As), 223 (Mar del Plata), 351 (Córdoba), 341 (Rosario), etc.
+  if (digits.startsWith('1115')) {
+    digits = '11' + digits.slice(4);
+  } else if (digits.match(/^(223|351|341|261|381)15(\d{6,7})$/)) {
+    const m = digits.match(/^(223|351|341|261|381)15(\d{6,7})$/)!;
+    digits = m[1] + m[2];
+  }
+
+  // Standard Argentine mobile number has 10 digits (2-4 area code + 6-8 subscriber number)
+  if (digits.length < 9 || digits.length > 11) {
+    return {
+      isValid: false,
+      cleanForWhatsApp: '',
+      formattedDisplay: raw,
+      error: 'El teléfono debe incluir código de área (ej: 223 555-1234 o 11 4444-3333).',
+    };
+  }
+
+  // Normalise for WhatsApp (+54 9 <10 digits>)
+  const cleanForWhatsApp = `549${digits}`;
+  const formattedDisplay = `+54 9 ${digits.slice(0, digits.length - 8)} ${digits.slice(-8, -4)}-${digits.slice(-4)}`;
+
+  return {
+    isValid: true,
+    cleanForWhatsApp,
+    formattedDisplay,
+  };
+}
+
+/**
+ * Builds the prepared WhatsApp confirmation message according to the required template:
+ *
+ * Hola, [nombre]. Somos de [nombre del balneario].
+ *
+ * Recibimos tu pedido [número]:
+ *
+ * [Detalle de productos y cantidades]
+ *
+ * Total: $[importe].
+ *
+ * Tu pedido se encuentra pendiente de confirmación. ¿Confirmás que está correcto o querés realizar alguna modificación?
+ *
+ * ¡Gracias!
+ */
+export function formatWhatsAppOrderMessage(
+  order: Order,
+  branchName: string
+): string {
+  const customerName = order.customerName || 'Cliente';
+  const itemsText = order.items
+    .map((item) => {
+      const modifications: string[] = [];
+      if (item.variant) modifications.push(`(${item.variant.name})`);
+      if (item.removedIngredients.length > 0) {
+        modifications.push(`sin ${item.removedIngredients.join(', ')}`);
+      }
+      if (item.selectedAddons.length > 0) {
+        modifications.push(`con ${item.selectedAddons.map((a) => a.name).join(', ')}`);
+      }
+      if (item.notes) {
+        modifications.push(`nota: "${item.notes}"`);
+      }
+      const modString = modifications.length > 0 ? ` [${modifications.join(' - ')}]` : '';
+      return `• ${item.quantity}x ${item.productName}${modString}`;
+    })
+    .join('\n');
+
+  const formattedTotal = formatCurrencyARS(order.total);
+  const locationText = order.locationCode ? ` (Ubicación: ${order.locationName} - ${order.locationCode})` : '';
+
+  return `Hola, ${customerName}. Somos de ${branchName}.\n\nRecibimos tu pedido ${order.orderNumber}${locationText}:\n\n${itemsText}\n\nTotal: ${formattedTotal}.\n\nTu pedido se encuentra pendiente de confirmación. ¿Confirmás que está correcto o querés realizar alguna modificación?\n\n¡Gracias!`;
+}
+
+/**
+ * Builds an action URL for WhatsApp Web / App.
+ */
+export function buildWhatsAppLink(
+  phoneClean: string,
+  message: string
+): string {
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${phoneClean}?text=${encodedMessage}`;
+}
+
+/**
+ * Fuzzy search matcher for written, voice, and barcode/SKU searches.
+ * Handles diacritics removal, partial token matching, and colloquial beach terminology
+ * (e.g. "coca" -> Gaseosa Cola, "papas" -> Papas Fritas, "rabas", "limonada", "mineral").
+ */
+export function matchProductSearch(product: Product, query: string): boolean {
+  if (!query || !query.trim()) return true;
+
+  const normalize = (str: string) =>
+    (str || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .trim();
+
+  const cleanQuery = normalize(query);
+  if (!cleanQuery) return true;
+
+  const name = normalize(product.name);
+  const desc = normalize(product.description);
+  const sku = normalize(product.sku);
+  const tag = normalize(product.tag || '');
+  const ingredients = (product.includedIngredients || []).map(normalize).join(' ');
+
+  // Direct substring match
+  if (
+    name.includes(cleanQuery) ||
+    desc.includes(cleanQuery) ||
+    sku.includes(cleanQuery) ||
+    tag.includes(cleanQuery) ||
+    ingredients.includes(cleanQuery)
+  ) {
+    return true;
+  }
+
+  // Synonym / colloquial aliases in Argentina beach parlance
+  const synonyms: Record<string, string[]> = {
+    coca: ['gaseosa', 'cola'],
+    cocacola: ['gaseosa', 'cola'],
+    gaseosa: ['cola', 'pomelo', 'tonica', 'sprite', 'paso'],
+    papas: ['fritas', 'papas'],
+    birra: ['cerveza', 'ipa', 'golden'],
+    cerveza: ['birra', 'ipa', 'golden', 'artesanal'],
+    hamburguesa: ['burger', 'novillo', 'medallon'],
+    burger: ['hamburguesa'],
+    rabas: ['calamar', 'romana'],
+    licuado: ['fruta', 'maracuya', 'frutilla', 'banana'],
+    trago: ['fernet', 'mojito', 'gin', 'aperol', 'cocktail'],
+    agua: ['mineral', 'agua'],
+  };
+
+  const queryWords = cleanQuery.split(/\s+/).filter(Boolean);
+
+  // Check if all or most words match product attributes or synonyms
+  const matchedWords = queryWords.filter((w) => {
+    if (name.includes(w) || desc.includes(w) || sku.includes(w) || tag.includes(w) || ingredients.includes(w)) {
+      return true;
+    }
+    const syns = synonyms[w];
+    if (syns && syns.some((s) => name.includes(s) || desc.includes(s) || tag.includes(s))) {
+      return true;
+    }
+    return false;
+  });
+
+  return matchedWords.length > 0;
+}

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { ProductCustomizeModal } from './ProductCustomizeModal';
 import { Product } from '../types';
-import { formatCurrencyARS, calculateTop5Products } from '../utils/balnearioLogic';
+import { formatCurrencyARS, calculateTop5Products, matchProductSearch } from '../utils/balnearioLogic';
 import {
   Search,
   Mic,
@@ -20,6 +20,10 @@ import {
   ChevronDown,
   CheckCircle2,
   Info,
+  Barcode,
+  QrCode,
+  X,
+  Volume2,
 } from 'lucide-react';
 
 export const DigitalMenuView: React.FC = () => {
@@ -51,21 +55,14 @@ export const DigitalMenuView: React.FC = () => {
     [products, orders]
   );
 
-  // Filtered products list
+  // Filtered products list using fuzzy matcher for text, voice, and barcodes
   const filteredProducts = useMemo(() => {
     return products.filter((prod) => {
       if (!prod.isActive) return false;
       if (selectedCategory !== 'todos' && prod.categoryId !== selectedCategory) {
         return false;
       }
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
-        const matchesName = prod.name.toLowerCase().includes(query);
-        const matchesDesc = prod.description.toLowerCase().includes(query);
-        const matchesSku = prod.sku.toLowerCase().includes(query);
-        return matchesName || matchesDesc || matchesSku;
-      }
-      return true;
+      return matchProductSearch(prod, searchQuery);
     });
   }, [products, selectedCategory, searchQuery]);
 
@@ -73,7 +70,10 @@ export const DigitalMenuView: React.FC = () => {
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalCartAmount = cart.reduce((sum, item) => sum + item.subtotal, 0);
 
-  // Voice Search via Web Speech API
+  // Barcode / QR modal state
+  const [showScannerModal, setShowScannerModal] = useState(false);
+
+  // Voice Search via Web Speech API (configured in es-AR)
   const handleVoiceSearch = () => {
     setVoiceError(null);
     const SpeechRecognition =
@@ -81,8 +81,10 @@ export const DigitalMenuView: React.FC = () => {
       (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setVoiceError('Búsqueda por voz no soportada en este navegador. Podés escribir arriba.');
-      setTimeout(() => setVoiceError(null), 4000);
+      setVoiceError(
+        'El reconocimiento de voz no está disponible en este navegador o dispositivo. Podés utilizar el teclado o el buscador por código.'
+      );
+      setTimeout(() => setVoiceError(null), 5000);
       return;
     }
 
@@ -90,7 +92,7 @@ export const DigitalMenuView: React.FC = () => {
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-AR';
       recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
 
       recognition.onstart = () => {
         setIsListeningVoice(true);
@@ -101,13 +103,16 @@ export const DigitalMenuView: React.FC = () => {
         if (transcript) {
           setSearchQuery(transcript);
         }
-        setIsListeningVoice(false);
       };
 
-      recognition.onerror = () => {
+      recognition.onerror = (e: any) => {
         setIsListeningVoice(false);
-        setVoiceError('No se pudo capturar audio. Escribí el producto.');
-        setTimeout(() => setVoiceError(null), 3000);
+        if (e.error === 'not-allowed') {
+          setVoiceError('Permiso de micrófono denegado. Habilitalo en los permisos del navegador.');
+        } else {
+          setVoiceError('No se pudo capturar audio claramente. Probá nuevamente o escribí el producto.');
+        }
+        setTimeout(() => setVoiceError(null), 4000);
       };
 
       recognition.onend = () => {
@@ -117,7 +122,8 @@ export const DigitalMenuView: React.FC = () => {
       recognition.start();
     } catch {
       setIsListeningVoice(false);
-      setVoiceError('Error al iniciar micrófono.');
+      setVoiceError('Error al iniciar el micrófono. Utilizá la búsqueda por texto.');
+      setTimeout(() => setVoiceError(null), 4000);
     }
   };
 
@@ -317,36 +323,82 @@ export const DigitalMenuView: React.FC = () => {
           )}
         </div>
 
-        {/* Search Bar & Voice Input */}
-        <div className="p-4 bg-white sticky top-14 z-20 shadow-xs border-b border-[#E2E2E2]">
+        {/* Search Bar & Voice / Barcode Input */}
+        <div className="p-4 bg-white sticky top-16 z-20 shadow-xs border-b border-[#E2E2E2]">
           <div className="relative flex items-center">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar hamburguesas, rabas, licuados, pizzas..."
-              className="w-full bg-[#FBEEB9]/20 hover:bg-[#FBEEB9]/35 focus:bg-white pl-10 pr-12 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-semibold text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] transition"
+              placeholder="Buscar por texto, voz o código (ej: rabas, hamburguesa, BUR-01)..."
+              className="w-full bg-[#FBEEB9]/20 hover:bg-[#FBEEB9]/35 focus:bg-white pl-10 pr-24 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-semibold text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] transition"
             />
-            {/* Voice Search Button */}
-            <button
-              type="button"
-              onClick={handleVoiceSearch}
-              className={`absolute right-2.5 p-1.5 rounded-xl transition ${
-                isListeningVoice
-                  ? 'bg-[#F68F57] text-white animate-pulse'
-                  : 'text-gray-400 hover:text-[#34313A] hover:bg-gray-100'
-              }`}
-              title="Buscar por voz"
-              aria-label="Buscar por voz"
-            >
-              {isListeningVoice ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-            </button>
+
+            <div className="absolute right-2 flex items-center gap-1">
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition"
+                  title="Borrar búsqueda"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              {/* Barcode / QR Search Button */}
+              <button
+                type="button"
+                onClick={() => setShowScannerModal(true)}
+                className="p-1.5 rounded-xl text-gray-500 hover:text-[#34313A] hover:bg-[#FBEEB9]/50 transition"
+                title="Buscar por código de barras o QR"
+                aria-label="Buscar por código de barras o QR"
+              >
+                <Barcode className="w-4 h-4" />
+              </button>
+
+              {/* Voice Search Button (Web Speech API es-AR) */}
+              <button
+                type="button"
+                onClick={handleVoiceSearch}
+                className={`p-1.5 rounded-xl transition flex items-center justify-center ${
+                  isListeningVoice
+                    ? 'bg-[#F68F57] text-white animate-pulse shadow-md ring-2 ring-[#F68F57]/50'
+                    : 'text-gray-500 hover:text-[#34313A] hover:bg-[#C1E7FF]/50'
+                }`}
+                title="Búsqueda por voz (es-AR)"
+                aria-label="Búsqueda por voz"
+              >
+                {isListeningVoice ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
+          {/* Listening Feedback Banner */}
+          {isListeningVoice && (
+            <div className="mt-2.5 p-2 rounded-xl bg-[#F68F57]/15 border border-[#F68F57]/40 text-[#34313A] flex items-center justify-between text-xs animate-in fade-in duration-200">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#F68F57] animate-ping" />
+                <span className="font-bold">Escuchando micrófono (es-AR)...</span>
+                <span className="text-gray-600 hidden sm:inline text-[11px]">
+                  Decí &ldquo;hamburguesa&rdquo;, &ldquo;rabas&rdquo;, &ldquo;coca&rdquo;, &ldquo;limonada&rdquo;...
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsListeningVoice(false)}
+                className="text-[10px] font-black uppercase text-[#F68F57] hover:underline ml-2"
+              >
+                Detener
+              </button>
+            </div>
+          )}
+
           {voiceError && (
-            <div className="mt-2 text-[11px] text-[#F68F57] font-bold px-2">
-              {voiceError}
+            <div className="mt-2 text-[11px] text-[#F68F57] font-bold px-2 flex items-center gap-1.5">
+              <Info className="w-3.5 h-3.5 shrink-0" />
+              <span>{voiceError}</span>
             </div>
           )}
         </div>
@@ -609,6 +661,77 @@ export const DigitalMenuView: React.FC = () => {
           onClose={() => setProductBeingCustomized(null)}
           onAddedToCart={() => {}}
         />
+      )}
+
+      {/* Barcode & QR Code Scanner Modal */}
+      {showScannerModal && (
+        <div className="fixed inset-0 z-50 bg-[#34313A]/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-[#E2E2E2] space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E2E2]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#C1E7FF] text-[#34313A] flex items-center justify-center font-black">
+                  <Barcode className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-[#34313A]">Lector de Código / QR</h3>
+                  <p className="text-[10px] text-gray-500 font-medium">Búsqueda rápida por PLU o escáner</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowScannerModal(false)}
+                className="p-1 rounded-full text-gray-400 hover:text-[#34313A] hover:bg-gray-100 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Simulated camera viewfinder frame */}
+            <div className="relative rounded-2xl bg-[#34313A] h-36 flex flex-col items-center justify-center overflow-hidden border-2 border-dashed border-[#C1E7FF]/60 text-white p-4 text-center">
+              <div className="w-24 h-16 border-2 border-[#C1E7FF] rounded-lg relative flex items-center justify-center">
+                <span className="w-full h-0.5 bg-[#F68F57] animate-pulse absolute" />
+                <QrCode className="w-6 h-6 text-white/50" />
+              </div>
+              <p className="text-[11px] font-bold mt-2 text-[#FBEEB9]">
+                Apuntá al código de barras o QR del producto
+              </p>
+              <p className="text-[9px] text-gray-300">O seleccioná un código de prueba rápido abajo</p>
+            </div>
+
+            {/* Quick barcode / PLU chips */}
+            <div>
+              <p className="text-[11px] font-black text-[#34313A] mb-2 uppercase tracking-wide">
+                Códigos de carta balnearia:
+              </p>
+              <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+                {products.filter((p) => p.isActive).map((prod) => (
+                  <button
+                    key={prod.id}
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery(prod.sku || prod.name);
+                      setShowScannerModal(false);
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl border border-[#E2E2E2] bg-gray-50 hover:bg-[#C1E7FF] hover:border-[#a9dbfa] text-left transition flex items-center gap-1.5 text-xs text-[#34313A]"
+                  >
+                    <span className="font-mono font-black text-[10px] px-1 py-0.5 rounded bg-white border border-[#E2E2E2]">
+                      {prod.sku}
+                    </span>
+                    <span className="font-semibold text-[11px] truncate max-w-[130px]">{prod.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowScannerModal(false)}
+              className="w-full py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#34313A] font-bold text-xs transition"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

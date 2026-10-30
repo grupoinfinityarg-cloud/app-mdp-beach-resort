@@ -88,13 +88,21 @@ interface BalnearioContextType {
   productBeingCustomized: Product | null;
   setProductBeingCustomized: (product: Product | null) => void;
 
-  // Orders & Kitchen (10 Steps)
   orders: Order[];
   createCustomerOrder: (
     locationCode: string,
-    customerName?: string,
+    customerName: string,
+    customerPhone: string,
     notes?: string
   ) => Order | null;
+  editOrder: (
+    orderId: string,
+    updatedItems: CartItem[],
+    updatedNotes?: string,
+    employeeName?: string,
+    changeDescription?: string
+  ) => boolean;
+  recordWhatsAppContact: (orderId: string) => void;
   confirmAndSendToKitchen: (orderId: string) => boolean;
   updateOrderStatus: (orderId: string, nextStatus: OrderStatus) => boolean;
   cancelOrder: (orderId: string, reason: string) => boolean;
@@ -368,7 +376,8 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Orders flow: Step 1 -> Step 2 -> Step 3
   const createCustomerOrder = (
     locationCode: string,
-    customerName?: string,
+    customerName: string,
+    customerPhone: string,
     notes?: string
   ): Order | null => {
     if (cart.length === 0) return null;
@@ -391,7 +400,8 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       locationCode: locationCode.toUpperCase(),
       locationName: resolvedName,
       locationType: resolvedType,
-      customerName: customerName || (loc?.currentGuestName ?? 'Cliente Balneario'),
+      customerName: customerName.trim(),
+      customerPhone: customerPhone.trim(),
       items: [...cart],
       subtotal,
       discount: 0,
@@ -401,6 +411,13 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       paymentStatus: 'pendiente',
       notes,
       createdAt: new Date().toISOString(),
+      editAuditLog: [
+        {
+          timestamp: new Date().toISOString(),
+          employee: 'Cliente (Carta QR)',
+          description: 'Pedido creado desde la carta digital móvil.',
+        },
+      ],
     };
 
     setOrders((prev) => [newOrder, ...prev]);
@@ -412,6 +429,64 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     clearCart();
     return newOrder;
+  };
+
+  // Permite al personal editar un pedido antes de confirmar o mientras se procesa
+  const editOrder = (
+    orderId: string,
+    updatedItems: CartItem[],
+    updatedNotes?: string,
+    employeeName = 'Personal Balneario',
+    changeDescription?: string
+  ): boolean => {
+    let success = false;
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          success = true;
+          const subtotal = updatedItems.reduce((acc, it) => acc + it.subtotal, 0);
+          const total = Math.max(0, subtotal - ord.discount + ord.serviceFee);
+          const now = new Date().toISOString();
+          const newAuditEntry = {
+            timestamp: now,
+            employee: employeeName,
+            description: changeDescription || `Modificación de comanda (${updatedItems.length} ítems, Total: $${total}).`,
+          };
+          return {
+            ...ord,
+            items: updatedItems,
+            subtotal,
+            total,
+            notes: updatedNotes !== undefined ? updatedNotes : ord.notes,
+            editAuditLog: [...(ord.editAuditLog || []), newAuditEntry],
+          };
+        }
+        return ord;
+      })
+    );
+    return success;
+  };
+
+  // Registra que el empleado abrió WhatsApp para contactar al cliente
+  const recordWhatsAppContact = (orderId: string) => {
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          const now = new Date().toISOString();
+          const newAuditEntry = {
+            timestamp: now,
+            employee: 'Personal Balneario',
+            description: 'Se abrió contacto por WhatsApp con mensaje preparado de confirmación.',
+          };
+          return {
+            ...ord,
+            whatsappContactedAt: now,
+            editAuditLog: [...(ord.editAuditLog || []), newAuditEntry],
+          };
+        }
+        return ord;
+      })
+    );
   };
 
   // PASO 6: Empleado confirma comanda comercial y la envía a cocina KDS
@@ -766,6 +841,8 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setProductBeingCustomized,
         orders,
         createCustomerOrder,
+        editOrder,
+        recordWhatsAppContact,
         confirmAndSendToKitchen,
         updateOrderStatus,
         cancelOrder,

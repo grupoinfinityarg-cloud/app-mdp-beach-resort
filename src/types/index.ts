@@ -147,6 +147,12 @@ export interface Order {
   readyAt?: string;
   deliveredAt?: string;
   paidAt?: string;
+  whatsappContactedAt?: string;
+  editAuditLog?: {
+    timestamp: string;
+    employee: string;
+    description: string;
+  }[];
 }
 
 export interface Promotion {

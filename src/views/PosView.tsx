@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { CartItem, PaymentMethod, Product } from '../types';
-import { formatCurrencyARS, calculateOrderTotals } from '../utils/balnearioLogic';
+import { formatCurrencyARS, calculateOrderTotals, matchProductSearch } from '../utils/balnearioLogic';
 import {
   Search,
   Plus,
@@ -22,6 +22,8 @@ import {
   Split,
   RefreshCw,
   Send,
+  Mic,
+  MicOff,
 } from 'lucide-react';
 
 export const PosView: React.FC = () => {
@@ -46,6 +48,56 @@ export const PosView: React.FC = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showPendingComandasModal, setShowPendingComandasModal] = useState(false);
+  const [isListeningVoice, setIsListeningVoice] = useState(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+
+  // Voice Search via Web Speech API in es-AR
+  const handleVoiceSearch = () => {
+    setVoiceError(null);
+    const SpeechRecognition =
+      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setVoiceError('Reconocimiento por voz no disponible en este navegador.');
+      setTimeout(() => setVoiceError(null), 4000);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-AR';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setIsListeningVoice(true);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setSearchQuery(transcript);
+        }
+      };
+
+      recognition.onerror = () => {
+        setIsListeningVoice(false);
+        setVoiceError('No se reconoció la voz. Reintentá o ingresá por teclado.');
+        setTimeout(() => setVoiceError(null), 3000);
+      };
+
+      recognition.onend = () => {
+        setIsListeningVoice(false);
+      };
+
+      recognition.start();
+    } catch {
+      setIsListeningVoice(false);
+      setVoiceError('Error al iniciar el micrófono.');
+      setTimeout(() => setVoiceError(null), 3000);
+    }
+  };
 
   // Cash payment calculator
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('efectivo');
@@ -73,20 +125,12 @@ export const PosView: React.FC = () => {
     );
   }, [posItems, discountPercent, config.serviceFeeCover, activeLocation]);
 
-  // Filtered products
+  // Filtered products using colloquial beach matching & SKU
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       if (!p.isActive || !p.isAvailable) return false;
       if (selectedCategory !== 'todos' && p.categoryId !== selectedCategory) return false;
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        return (
-          p.name.toLowerCase().includes(q) ||
-          p.sku.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q)
-        );
-      }
-      return true;
+      return matchProductSearch(p, searchQuery);
     });
   }, [products, selectedCategory, searchQuery]);
 
@@ -284,21 +328,68 @@ export const PosView: React.FC = () => {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Side: Search, Categories & Products Grid */}
         <div className="flex-1 flex flex-col p-4 sm:p-5 overflow-y-auto space-y-4 bg-[#FBEEB9]/30">
-          {/* Search bar with PLU & barcode icon */}
+          {/* Search bar with PLU & voice recognition */}
           <div className="relative flex items-center">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por plato, bebida o código PLU (ej: BUR-01, rabas, ipa)..."
-              className="w-full bg-white pl-10 pr-20 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-medium text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] shadow-2xs"
+              placeholder="Buscar por plato, bebida, voz o PLU (ej: BUR-01, rabas, ipa)..."
+              className="w-full bg-white pl-10 pr-32 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-medium text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] shadow-2xs"
             />
-            <div className="absolute right-3 flex items-center gap-1.5 text-[10px] font-mono font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-              <Barcode className="w-3 h-3 text-gray-500" />
-              <span>PLU ↵</span>
+            <div className="absolute right-2 flex items-center gap-1">
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="p-1 rounded-lg text-gray-400 hover:text-[#34313A] hover:bg-gray-100"
+                  title="Limpiar búsqueda"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              {/* Voice Search in POS */}
+              <button
+                type="button"
+                onClick={handleVoiceSearch}
+                className={`p-1.5 rounded-xl transition ${
+                  isListeningVoice
+                    ? 'bg-[#F68F57] text-white animate-pulse shadow-sm'
+                    : 'text-gray-400 hover:text-[#34313A] hover:bg-[#C1E7FF]/40'
+                }`}
+                title="Búsqueda por voz (es-AR)"
+              >
+                {isListeningVoice ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+
+              <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-lg border border-gray-200">
+                <Barcode className="w-3 h-3 text-gray-500" />
+                <span>PLU</span>
+              </div>
             </div>
           </div>
+
+          {isListeningVoice && (
+            <div className="p-2 rounded-xl bg-[#F68F57]/15 border border-[#F68F57]/30 text-xs text-[#34313A] flex items-center justify-between">
+              <span className="font-bold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#F68F57] animate-ping" />
+                Escuchando comanda por voz... decí un plato o bebida
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsListeningVoice(false)}
+                className="text-[10px] font-bold text-[#F68F57] uppercase hover:underline"
+              >
+                Detener
+              </button>
+            </div>
+          )}
+
+          {voiceError && (
+            <div className="text-[11px] font-bold text-[#F68F57] px-2">{voiceError}</div>
+          )}
 
           {/* Category Filter Pills (Interactive #C1E7FF active) */}
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">

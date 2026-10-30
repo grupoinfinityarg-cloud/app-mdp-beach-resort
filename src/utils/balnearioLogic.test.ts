@@ -8,6 +8,9 @@ import {
   calculateCashDifference,
   parseLocationCode,
   formatCurrencyARS,
+  validateArgentinePhone,
+  formatWhatsAppOrderMessage,
+  matchProductSearch,
 } from './balnearioLogic';
 import { Product, Order, CartItem } from '../types';
 
@@ -212,4 +215,126 @@ test('parseLocationCode parses beach codes', () => {
   assert.deepEqual(parseLocationCode('M-08'), { type: 'mesa_interior', number: 8, isValid: true });
   assert.deepEqual(parseLocationCode('D-04'), { type: 'mesa_exterior', number: 4, isValid: true });
   assert.equal(parseLocationCode('INVALID').isValid, false);
+});
+
+test('validateArgentinePhone handles standard Argentine mobile formats', () => {
+  const r1 = validateArgentinePhone('+54 9 223 555-1234');
+  assert.equal(r1.isValid, true);
+  assert.equal(r1.cleanForWhatsApp, '5492235551234');
+
+  const r2 = validateArgentinePhone('2235551234');
+  assert.equal(r2.isValid, true);
+  assert.equal(r2.cleanForWhatsApp, '5492235551234');
+
+  const r3 = validateArgentinePhone('011 15-4444-3333');
+  assert.equal(r3.isValid, true);
+  assert.equal(r3.cleanForWhatsApp, '5491144443333');
+
+  const rEmpty = validateArgentinePhone('');
+  assert.equal(rEmpty.isValid, false);
+
+  const rShort = validateArgentinePhone('1234');
+  assert.equal(rShort.isValid, false);
+});
+
+test('formatWhatsAppOrderMessage generates the expected friendly verification text', () => {
+  const dummyOrder: Order = {
+    id: 'ord-test-1',
+    orderNumber: '#1055',
+    locationId: 'loc-c1',
+    locationCode: 'C-01',
+    locationName: 'Carpa VIP 01',
+    locationType: 'carpa',
+    customerName: 'Martín Rossi',
+    customerPhone: '+5492235551234',
+    items: [
+      {
+        id: 'i1',
+        productId: 'p1',
+        productName: 'Hamburguesa Doble',
+        productImage: '',
+        basePrice: 10000,
+        unitPrice: 10000,
+        quantity: 2,
+        removedIngredients: ['Cebolla'],
+        selectedAddons: [],
+        subtotal: 20000,
+      },
+    ],
+    subtotal: 20000,
+    discount: 0,
+    serviceFee: 0,
+    total: 20000,
+    status: 'pendiente_confirmacion',
+    paymentStatus: 'pendiente',
+    createdAt: new Date().toISOString(),
+  };
+
+  const message = formatWhatsAppOrderMessage(dummyOrder, 'Costa Serena');
+  assert.ok(message.includes('Hola, Martín Rossi. Somos de Costa Serena.'));
+  assert.ok(message.includes('Recibimos tu pedido #1055'));
+  assert.ok(message.includes('2x Hamburguesa Doble [sin Cebolla]'));
+  assert.ok(message.includes('Total: $20.000 ARS.'));
+  assert.ok(message.includes('Tu pedido se encuentra pendiente de confirmación.'));
+  assert.ok(message.includes('¡Gracias!'));
+});
+
+test('matchProductSearch matches written, voice, and partial colloquial queries', () => {
+  const burger: Product = {
+    id: 'b1',
+    name: 'Hamburguesa Doble Novillo con Bacon',
+    description: 'Doble medallón 100% novillo con cheddar y panceta',
+    categoryId: 'c1',
+    price: 11800,
+    image: '',
+    sku: 'BUR-01',
+    isAvailable: true,
+    isActive: true,
+    rating: 4.9,
+    reviewsCount: 100,
+    salesCount: 10,
+    prepTimeMinutes: 15,
+  };
+
+  const rabas: Product = {
+    id: 'r1',
+    name: 'Rabas de Mar a la Romana',
+    description: 'Tubos de calamar fresco con limón y alioli',
+    categoryId: 'c2',
+    price: 15000,
+    image: '',
+    sku: 'MAR-01',
+    isAvailable: true,
+    isActive: true,
+    rating: 4.8,
+    reviewsCount: 50,
+    salesCount: 8,
+    prepTimeMinutes: 12,
+  };
+
+  const gaseosa: Product = {
+    id: 'g1',
+    name: 'Gaseosa Línea Cola 500ml',
+    description: 'Refresco clásico bien frío',
+    categoryId: 'c3',
+    price: 3200,
+    image: '',
+    sku: 'BEB-01',
+    isAvailable: true,
+    isActive: true,
+    rating: 4.5,
+    reviewsCount: 20,
+    salesCount: 30,
+    prepTimeMinutes: 2,
+  };
+
+  // Check voice / text searches from prompt examples:
+  assert.equal(matchProductSearch(burger, 'Hamburguesa completa'), true);
+  assert.equal(matchProductSearch(burger, 'hamburguesa'), true);
+  assert.equal(matchProductSearch(burger, 'BUR-01'), true);
+  assert.equal(matchProductSearch(rabas, 'Rabas'), true);
+  assert.equal(matchProductSearch(rabas, 'calamar'), true);
+  assert.equal(matchProductSearch(gaseosa, 'Coca-Cola'), true);
+  assert.equal(matchProductSearch(gaseosa, 'coca'), true);
+  assert.equal(matchProductSearch(burger, 'rabas'), false);
 });

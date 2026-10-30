@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
-import { formatCurrencyARS } from '../utils/balnearioLogic';
+import { formatCurrencyARS, validateArgentinePhone } from '../utils/balnearioLogic';
 import confetti from 'canvas-confetti';
 import {
   ArrowLeft,
   Trash2,
   Plus,
   Minus,
-  Utensils,
   MapPin,
   Clock,
-  Sparkles,
   ShoppingBag,
   Send,
   CheckCircle2,
   FileText,
+  AlertTriangle,
+  Phone,
+  User,
+  HelpCircle,
+  ChevronDown,
 } from 'lucide-react';
 
 export const CartView: React.FC = () => {
@@ -25,26 +28,48 @@ export const CartView: React.FC = () => {
     clearCart,
     createCustomerOrder,
     selectedLocationCode,
+    setSelectedLocationCode,
     setActiveView,
     locations,
+    sectors,
   } = useBalneario();
 
+  // Customer required fields
   const [customerName, setCustomerName] = useState<string>('');
+  const [customerPhone, setCustomerPhone] = useState<string>('');
   const [deliveryNotes, setDeliveryNotes] = useState<string>('');
+  const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false);
+  const [selectedSectorTypeFilter, setSelectedSectorTypeFilter] = useState<string>('todos');
+
+  // Validation feedback
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<string | null>(null);
 
-  const loc = locations.find((l) => l.code === selectedLocationCode);
+  // Modals
+  const [showClearCartModal, setShowClearCartModal] = useState<boolean>(false);
+  const [showLeaveWarningModal, setShowLeaveWarningModal] = useState<boolean>(false);
+
+  // Location resolution
+  const loc = locations.find((l) => l.code.toUpperCase() === selectedLocationCode.toUpperCase());
   const locationDisplayName = loc ? `${loc.name} (${loc.code})` : `Ubicación ${selectedLocationCode}`;
+
+  // Phone validation
+  const phoneValidation = validateArgentinePhone(customerPhone);
+  const isNameValid = customerName.trim().length >= 3;
+  const isPhoneValid = phoneValidation.isValid;
+  const isFormValid = isNameValid && isPhoneValid;
 
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
   const total = subtotal;
 
   const handlePlaceOrder = () => {
-    if (cart.length === 0) return;
+    setFormSubmitted(true);
+    if (!isFormValid || cart.length === 0) return;
 
     const order = createCustomerOrder(
       selectedLocationCode,
-      customerName.trim() || undefined,
+      customerName.trim(),
+      phoneValidation.cleanForWhatsApp,
       deliveryNotes.trim() || undefined
     );
 
@@ -52,7 +77,7 @@ export const CartView: React.FC = () => {
       setPlacedOrderNumber(order.orderNumber);
       try {
         confetti({
-          particleCount: 60,
+          particleCount: 65,
           spread: 70,
           origin: { y: 0.6 },
         });
@@ -62,26 +87,115 @@ export const CartView: React.FC = () => {
     }
   };
 
+  const handleConfirmClearCart = () => {
+    clearCart();
+    setShowClearCartModal(false);
+  };
+
+  const handleAttemptLeave = () => {
+    if (cart.length > 0 && !placedOrderNumber) {
+      setShowLeaveWarningModal(true);
+    } else {
+      setActiveView('carta');
+    }
+  };
+
+  const filteredLocationsForPicker = locations.filter((l) => {
+    if (selectedSectorTypeFilter === 'todos') return true;
+    return l.type === selectedSectorTypeFilter;
+  });
+
   return (
     <div className="min-h-screen bg-[#FBEEB9] pb-24 text-[#34313A]">
       <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen flex flex-col justify-between border-x border-[#E2E2E2]">
         {/* Top Header */}
-        <div className="sticky top-14 z-20 bg-white/95 backdrop-blur-md border-b border-[#E2E2E2] px-4 py-3.5 flex items-center justify-between">
+        <div className="relative bg-white border-b border-[#E2E2E2] px-4 py-3.5 flex items-center justify-between">
           <button
-            onClick={() => setActiveView('carta')}
+            onClick={handleAttemptLeave}
             className="flex items-center gap-1.5 text-xs font-bold text-[#34313A] hover:text-[#F68F57] transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a la Carta</span>
           </button>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold">
+          <button
+            onClick={() => setShowLocationPicker(!showLocationPicker)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold hover:bg-[#aee0ff] transition"
+            title="Tocar para cambiar tu sector de entrega"
+          >
             <MapPin className="w-3.5 h-3.5 text-[#34313A]" />
             <span>{locationDisplayName}</span>
-          </div>
+            <ChevronDown className="w-3 h-3 text-[#34313A]" />
+          </button>
         </div>
 
-        {/* Content */}
+        {/* Location Picker dropdown modal */}
+        {showLocationPicker && (
+          <div className="bg-[#FBEEB9]/30 border-b border-[#E2E2E2] p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-black text-xs text-[#34313A]">
+                  Seleccioná el sector de entrega de tu pedido:
+                </h4>
+                <p className="text-[11px] text-gray-500">
+                  Podés elegir tu carpa, sombrilla o mesa en el balneario.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowLocationPicker(false)}
+                className="text-xs font-bold text-gray-500 hover:text-[#34313A]"
+              >
+                Cerrar ✕
+              </button>
+            </div>
+
+            {/* Type selector tabs */}
+            <div className="flex gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-none">
+              {[
+                { id: 'todos', label: 'Todos' },
+                { id: 'carpa', label: 'Carpas' },
+                { id: 'sombrilla', label: 'Sombrillas' },
+                { id: 'mesa_exterior', label: 'Mesas Deck' },
+                { id: 'mesa_interior', label: 'Mesas Salón' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedSectorTypeFilter(tab.id)}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition whitespace-nowrap ${
+                    selectedSectorTypeFilter === tab.id
+                      ? 'bg-[#34313A] text-white'
+                      : 'bg-white text-[#34313A] border border-[#E2E2E2]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Location spots grid */}
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 max-h-48 overflow-y-auto p-1">
+              {filteredLocationsForPicker.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setSelectedLocationCode(item.code);
+                    setShowLocationPicker(false);
+                  }}
+                  className={`p-2 rounded-xl text-center text-xs font-black transition border ${
+                    selectedLocationCode === item.code
+                      ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] ring-2 ring-[#C1E7FF]'
+                      : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-[#FBEEB9]/40'
+                  }`}
+                >
+                  <div>{item.code}</div>
+                  <div className="text-[9px] font-semibold text-gray-500 truncate">{item.name}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Content Area */}
         <div className="flex-1 p-4 sm:p-5 space-y-5">
           {placedOrderNumber ? (
             /* Success confirmation screen (Step 3 completed) */
@@ -98,20 +212,22 @@ export const CartView: React.FC = () => {
                   ¡Pedido {placedOrderNumber} Enviado!
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-600 max-w-sm mx-auto mt-2 leading-relaxed">
-                  Tu solicitud fue recibida para <strong>{locationDisplayName}</strong>. El personal del parador revisará la comanda y la enviará a cocina.
+                  Muchas gracias, <strong>{customerName}</strong>. Tu pedido para{' '}
+                  <strong>{locationDisplayName}</strong> fue registrado con estado{' '}
+                  <span className="font-bold text-[#F68F57]">Pendiente de confirmación</span>.
                 </p>
               </div>
 
               {/* Status explanation card */}
               <div className="p-4 rounded-2xl bg-[#C1E7FF]/25 border border-[#C1E7FF]/60 text-left text-xs space-y-2.5 max-w-sm mx-auto text-[#34313A]">
-                <div className="flex items-center gap-2 font-bold">
+                <div className="flex items-center gap-2 font-black">
                   <Clock className="w-4 h-4 text-[#34313A]" />
-                  <span>Estado: Pendiente de confirmación</span>
+                  <span>¿Cómo sigue tu pedido?</span>
                 </div>
                 <p className="text-gray-700 leading-normal text-[11px]">
-                  1. El personal confirma disponibilidad y comanda.<br />
-                  2. Ingresa a la pantalla KDS de la cocina.<br />
-                  3. El runner o mozo te lo acerca a tu carpa o mesa.
+                  1. <strong>Contacto por WhatsApp:</strong> El personal del balneario revisará tu pedido y se comunicará a tu celular (<strong>{customerPhone}</strong>) para confirmar los productos e importe.<br />
+                  2. <strong>Envío a Cocina KDS:</strong> Una vez confirmado, se despacha inmediatamente a preparación.<br />
+                  3. <strong>Entrega:</strong> Te lo llevamos directamente a tu sector.
                 </p>
               </div>
 
@@ -123,7 +239,7 @@ export const CartView: React.FC = () => {
                   }}
                   className="w-full py-3 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs transition shadow-sm border border-[#a9dbfa]"
                 >
-                  Ver en Panel de Comandas
+                  Ver Estado en Comandas
                 </button>
                 <button
                   onClick={() => {
@@ -154,15 +270,17 @@ export const CartView: React.FC = () => {
           ) : (
             /* Cart with Items */
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between pb-1">
                 <h2 className="text-base font-black text-[#34313A]">
                   Resumen de tu Pedido ({cart.reduce((s, i) => s + i.quantity, 0)} productos)
                 </h2>
                 <button
-                  onClick={clearCart}
-                  className="text-xs font-bold text-rose-600 hover:text-rose-800"
+                  type="button"
+                  onClick={() => setShowClearCartModal(true)}
+                  className="text-xs font-bold text-rose-600 hover:text-rose-800 transition flex items-center gap-1"
                 >
-                  Vaciar carrito
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Vaciar carrito</span>
                 </button>
               </div>
 
@@ -174,18 +292,18 @@ export const CartView: React.FC = () => {
                     className="p-3.5 rounded-2xl bg-white border border-[#E2E2E2] shadow-xs space-y-2.5"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex gap-3">
+                      <div className="flex gap-3 min-w-0">
                         <img
                           src={item.productImage}
                           alt={item.productName}
                           className="w-14 h-14 rounded-xl object-cover bg-gray-100 shrink-0"
                         />
-                        <div>
-                          <h4 className="text-xs sm:text-sm font-extrabold text-[#34313A] leading-snug">
+                        <div className="min-w-0">
+                          <h4 className="text-xs sm:text-sm font-extrabold text-[#34313A] leading-snug truncate">
                             {item.productName}
                           </h4>
                           {item.variant && (
-                            <span className="text-[11px] font-bold text-[#34313A]/80 block">
+                            <span className="text-[11px] font-bold text-[#34313A]/80 block truncate">
                               {item.variant.name}
                             </span>
                           )}
@@ -197,8 +315,9 @@ export const CartView: React.FC = () => {
 
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="p-1.5 text-gray-400 hover:text-rose-600 transition"
-                        title="Eliminar producto"
+                        className="p-1.5 text-gray-400 hover:text-rose-600 transition shrink-0"
+                        title="Eliminar este producto"
+                        aria-label="Eliminar producto"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -239,6 +358,8 @@ export const CartView: React.FC = () => {
                         <button
                           onClick={() => updateCartItemQuantity(item.id, -1)}
                           className="w-7 h-7 rounded flex items-center justify-center text-[#34313A] hover:bg-white"
+                          title="Disminuir cantidad"
+                          aria-label="Disminuir cantidad"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
@@ -248,6 +369,8 @@ export const CartView: React.FC = () => {
                         <button
                           onClick={() => updateCartItemQuantity(item.id, 1)}
                           className="w-7 h-7 rounded flex items-center justify-center text-[#34313A] hover:bg-white"
+                          title="Aumentar cantidad"
+                          aria-label="Aumentar cantidad"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -261,36 +384,111 @@ export const CartView: React.FC = () => {
                 ))}
               </div>
 
-              {/* Customer details for delivery */}
-              <div className="p-4 rounded-2xl bg-[#FBEEB9]/20 border border-[#E2E2E2] space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#34313A]">
-                  <FileText className="w-4 h-4 text-[#F68F57]" />
-                  <span>Datos de Entrega en el Balneario</span>
+              {/* Obligatory Customer Details Form (Requirement Section 1) */}
+              <div className="p-4 rounded-2xl bg-[#FBEEB9]/25 border border-[#E2E2E2] space-y-3.5">
+                <div className="flex items-center justify-between pb-1 border-b border-[#E2E2E2]">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-[#34313A]">
+                    <FileText className="w-4 h-4 text-[#F68F57]" />
+                    <span>Datos Obligatorios del Cliente</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                    * Requerido p/ WhatsApp
+                  </span>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-semibold text-gray-600">
-                    Nombre o Titular de la Carpa/Mesa (opcional)
+                {/* Nombre y Apellido */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
+                    <User className="w-3 h-3 text-[#34313A]" />
+                    <span>Nombre y Apellido *</span>
                   </label>
                   <input
                     type="text"
+                    required
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder="Ej: Familia Rossi, Carlos M."
-                    className="w-full bg-white px-3 py-2 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF]"
+                    placeholder="Ej: Laura Domínguez, Martín Rossi"
+                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] ${
+                      formSubmitted && !isNameValid
+                        ? 'border-rose-400 bg-rose-50/40'
+                        : 'border-[#E2E2E2]'
+                    }`}
                   />
+                  {formSubmitted && !isNameValid && (
+                    <span className="text-[10px] font-bold text-rose-600 block">
+                      Por favor ingresá tu nombre y apellido completo.
+                    </span>
+                  )}
                 </div>
 
-                <div className="space-y-1.5">
+                {/* Teléfono celular con código de área */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#34313A]" />
+                    <span>Número de Celular con Código de Área *</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="Ej: 223 555-1234 ó +54 9 11 4444-3333"
+                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs font-mono text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] ${
+                      formSubmitted && !isPhoneValid
+                        ? 'border-rose-400 bg-rose-50/40'
+                        : 'border-[#E2E2E2]'
+                    }`}
+                  />
+                  <div className="flex items-center justify-between text-[10px] text-gray-500 pt-0.5">
+                    <span>Válido para celulares de Mar del Plata (+54 9 223...) o todo el país.</span>
+                    {customerPhone.trim() && isPhoneValid && (
+                      <span className="text-emerald-700 font-bold flex items-center gap-0.5">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        Formato válido
+                      </span>
+                    )}
+                  </div>
+                  {formSubmitted && !isPhoneValid && (
+                    <span className="text-[10px] font-bold text-rose-600 block">
+                      {phoneValidation.error || 'Ingresá un número de celular válido con código de área.'}
+                    </span>
+                  )}
+                </div>
+
+                {/* Sector de entrega confirmado */}
+                <div className="space-y-1 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-[#34313A]" />
+                      <span>Sector de Entrega Confirmado:</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowLocationPicker(true)}
+                      className="text-[11px] font-bold text-[#34313A] underline hover:text-[#F68F57]"
+                    >
+                      Cambiar sector
+                    </button>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-xl border border-[#E2E2E2] flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#34313A]">{locationDisplayName}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#C1E7FF] text-[#34313A] font-black text-[10px] uppercase">
+                      {loc?.type.replace(/_/g, ' ') || 'Playa'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Notas adicionales */}
+                <div className="space-y-1 pt-1">
                   <label className="text-[11px] font-semibold text-gray-600">
-                    Aclaraciones para la entrega
+                    Aclaraciones para la entrega (opcional)
                   </label>
                   <input
                     type="text"
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
                     placeholder="Ej: Sombrilla azul con toallas rojas, dejar en mesita..."
-                    className="w-full bg-white px-3 py-2 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF]"
+                    className="w-full bg-white px-3 py-2 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF]"
                   />
                 </div>
               </div>
@@ -306,7 +504,7 @@ export const CartView: React.FC = () => {
                   <span className="font-semibold text-[#34313A]">Incluido</span>
                 </div>
                 <div className="pt-2 border-t border-[#E2E2E2] flex justify-between items-baseline text-sm">
-                  <span className="font-extrabold text-[#34313A]">Total a Pagar</span>
+                  <span className="font-extrabold text-[#34313A]">Total del Pedido</span>
                   <span className="font-black text-lg text-[#34313A]">
                     {formatCurrencyARS(total)}
                   </span>
@@ -333,11 +531,88 @@ export const CartView: React.FC = () => {
             </button>
 
             <p className="text-[10px] text-gray-500 text-center mt-2">
-              Se creará la comanda con origen <strong>{selectedLocationCode}</strong> para aprobación del personal.
+              Se creará el pedido para <strong>{locationDisplayName}</strong> y el personal te contactará por WhatsApp para confirmar.
             </p>
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal: Vaciar Carrito (Requirement Section 4-B) */}
+      {showClearCartModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-1.5">
+              <h3 className="font-black text-base text-[#34313A]">
+                ¿Estás seguro de que querés eliminar todos los productos del carrito?
+              </h3>
+              <p className="text-xs text-gray-600">
+                Se quitarán todos los productos seleccionados y el total volverá a $0. Los pedidos que ya enviaste al balneario permanecerán guardados.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowClearCartModal(false)}
+                className="flex-1 py-2.5 px-4 rounded-xl border border-[#E2E2E2] text-xs font-bold text-[#34313A] hover:bg-gray-100 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmClearCart}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black transition"
+              >
+                Sí, vaciar carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Protection Modal: Warn on leaving with active cart (Requirement Section 4-D) */}
+      {showLeaveWarningModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+            <div className="w-12 h-12 rounded-2xl bg-[#FBEEB9] text-[#34313A] flex items-center justify-center mx-auto border border-[#e8d799]">
+              <AlertTriangle className="w-6 h-6 text-[#34313A]" />
+            </div>
+
+            <div className="text-center space-y-1.5">
+              <h3 className="font-black text-base text-[#34313A]">
+                ¿Deseás salir de tu pedido?
+              </h3>
+              <p className="text-xs text-gray-600">
+                Tenés <strong>{cart.reduce((s, i) => s + i.quantity, 0)} productos</strong> en el carrito que aún no fueron enviados al balneario.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLeaveWarningModal(false)}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#aee0ff] border border-[#a9dbfa] transition"
+              >
+                Seguir en el carrito
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLeaveWarningModal(false);
+                  setActiveView('carta');
+                }}
+                className="w-full py-2 px-4 rounded-xl border border-[#E2E2E2] text-[#34313A]/70 font-bold text-xs hover:bg-gray-100 transition"
+              >
+                Salir de todas formas
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

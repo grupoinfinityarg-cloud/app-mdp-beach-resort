@@ -271,10 +271,10 @@ test('formatWhatsAppOrderMessage generates the expected friendly verification te
   };
 
   const message = formatWhatsAppOrderMessage(dummyOrder, 'Costa Serena');
-  assert.ok(message.includes('Hola, Martín Rossi. Somos de Costa Serena.'));
-  assert.ok(message.includes('Recibimos tu pedido #1055'));
+  assert.ok(message.includes('Hola, *Martín Rossi*. Somos de *Costa Serena*.'));
+  assert.ok(message.includes('Recibimos tu pedido *#1055*'));
   assert.ok(message.includes('2x Hamburguesa Doble [sin Cebolla]'));
-  assert.ok(message.includes('Total: $20.000 ARS.'));
+  assert.ok(message.includes('Total: *$20.000 ARS*.'));
   assert.ok(message.includes('Tu pedido se encuentra pendiente de confirmación.'));
   assert.ok(message.includes('¡Gracias!'));
 });

@@ -335,9 +335,23 @@ export function formatWhatsAppOrderMessage(
     .join('\n');
 
   const formattedTotal = formatCurrencyARS(order.total);
-  const locationText = order.locationCode ? ` (Ubicación: ${order.locationName} - ${order.locationCode})` : '';
+  const locationText = order.locationCode ? ` (Ubicación: *${order.locationName} - ${order.locationCode}*)` : '';
 
-  return `Hola, ${customerName}. Somos de ${branchName}.\n\nRecibimos tu pedido ${order.orderNumber}${locationText}:\n\n${itemsText}\n\nTotal: ${formattedTotal}.\n\nTu pedido se encuentra pendiente de confirmación. ¿Confirmás que está correcto o querés realizar alguna modificación?\n\n¡Gracias!`;
+  const paymentMethodLabels: Record<string, string> = {
+    efectivo: 'Efectivo',
+    transferencia: 'Transferencia Bancaria',
+    qr: 'Mercado Pago / Billetera QR',
+    'debito/credito': 'Tarjeta Débito / Crédito',
+    mercadopago_qr: 'Mercado Pago QR',
+    tarjeta_debito: 'Tarjeta Débito',
+    tarjeta_credito: 'Tarjeta Crédito',
+    cargo_a_carpa: 'Cargo a la Carpa',
+  };
+  const paymentLine = order.paymentMethod
+    ? `\nMedio de pago: *${paymentMethodLabels[order.paymentMethod] || order.paymentMethod}*`
+    : '';
+
+  return `Hola, *${customerName}*. Somos de *${branchName}*.\n\nRecibimos tu pedido *${order.orderNumber}*${locationText}:\n\n${itemsText}\n\nTotal: *${formattedTotal}*.${paymentLine}\n\nTu pedido se encuentra pendiente de confirmación. ¿Confirmás que está correcto o querés realizar alguna modificación?\n\n¡Gracias!`;
 }
 
 /**

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { formatCurrencyARS, validateArgentinePhone } from '../utils/balnearioLogic';
 import confetti from 'canvas-confetti';
+import { PaymentMethod } from '../types';
 import {
   ArrowLeft,
   Trash2,
@@ -16,8 +17,11 @@ import {
   AlertTriangle,
   Phone,
   User,
-  HelpCircle,
   ChevronDown,
+  CreditCard,
+  QrCode,
+  Banknote,
+  Landmark,
 } from 'lucide-react';
 
 export const CartView: React.FC = () => {
@@ -31,13 +35,13 @@ export const CartView: React.FC = () => {
     setSelectedLocationCode,
     setActiveView,
     locations,
-    sectors,
   } = useBalneario();
 
   // Customer required fields
   const [customerName, setCustomerName] = useState<string>('');
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [deliveryNotes, setDeliveryNotes] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('efectivo');
   const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false);
   const [selectedSectorTypeFilter, setSelectedSectorTypeFilter] = useState<string>('todos');
 
@@ -70,6 +74,7 @@ export const CartView: React.FC = () => {
       selectedLocationCode,
       customerName.trim(),
       phoneValidation.cleanForWhatsApp,
+      selectedPaymentMethod,
       deliveryNotes.trim() || undefined
     );
 
@@ -246,7 +251,7 @@ export const CartView: React.FC = () => {
                     setPlacedOrderNumber(null);
                     setActiveView('carta');
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-gray-50 transition"
+                  className="w-full py-2.5 px-4 rounded-xl border border-[#E2E2E2] text-xs font-bold text-gray-600 hover:bg-gray-50 transition"
                 >
                   Seguir explorando la carta
                 </button>
@@ -254,24 +259,29 @@ export const CartView: React.FC = () => {
             </div>
           ) : cart.length === 0 ? (
             /* Empty Cart */
-            <div className="py-20 text-center space-y-3">
-              <ShoppingBag className="w-14 h-14 mx-auto text-gray-300" />
-              <h3 className="text-base font-bold text-[#34313A]">Tu carrito está vacío</h3>
-              <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                Explorá nuestra carta gastronómica y elegí tus platos y bebidas favoritos de la playa.
-              </p>
+            <div className="py-16 text-center space-y-4">
+              <div className="w-16 h-16 rounded-3xl bg-[#FBEEB9]/40 border border-[#E2E2E2] flex items-center justify-center mx-auto text-[#34313A]/60 shadow-xs">
+                <ShoppingBag className="w-8 h-8 text-[#34313A]" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-base text-[#34313A]">Tu carrito está vacío</h3>
+                <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                  Explorá la carta del balneario y agregá tus platos, tragos o bebidas favoritas.
+                </p>
+              </div>
               <button
                 onClick={() => setActiveView('carta')}
-                className="mt-3 px-5 py-2.5 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-sm border border-[#a9dbfa] transition"
+                className="mt-2 px-5 py-2.5 rounded-2xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition"
               >
-                Explorar Menú
+                IR A LA CARTA DIGITAL
               </button>
             </div>
           ) : (
-            /* Cart with Items */
+            /* Active Cart Items & Order Confirmation */
             <>
-              <div className="flex items-center justify-between pb-1">
-                <h2 className="text-base font-black text-[#34313A]">
+              {/* Header with clear cart option */}
+              <div className="flex items-center justify-between pb-1 border-b border-[#E2E2E2]">
+                <h2 className="font-black text-sm text-[#34313A]">
                   Resumen de tu Pedido ({cart.reduce((s, i) => s + i.quantity, 0)} productos)
                 </h2>
                 <button
@@ -289,94 +299,91 @@ export const CartView: React.FC = () => {
                 {cart.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3.5 rounded-2xl bg-white border border-[#E2E2E2] shadow-xs space-y-2.5"
+                    className="p-3.5 rounded-2xl border border-[#E2E2E2] bg-white shadow-xs flex flex-col justify-between gap-2.5 hover:shadow-sm transition"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex gap-3 min-w-0">
-                        <img
-                          src={item.productImage}
-                          alt={item.productName}
-                          className="w-14 h-14 rounded-xl object-cover bg-gray-100 shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <h4 className="text-xs sm:text-sm font-extrabold text-[#34313A] leading-snug truncate">
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={item.productImage}
+                        alt={item.productName}
+                        className="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100 border border-[#E2E2E2]"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-1">
+                          <h4 className="font-black text-xs text-[#34313A] line-clamp-1">
                             {item.productName}
                           </h4>
-                          {item.variant && (
-                            <span className="text-[11px] font-bold text-[#34313A]/80 block truncate">
-                              {item.variant.name}
-                            </span>
-                          )}
-                          <span className="text-xs font-extrabold text-[#34313A] block mt-0.5">
-                            {formatCurrencyARS(item.unitPrice)} c/u
-                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-gray-400 hover:text-rose-600 p-1 rounded-lg transition"
+                            title="Eliminar producto"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {item.variant && (
+                          <div className="text-[10px] text-gray-500 font-semibold">
+                            Variante: {item.variant.name}
+                          </div>
+                        )}
+
+                        {(item.removedIngredients.length > 0 ||
+                          item.selectedAddons.length > 0 ||
+                          item.notes) && (
+                          <div className="flex flex-wrap gap-1 text-[10px] pt-1">
+                            {item.removedIngredients.map((r) => (
+                              <span
+                                key={r}
+                                className="px-1.5 py-0.2 bg-rose-50 text-rose-800 border border-rose-200 font-bold rounded line-through"
+                              >
+                                Sin {r}
+                              </span>
+                            ))}
+                            {item.selectedAddons.map((a) => (
+                              <span
+                                key={a.id}
+                                className="px-1.5 py-0.2 bg-[#C1E7FF]/30 text-[#34313A] border border-[#a9dbfa] font-bold rounded"
+                              >
+                                +{a.name}
+                              </span>
+                            ))}
+                            {item.notes && (
+                              <span className="text-gray-500 italic block w-full">
+                                "{item.notes}"
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="text-[11px] font-extrabold text-[#34313A] mt-1">
+                          {formatCurrencyARS(item.unitPrice)} c/u
                         </div>
                       </div>
-
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="p-1.5 text-gray-400 hover:text-rose-600 transition shrink-0"
-                        title="Eliminar este producto"
-                        aria-label="Eliminar producto"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
 
-                    {/* Customizations tags */}
-                    {(item.removedIngredients.length > 0 ||
-                      item.selectedAddons.length > 0 ||
-                      item.notes) && (
-                      <div className="pt-2 border-t border-[#E2E2E2] flex flex-wrap gap-1 text-[10px]">
-                        {item.removedIngredients.map((r) => (
-                          <span
-                            key={r}
-                            className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 font-bold border border-rose-200"
-                          >
-                            Sin {r}
-                          </span>
-                        ))}
-                        {item.selectedAddons.map((a) => (
-                          <span
-                            key={a.id}
-                            className="px-2 py-0.5 rounded-md bg-[#C1E7FF]/30 text-[#34313A] font-bold border border-[#a9dbfa]"
-                          >
-                            +{a.name} ({formatCurrencyARS(a.price)})
-                          </span>
-                        ))}
-                        {item.notes && (
-                          <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 italic">
-                            "{item.notes}"
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Stepper & item subtotal */}
-                    <div className="flex items-center justify-between pt-1">
-                      <div className="flex items-center border border-[#E2E2E2] rounded-lg p-0.5 bg-[#FBEEB9]/15">
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <div className="flex items-center gap-2 bg-[#FBEEB9]/30 rounded-xl p-1 border border-[#E2E2E2]">
                         <button
+                          type="button"
                           onClick={() => updateCartItemQuantity(item.id, -1)}
-                          className="w-7 h-7 rounded flex items-center justify-center text-[#34313A] hover:bg-white"
-                          title="Disminuir cantidad"
-                          aria-label="Disminuir cantidad"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#E2E2E2] flex items-center justify-center text-xs font-black text-[#34313A] hover:bg-gray-50 shadow-2xs"
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-3 text-xs font-bold text-[#34313A]">
+                        <span className="text-xs font-black text-[#34313A] w-6 text-center">
                           {item.quantity}
                         </span>
                         <button
+                          type="button"
                           onClick={() => updateCartItemQuantity(item.id, 1)}
-                          className="w-7 h-7 rounded flex items-center justify-center text-[#34313A] hover:bg-white"
-                          title="Aumentar cantidad"
-                          aria-label="Aumentar cantidad"
+                          className="w-6 h-6 rounded-lg bg-[#F68F57] text-white flex items-center justify-center text-xs font-black shadow-2xs hover:bg-[#e07f4a]"
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="w-3 h-3" />
                         </button>
                       </div>
 
-                      <span className="text-xs sm:text-sm font-black text-[#34313A]">
+                      <span className="font-black text-sm text-[#34313A]">
                         {formatCurrencyARS(item.subtotal)}
                       </span>
                     </div>
@@ -450,7 +457,7 @@ export const CartView: React.FC = () => {
                   </div>
                   {formSubmitted && !isPhoneValid && (
                     <span className="text-[10px] font-bold text-rose-600 block">
-                      {phoneValidation.error || 'Ingresá un número de celular válido con código de área.'}
+                      {phoneValidation.error || 'Ingresá tu número de teléfono celular con código de área.'}
                     </span>
                   )}
                 </div>

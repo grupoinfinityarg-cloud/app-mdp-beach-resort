@@ -83,18 +83,6 @@ export const OrderManagementView: React.FC = () => {
     setCancellationReason('');
   };
 
-  // WhatsApp Contact Action
-  const handleContactWhatsApp = (order: Order) => {
-    const rawPhone = order.customerPhone || '';
-    const phoneVal = validateArgentinePhone(rawPhone);
-    const cleanPhone = phoneVal.cleanForWhatsApp || '5492235551234';
-    const message = formatWhatsAppOrderMessage(order, config.branchName);
-    const link = buildWhatsAppLink(cleanPhone, message);
-
-    recordWhatsAppContact(order.id);
-    window.open(link, '_blank');
-  };
-
   const handleCopyWhatsAppMessage = (order: Order) => {
     const message = formatWhatsAppOrderMessage(order, config.branchName);
     navigator.clipboard.writeText(message);
@@ -138,7 +126,7 @@ export const OrderManagementView: React.FC = () => {
     if (!prod) return;
 
     const newItem: CartItem = {
-      id: `edit-item-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: `edit-item-${Date.now()}`,
       productId: prod.id,
       productName: prod.name,
       productImage: prod.image,
@@ -157,65 +145,15 @@ export const OrderManagementView: React.FC = () => {
   const handleSaveOrderEdits = () => {
     if (!editingOrder) return;
     if (editItems.length === 0) {
-      alert('La comanda debe contener al menos un producto.');
+      alert('La comanda debe tener al menos un producto.');
       return;
     }
 
-    editOrder(
-      editingOrder.id,
-      editItems,
-      editNotes,
-      editEmployeeName || 'Personal Balneario',
-      editChangeReason || 'Modificación de productos y cantidades acordada con el cliente.'
-    );
+    const employee = editEmployeeName.trim() || 'Personal Balneario';
+    const reason = editChangeReason.trim() || 'Modificación acordada con el cliente';
 
+    editOrder(editingOrder.id, editItems, editNotes, employee, reason);
     setEditingOrder(null);
-  };
-
-  const getStatusBadge = (status: OrderStatus) => {
-    switch (status) {
-      case 'pendiente_confirmacion':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-[#F68F57]/15 text-[#34313A] border border-[#F68F57] text-xs font-black flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 text-[#F68F57] animate-pulse" />
-            <span>Paso 3: Espera Aprobación</span>
-          </span>
-        );
-      case 'confirmado_en_cocina':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-black flex items-center gap-1">
-            <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
-            <span>Paso 6: En Cocina KDS</span>
-          </span>
-        );
-      case 'en_preparacion':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-[#C1E7FF]/50 text-[#34313A] border border-[#a9dbfa] text-xs font-bold flex items-center gap-1">
-            <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
-            <span>Paso 8: Cocinando</span>
-          </span>
-        );
-      case 'listo_para_entrega':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-[#FBEEB9] text-[#34313A] border border-[#e8d799] text-xs font-black flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#34313A]" />
-            <span>Paso 8: Listo p/ Despacho</span>
-          </span>
-        );
-      case 'entregado':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-gray-100 text-gray-800 border border-gray-300 text-xs font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-gray-600" />
-            <span>Paso 9: Entregado</span>
-          </span>
-        );
-      case 'cancelado':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-xs font-bold">
-            Cancelado
-          </span>
-        );
-    }
   };
 
   return (
@@ -318,38 +256,72 @@ export const OrderManagementView: React.FC = () => {
 
                     <div className="flex items-center gap-1.5 text-xs font-black text-[#34313A] mt-1">
                       {ord.locationType === 'carpa' ? (
-                        <Umbrella className="w-3.5 h-3.5 text-[#F68F57]" />
+                        <Umbrella className="w-3.5 h-3.5 text-[#34313A]" />
                       ) : (
                         <Utensils className="w-3.5 h-3.5 text-[#34313A]" />
                       )}
                       <span>{ord.locationName}</span>
-                      <span className="text-[10px] font-mono bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] px-1.5 py-0.5 rounded font-black">
+                      <span className="px-1.5 py-0.2 rounded bg-gray-100 text-[10px] font-mono text-gray-600">
                         {ord.locationCode}
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-[#34313A] font-semibold mt-1 space-y-0.5">
-                      <div>
-                        Cliente: <strong>{ord.customerName || 'Cliente Balneario'}</strong>
-                      </div>
-                      <div className="flex items-center gap-1 text-[#34313A]/80 font-mono text-[10px]">
-                        <Phone className="w-3 h-3 text-emerald-600" />
-                        <span>{ord.customerPhone || 'Sin teléfono'}</span>
-                      </div>
+                    <div className="text-[11px] text-gray-600 font-medium mt-1">
+                      <div>Cliente: <strong>{ord.customerName || 'Cliente'}</strong></div>
+                      {ord.customerPhone ? (
+                        <div className="text-gray-500 font-mono text-[10px] flex items-center gap-1 mt-0.5">
+                          <Phone className="w-3 h-3 text-[#34313A]" />
+                          <span>{phoneValidation.cleanForWhatsApp || ord.customerPhone}</span>
+                        </div>
+                      ) : (
+                        <div className="text-gray-400 text-[10px]">Sin teléfono</div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="shrink-0">{getStatusBadge(ord.status)}</div>
+                  {/* Status Badge */}
+                  <div>
+                    {isPending && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#FBEEB9] text-[#34313A] border border-[#e8d799]">
+                        Paso 3: Espera Aprobación
+                      </span>
+                    )}
+                    {isConfirmed && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]">
+                        Paso 6: En Cola Cocina
+                      </span>
+                    )}
+                    {isPreparing && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#F68F57] text-white">
+                        Paso 8: En Cocina KDS
+                      </span>
+                    )}
+                    {isReady && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] animate-pulse">
+                        Paso 8: Listo para Llevar
+                      </span>
+                    )}
+                    {ord.status === 'entregado' && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-gray-100 text-[#34313A] border border-[#E2E2E2]">
+                        Paso 9: Entregado
+                      </span>
+                    )}
+                    {ord.status === 'cancelado' && (
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-200">
+                        Cancelado
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                {/* Items breakdown with modifications */}
-                <div className="space-y-2 bg-gray-50/80 p-3 rounded-2xl border border-[#E2E2E2] text-xs">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 pb-1 border-b border-[#E2E2E2]">
-                    <span>Productos solicitados ({ord.items.length})</span>
+                {/* Items List */}
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  <div className="flex items-center justify-between text-[11px] font-black uppercase text-gray-400 tracking-wider">
+                    <span>Productos solicitados ({ord.items.reduce((s, i) => s + i.quantity, 0)})</span>
                     {isPending && (
                       <button
                         onClick={() => handleOpenEditOrder(ord)}
-                        className="text-[#34313A] hover:text-[#F68F57] flex items-center gap-1 font-bold"
+                        className="text-[10px] font-bold text-[#F68F57] lowercase hover:underline flex items-center gap-1"
                       >
                         <Edit className="w-3 h-3" />
                         <span>Editar Comanda</span>
@@ -357,16 +329,20 @@ export const OrderManagementView: React.FC = () => {
                     )}
                   </div>
 
-                  {ord.items.map((item, idx) => (
-                    <div key={idx} className="pb-1.5 border-b border-[#E2E2E2] last:border-0 space-y-1">
-                      <div className="flex justify-between font-bold text-[#34313A]">
-                        <span>
-                          {item.quantity}x {item.productName}
+                  {ord.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-2 rounded-xl bg-gray-50/70 border border-[#E2E2E2]/60 text-xs space-y-1"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-bold text-[#34313A]">
+                          <strong className="text-[#F68F57]">{item.quantity}x</strong> {item.productName}
                         </span>
-                        <span>{formatCurrencyARS(item.subtotal)}</span>
+                        <span className="font-extrabold text-[#34313A] shrink-0">
+                          {formatCurrencyARS(item.subtotal)}
+                        </span>
                       </div>
 
-                      {/* Modifications */}
                       {(item.removedIngredients.length > 0 ||
                         item.selectedAddons.length > 0 ||
                         item.notes) && (
@@ -455,7 +431,8 @@ export const OrderManagementView: React.FC = () => {
                     {/* Botón WhatsApp prioritario (Requisito 2) */}
                     <div className="flex gap-1.5">
                       {(() => {
-                        const phoneVal = validateArgentinePhone(ord.customerPhone || '');
+                        const rawPhone = ord.customerPhone || '';
+                        const phoneVal = validateArgentinePhone(rawPhone);
                         const cleanPhone = phoneVal.cleanForWhatsApp || '5492235551234';
                         const message = formatWhatsAppOrderMessage(ord, config.branchName);
                         const waLink = buildWhatsAppLink(cleanPhone, message);

@@ -89,10 +89,14 @@ interface BalnearioContextType {
   setProductBeingCustomized: (product: Product | null) => void;
 
   orders: Order[];
+  activePosOrder: Order | null;
+  setActivePosOrder: (order: Order | null) => void;
+  openPosForOrder: (order: Order) => void;
   createCustomerOrder: (
     locationCode: string,
-    customerName: string,
-    customerPhone: string,
+    customerName?: string,
+    customerPhone?: string,
+    paymentMethod?: PaymentMethod,
     notes?: string
   ) => Order | null;
   editOrder: (
@@ -195,11 +199,17 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     })
   );
 
-  // Active navigation
   const [activeView, setActiveView] = useState<ActiveView>('panel');
   const [selectedLocationCode, setSelectedLocationCode] = useState<string>('C-01');
   const [cart, setCart] = useState<CartItem[]>(() => loadStored('cart', []));
   const [productBeingCustomized, setProductBeingCustomized] = useState<Product | null>(null);
+  const [activePosOrder, setActivePosOrder] = useState<Order | null>(null);
+
+  const openPosForOrder = (order: Order) => {
+    setActivePosOrder(order);
+    setSelectedLocationCode(order.locationCode);
+    setActiveView('pos');
+  };
 
   // Sync to localStorage
   useEffect(() => {
@@ -376,8 +386,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Orders flow: Step 1 -> Step 2 -> Step 3
   const createCustomerOrder = (
     locationCode: string,
-    customerName: string,
-    customerPhone: string,
+    customerName?: string,
+    customerPhone?: string,
+    paymentMethod?: PaymentMethod,
     notes?: string
   ): Order | null => {
     if (cart.length === 0) return null;
@@ -400,8 +411,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       locationCode: locationCode.toUpperCase(),
       locationName: resolvedName,
       locationType: resolvedType,
-      customerName: customerName.trim(),
-      customerPhone: customerPhone.trim(),
+      customerName: (customerName || 'Cliente').trim(),
+      customerPhone: customerPhone ? customerPhone.trim() : undefined,
+      paymentMethod: paymentMethod || 'efectivo',
       items: [...cart],
       subtotal,
       discount: 0,
@@ -614,6 +626,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           return p;
         })
       );
+      if (activePosOrder?.id === orderId) {
+        setActivePosOrder(null);
+      }
     }
 
     return success;
@@ -840,6 +855,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         productBeingCustomized,
         setProductBeingCustomized,
         orders,
+        activePosOrder,
+        setActivePosOrder,
+        openPosForOrder,
         createCustomerOrder,
         editOrder,
         recordWhatsAppContact,

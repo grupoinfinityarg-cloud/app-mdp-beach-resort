@@ -114,10 +114,12 @@ export type PaymentStatus = 'pendiente' | 'cobrado' | 'anulado';
 
 export type PaymentMethod =
   | 'efectivo'
+  | 'transferencia'
+  | 'qr'
+  | 'debito/credito'
   | 'mercadopago_qr'
   | 'tarjeta_debito'
   | 'tarjeta_credito'
-  | 'transferencia'
   | 'cargo_a_carpa';
 
 export interface Order {

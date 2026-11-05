@@ -49,6 +49,7 @@ export const PosView: React.FC = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showPendingComandasModal, setShowPendingComandasModal] = useState(false);
+  const [loadedOrderId, setLoadedOrderId] = useState<string | null>(null);
   const [isListeningVoice, setIsListeningVoice] = useState(false);
   const [voiceError, setVoiceError] = useState<string | null>(null);
 
@@ -115,6 +116,12 @@ export const PosView: React.FC = () => {
       o.paymentStatus === 'pendiente' &&
       o.status !== 'cancelado'
   );
+  const loadedPendingOrder = loadedOrderId
+    ? orders.find((order) => order.id === loadedOrderId && order.paymentStatus === 'pendiente' && order.status !== 'cancelado')
+    : undefined;
+  const pendingPaymentOrders = orders.filter(
+    (order) => order.paymentStatus === 'pendiente' && order.status !== 'cancelado'
+  );
 
   const hasUnpaidBalance = (locationCode: string) => orders.some(
     (order) => order.locationCode === locationCode &&
@@ -130,6 +137,7 @@ export const PosView: React.FC = () => {
       activeLocation?.capacity || 2
     );
   }, [posItems, discountPercent, config.serviceFeeCover, activeLocation]);
+  const paymentAmount = loadedPendingOrder?.total ?? totals.total;
 
   // Filtered products using colloquial beach matching & SKU
   const filteredProducts = useMemo(() => {
@@ -142,6 +150,7 @@ export const PosView: React.FC = () => {
 
   // Add product to POS cart
   const handleAddProduct = (prod: Product) => {
+    if (loadedPendingOrder) return;
     setPosItems((prev) => {
       const idx = prev.findIndex(
         (i) => i.productId === prod.id && i.removedIngredients.length === 0 && i.selectedAddons.length === 0
@@ -174,6 +183,7 @@ export const PosView: React.FC = () => {
   };
 
   const updateQuantity = (itemId: string, delta: number) => {
+    if (loadedPendingOrder) return;
     setPosItems((prev) =>
       prev
         .map((i) => {
@@ -189,12 +199,14 @@ export const PosView: React.FC = () => {
   };
 
   const removeItem = (itemId: string) => {
+    if (loadedPendingOrder) return;
     setPosItems((prev) => prev.filter((i) => i.id !== itemId));
   };
 
   // Load comanda from table/carpa
   const handleLoadComanda = (ord: any) => {
     setSelectedLocationCode(ord.locationCode);
+    setLoadedOrderId(ord.id);
     setPosItems([...ord.items]);
     setShowPendingComandasModal(false);
   };
@@ -202,20 +214,28 @@ export const PosView: React.FC = () => {
   // Open Checkout Modal
   const handleOpenPayment = () => {
     if (posItems.length === 0) return;
-    setCashReceived(totals.total);
+    setCashReceived(paymentAmount);
     setShowPaymentModal(true);
   };
 
   // Confirm Sale & Close
-  const handleConfirmPayment = () => {
-    if (existingOrderForLocation) {
-      closeAndPayOrder(
-        existingOrderForLocation.id,
+  const handleConfirmPayment = async () => {
+    if (loadedPendingOrder) {
+      const paidAt = new Date().toISOString();
+      const success = await closeAndPayOrder(
+        loadedPendingOrder.id,
         selectedPaymentMethod,
-        totals.discountAmount,
+        0,
         'Lucas G. (Mozo #4)'
       );
-      setPaymentSuccessOrder(existingOrderForLocation);
+      if (!success) return;
+      setPaymentSuccessOrder({
+        ...loadedPendingOrder,
+        paymentStatus: 'cobrado',
+        paymentMethod: selectedPaymentMethod,
+        paidAt,
+        ticketNumber: loadedPendingOrder.ticketNumber || `T-${Math.floor(1000 + Math.random() * 9000)}`,
+      });
     } else {
       const newOrder = createDirectPosSale(
         selectedLocationCode,
@@ -230,6 +250,7 @@ export const PosView: React.FC = () => {
     }
 
     setPosItems([]);
+    setLoadedOrderId(null);
     setShowPaymentModal(false);
   };
 
@@ -249,7 +270,7 @@ export const PosView: React.FC = () => {
     alert(`Comanda enviada exitosamente a la KDS de Cocina para ${selectedLocationCode}`);
   };
 
-  const cashChange = Math.max(0, cashReceived - totals.total);
+  const cashChange = Math.max(0, cashReceived - paymentAmount);
 
   return (
     <div className="min-h-screen bg-[#FBEEB9] flex flex-col text-[#34313A]">
@@ -312,7 +333,7 @@ export const PosView: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-gray-50"
           >
             <Receipt className="w-3.5 h-3.5 text-[#34313A]" />
-            <span>Buscar Comanda</span>
+            <span>Buscar Comanda{pendingPaymentOrders.length > 0 ? ` (${pendingPaymentOrders.length})` : ''}</span>
           </button>
 
           <button
@@ -466,6 +487,7 @@ export const PosView: React.FC = () => {
                     </span>
                     <button
                       onClick={() => handleAddProduct(p)}
+                      disabled={Boolean(loadedPendingOrder)}
                       className="w-8 h-8 rounded-xl bg-[#F68F57] hover:bg-[#e07f4a] text-white flex items-center justify-center shadow-xs active:scale-95 transition"
                       title="Agregar al pedido"
                     >
@@ -498,6 +520,7 @@ export const PosView: React.FC = () => {
               {posItems.length > 0 && (
                 <button
                   onClick={() => setPosItems([])}
+                  disabled={Boolean(loadedPendingOrder)}
                   className="p-1.5 text-gray-400 hover:text-rose-600 transition"
                   title="Vaciar comanda"
                 >
@@ -505,6 +528,12 @@ export const PosView: React.FC = () => {
                 </button>
               )}
             </div>
+
+            {loadedPendingOrder && (
+              <div className="-mt-2 rounded-xl border border-[#F68F57] bg-[#F68F57]/10 px-3 py-2 text-xs font-bold text-[#34313A]">
+                Cuenta pendiente {loadedPendingOrder.orderNumber} cargada para cobrar.
+              </div>
+            )}
 
             {/* List of items */}
             <div className="max-h-[36vh] overflow-y-auto space-y-2.5 pr-1">
@@ -536,6 +565,7 @@ export const PosView: React.FC = () => {
                     <div className="flex items-center border border-[#E2E2E2] rounded-lg bg-white p-0.5">
                       <button
                         onClick={() => updateQuantity(item.id, -1)}
+                        disabled={Boolean(loadedPendingOrder)}
                         className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100"
                       >
                         <Minus className="w-3 h-3" />
@@ -545,6 +575,7 @@ export const PosView: React.FC = () => {
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, 1)}
+                        disabled={Boolean(loadedPendingOrder)}
                         className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100"
                       >
                         <Plus className="w-3 h-3" />
@@ -587,7 +618,7 @@ export const PosView: React.FC = () => {
                 <span className="text-[10px] text-gray-400">IVA Incluido • Factura B</span>
               </div>
               <span className="text-2xl font-black text-[#34313A]">
-                {formatCurrencyARS(totals.total)}
+                {formatCurrencyARS(paymentAmount)}
               </span>
             </div>
 
@@ -739,6 +770,50 @@ export const PosView: React.FC = () => {
         </div>
       )}
 
+      {/* Pending Payment Orders Modal */}
+      {showPendingComandasModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col border border-[#E2E2E2]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
+              <div>
+                <h3 className="font-black text-base text-[#34313A]">Cuentas pendientes de pago</h3>
+                <p className="text-xs text-gray-500 mt-1">Elegí una cuenta para cargarla en el POS.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPendingComandasModal(false)}
+                className="text-gray-400 hover:text-[#34313A]"
+                aria-label="Cerrar cuentas pendientes"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto space-y-2">
+              {pendingPaymentOrders.map((order) => (
+                <button
+                  key={order.id}
+                  type="button"
+                  onClick={() => handleLoadComanda(order)}
+                  className="w-full flex items-center justify-between gap-3 p-3 rounded-xl text-left border border-[#E2E2E2] hover:bg-[#FBEEB9]/30 transition"
+                >
+                  <div className="min-w-0">
+                    <div className="font-black text-sm text-[#34313A]">Orden {order.orderNumber}</div>
+                    <div className="text-xs text-gray-500 truncate">{order.locationName} · {order.items.reduce((count, item) => count + item.quantity, 0)} productos</div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="font-black text-sm text-[#34313A]">{formatCurrencyARS(order.total)}</div>
+                    <div className="text-[10px] font-bold text-rose-700">PAGO PENDIENTE</div>
+                  </div>
+                </button>
+              ))}
+              {pendingPaymentOrders.length === 0 && (
+                <div className="py-10 text-center text-xs text-gray-500">No hay cuentas pendientes de cobro.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Discount Modal */}
       {showDiscountModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
@@ -781,7 +856,7 @@ export const PosView: React.FC = () => {
             <div className="text-center p-3 rounded-2xl bg-[#FBEEB9]/50 border border-[#FBEEB9]">
               <div className="text-xs text-[#34313A] font-bold uppercase">Total a Cobrar</div>
               <div className="text-2xl font-black text-[#34313A] mt-0.5">
-                {formatCurrencyARS(totals.total)}
+                {formatCurrencyARS(paymentAmount)}
               </div>
             </div>
 

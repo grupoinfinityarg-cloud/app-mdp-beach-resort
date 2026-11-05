@@ -225,7 +225,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
           {/* Quick Module Switchers */}
           <button
             onClick={() => setActiveView('carta')}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'carta'
                 ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -238,7 +238,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
 
           <button
             onClick={() => setActiveView('personalizar')}
-            className={`relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`relative hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'personalizar'
                 ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -256,7 +256,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
 
           <button
             onClick={() => setActiveView('pos')}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'pos'
                 ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -269,7 +269,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
 
           <button
             onClick={() => setActiveView('panel')}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'panel'
                 ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -294,7 +294,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
               aria-label="Cerrar sesión"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Cerrar sesión</span>
+              <span>Cerrar sesión</span>
             </button>
           )}
         </div>

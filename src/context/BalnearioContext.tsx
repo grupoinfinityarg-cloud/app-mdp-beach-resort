@@ -123,7 +123,7 @@ interface BalnearioContextType {
     paymentMethod: PaymentMethod,
     discountAmount?: number,
     cashierName?: string
-  ) => boolean;
+  ) => Promise<boolean>;
   createDirectPosSale: (
     locationCode: string,
     items: CartItem[],
@@ -750,12 +750,31 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   // PASO 10: POS registra pago y cierra la venta
-  const closeAndPayOrder = (
+  const closeAndPayOrder = async (
     orderId: string,
     paymentMethod: PaymentMethod,
     discountAmount = 0,
     cashierName = 'Cajero Turno'
-  ): boolean => {
+  ): Promise<boolean> => {
+    const targetOrder = orders.find((order) => order.id === orderId);
+    let remotePayment: { ticketNumber?: string; paidAt?: string } | null = null;
+    if (targetOrder?.orderSource === 'qr') {
+      if (!supabase || !supabaseBusinessSlug) {
+        window.alert('No se pudo conectar con el servidor. El pedido sigue pendiente de pago.');
+        return false;
+      }
+      const { data, error } = await supabase.rpc('pay_qr_order', {
+        p_business_slug: supabaseBusinessSlug,
+        p_order_id: orderId,
+        p_payment_method: paymentMethod,
+      });
+      if (error) {
+        window.alert(`No se pudo registrar el pago: ${error.message}`);
+        return false;
+      }
+      remotePayment = data as { ticketNumber?: string; paidAt?: string };
+    }
+
     let success = false;
     let paidOrder: Order | null = null;
 
@@ -770,8 +789,8 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             total: discountedTotal,
             paymentStatus: 'cobrado',
             paymentMethod,
-            paidAt: new Date().toISOString(),
-            ticketNumber: ord.ticketNumber || `T-${Math.floor(1000 + Math.random() * 9000)}`,
+            paidAt: remotePayment?.paidAt || new Date().toISOString(),
+            ticketNumber: remotePayment?.ticketNumber || ord.ticketNumber || `T-${Math.floor(1000 + Math.random() * 9000)}`,
           };
           paidOrder = updated;
           return updated;

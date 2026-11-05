@@ -30,6 +30,7 @@ export const DashboardView: React.FC = () => {
     cashRegister,
     cashMovements,
     config,
+    businessDisplayName,
     setActiveView,
     confirmAndSendToKitchen,
     cancelOrder,
@@ -103,7 +104,7 @@ export const DashboardView: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl font-black text-[#34313A] tracking-tight">
-                {config.branchName}
+                {businessDisplayName}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]">
                 TEMPORADA 2026

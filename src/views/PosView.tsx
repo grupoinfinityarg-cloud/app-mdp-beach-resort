@@ -10,6 +10,7 @@ import {
   CreditCard,
   QrCode,
   DollarSign,
+  Landmark,
   Utensils,
   Umbrella,
   Percent,
@@ -113,6 +114,11 @@ export const PosView: React.FC = () => {
       o.locationCode === selectedLocationCode &&
       o.paymentStatus === 'pendiente' &&
       o.status !== 'cancelado'
+  );
+
+  const hasUnpaidBalance = (locationCode: string) => orders.some(
+    (order) => order.locationCode === locationCode &&
+      order.paymentStatus === 'pendiente' && order.status !== 'cancelado'
   );
 
   // Calculate totals
@@ -586,7 +592,7 @@ export const PosView: React.FC = () => {
             </div>
 
             {/* Payment Method Selector Buttons */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedPaymentMethod('efectivo')}
@@ -611,6 +617,19 @@ export const PosView: React.FC = () => {
               >
                 <QrCode className="w-3.5 h-3.5" />
                 <span>MP QR</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentMethod('transferencia')}
+                className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-xs font-bold transition ${
+                  selectedPaymentMethod === 'transferencia'
+                    ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
+                    : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                }`}
+              >
+                <Landmark className="w-3.5 h-3.5" />
+                <span>Transferencia</span>
               </button>
 
               <button
@@ -695,7 +714,10 @@ export const PosView: React.FC = () => {
                       {l.code}
                     </span>
                     <div>
-                      <div className="text-xs font-bold">{l.name}</div>
+                      <div className={`text-xs font-bold ${hasUnpaidBalance(l.code) ? 'text-rose-700' : 'text-black'}`}>
+                        {l.name}
+                        {hasUnpaidBalance(l.code) && <span className="ml-1 text-[10px] font-black">PAGO PENDIENTE</span>}
+                      </div>
                       <div className="text-[10px] text-gray-500">{l.sectorName}</div>
                     </div>
                   </div>

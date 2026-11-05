@@ -12,7 +12,7 @@ import {
 
 export const INITIAL_CONFIG: BalnearioConfig = {
   name: 'GESTIÓN BALNEARIA',
-  branchName: 'Balneario Costa Serena',
+  branchName: 'MDP BEACH & RESORT',
   address: 'Paseo Victoria Ocampo 1240, Playa Grande',
   city: 'Mar del Plata, Argentina',
   phone: '+54 9 223 540-8890',

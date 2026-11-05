@@ -262,7 +262,7 @@ export const SettingsView: React.FC = () => {
             <h3 className="font-black text-sm text-[#34313A]">Restablecer Datos Demo</h3>
           </div>
           <p className="text-xs text-[#34313A]/80 leading-relaxed">
-            Si realizaste pruebas y deseás volver al estado inicial del balneario Costa Serena de Mar del Plata, podés reiniciar los registros.
+            Si realizaste pruebas y deseás volver al estado inicial de MDP BEACH & RESORT, podés reiniciar los registros.
           </p>
           {resetSuccess ? (
             <div className="p-2.5 rounded-xl bg-[#FBEEB9] border border-[#e8d799] text-xs font-bold text-[#34313A] text-center">

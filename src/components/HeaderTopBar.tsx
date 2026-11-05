@@ -12,15 +12,21 @@ import {
   UserCheck,
   CheckCircle2,
   AlertCircle,
+  BellRing,
+  LogOut,
   X,
 } from 'lucide-react';
 
 interface HeaderTopBarProps {
   onToggleMobileSidebar?: () => void;
+  onSignOut?: () => void;
 }
 
-export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSidebar }) => {
-  const { activeView, setActiveView, cart, orders, cashRegister } = useBalneario();
+export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSidebar, onSignOut }) => {
+  const {
+    activeView, setActiveView, setSelectedLocationCode, cart, orders, cashRegister,
+    guestAssistanceRequests, resolveGuestAssistanceRequest,
+  } = useBalneario();
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -37,7 +43,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
   // Notifications calculation
   const pendingOrders = orders.filter((o) => o.status === 'pendiente_confirmacion');
   const readyOrders = orders.filter((o) => o.status === 'listo_para_entrega');
-  const totalNotifications = pendingOrders.length + readyOrders.length;
+  const totalNotifications = pendingOrders.length + readyOrders.length + guestAssistanceRequests.length;
 
   const formattedDate = currentTime.toLocaleDateString('es-AR', {
     weekday: 'short',
@@ -134,6 +140,36 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                 </div>
 
                 <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {guestAssistanceRequests.map((request) => (
+                    <div key={request.id} className="p-2.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs">
+                      <div className="font-black text-rose-700 flex items-center gap-1">
+                        <BellRing className="w-3.5 h-3.5" />
+                        <span>Llamado de mozo · {request.locationCode}</span>
+                      </div>
+                      <p className="text-[11px] text-[#34313A]/80 mt-1">
+                        {request.locationName}{request.requestCount > 1 ? ` · ${request.requestCount} llamados` : ''}
+                      </p>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedLocationCode(request.locationCode);
+                            setActiveView('pos');
+                            setShowNotifications(false);
+                          }}
+                          className="text-[11px] font-bold underline text-[#34313A]"
+                        >
+                          Ver ubicación en POS →
+                        </button>
+                        <button
+                          onClick={() => void resolveGuestAssistanceRequest(request.id)}
+                          className="rounded-lg bg-white border border-rose-200 px-2 py-1 text-[10px] font-black text-rose-700 hover:bg-rose-100"
+                        >
+                          Marcar atendido
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
                   {pendingOrders.length > 0 && (
                     <div className="p-2.5 rounded-2xl bg-[#F68F57]/15 border border-[#F68F57]/30 text-xs">
                       <div className="font-black text-[#F68F57] flex items-center gap-1">
@@ -248,6 +284,19 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
           <div className="hidden sm:block">
             <PWAInstallButton variant="header" />
           </div>
+
+          {onSignOut && (
+            <button
+              type="button"
+              onClick={onSignOut}
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition"
+              title="Cerrar sesión"
+              aria-label="Cerrar sesión"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Cerrar sesión</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

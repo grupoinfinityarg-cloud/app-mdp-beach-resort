@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { ProductCustomizeModal } from './ProductCustomizeModal';
 import { Product } from '../types';
+import { Category, Promotion, BalnearioConfig } from '../types';
+import { supabase, supabaseBusinessSlug } from '../utils/supabase';
 import { formatCurrencyARS, calculateTop5Products, matchProductSearch } from '../utils/balnearioLogic';
 import {
   Search,
@@ -37,34 +39,71 @@ export const DigitalMenuView: React.FC = () => {
     setSelectedLocationCode,
     locations,
     config,
+    businessDisplayName,
     productBeingCustomized,
     setProductBeingCustomized,
   } = useBalneario();
+  const qrParams = new URLSearchParams(window.location.search);
+  const qrLocationCode = qrParams.get('mesa') || qrParams.get('carpa') || qrParams.get('spot');
+  const isQrAccess = ['mesa', 'carpa', 'spot'].some((param) => qrParams.has(param));
+  const activeLocationCode = qrLocationCode?.toUpperCase() || selectedLocationCode;
 
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [orderMode, setOrderMode] = useState<'mesa' | 'retirar'>('mesa');
   const [isLocationSelectorOpen, setIsLocationSelectorOpen] = useState(false);
   const [assistanceRequested, setAssistanceRequested] = useState(false);
+  const [assistanceSubmitting, setAssistanceSubmitting] = useState(false);
+  const [assistanceError, setAssistanceError] = useState<string | null>(null);
   const [isListeningVoice, setIsListeningVoice] = useState(false);
   const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [qrMenu, setQrMenu] = useState<{ products: Product[]; categories: Category[]; promotions: Promotion[]; business?: Partial<BalnearioConfig> } | null>(null);
+  const [qrMenuError, setQrMenuError] = useState<string | null>(null);
+  const [qrMenuLoading, setQrMenuLoading] = useState(isQrAccess);
+
+  useEffect(() => {
+    if (!isQrAccess) return;
+    if (!supabase || !supabaseBusinessSlug) {
+      setQrMenuError('La carta QR todavía no está conectada al balneario.');
+      setQrMenuLoading(false);
+      return;
+    }
+    let active = true;
+    void supabase.rpc('get_qr_menu', { p_business_slug: supabaseBusinessSlug }).then(({ data, error }) => {
+      if (!active) return;
+      if (error || !data) setQrMenuError(error?.message ?? 'No se pudo cargar la carta.');
+      else setQrMenu(data as typeof qrMenu);
+      setQrMenuLoading(false);
+    });
+    return () => { active = false; };
+  }, [isQrAccess]);
+
+  const visibleProducts = isQrAccess ? (qrMenu?.products ?? []) : products;
+  const visibleCategories = isQrAccess ? (qrMenu?.categories ?? []) : categories;
+  const visiblePromotions = isQrAccess ? (qrMenu?.promotions ?? []) : [];
+  const visibleConfig = {
+    ...config,
+    ...(qrMenu?.business ?? {}),
+    name: qrMenu?.business?.name || businessDisplayName,
+    branchName: qrMenu?.business?.name || businessDisplayName,
+  };
 
   // Dynamic Top 5 ranking
   const { products: top5List, isDemonstrationOnly } = useMemo(
-    () => calculateTop5Products(products, orders),
-    [products, orders]
+    () => calculateTop5Products(visibleProducts, orders),
+    [visibleProducts, orders]
   );
 
   // Filtered products list using fuzzy matcher for text, voice, and barcodes
   const filteredProducts = useMemo(() => {
-    return products.filter((prod) => {
+    return visibleProducts.filter((prod) => {
       if (!prod.isActive) return false;
       if (selectedCategory !== 'todos' && prod.categoryId !== selectedCategory) {
         return false;
       }
       return matchProductSearch(prod, searchQuery);
     });
-  }, [products, selectedCategory, searchQuery]);
+  }, [visibleProducts, selectedCategory, searchQuery]);
 
   // Cart totals
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -130,7 +169,7 @@ export const DigitalMenuView: React.FC = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${config.name} - ${config.branchName}`,
+        title: `${visibleConfig.name} - ${visibleConfig.branchName}`,
         text: '¡Mirá la carta digital del balneario y hacé tu pedido!',
         url: window.location.href,
       }).catch(() => {});
@@ -140,15 +179,40 @@ export const DigitalMenuView: React.FC = () => {
     }
   };
 
-  const handleRequestAssistance = () => {
-    setAssistanceRequested(true);
-    setTimeout(() => setAssistanceRequested(false), 5000);
+  const handleRequestAssistance = async () => {
+    if (!supabase || !supabaseBusinessSlug || assistanceSubmitting) {
+      if (!supabase || !supabaseBusinessSlug) setAssistanceError('No se pudo conectar con el personal. Avisale a alguien del balneario.');
+      return;
+    }
+    setAssistanceError(null);
+    setAssistanceSubmitting(true);
+    try {
+      const { error } = await supabase.rpc('request_guest_assistance', {
+        p_business_slug: supabaseBusinessSlug,
+        p_location_code: activeLocationCode,
+      });
+      if (error) throw error;
+      setAssistanceRequested(true);
+    } catch {
+      setAssistanceError('No se pudo enviar el llamado. Avisale a alguien del balneario.');
+    } finally {
+      setAssistanceSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#FBEEB9] pb-32">
       {/* Maximum Mobile/Tablet Centered Frame in Blanco (#FFFFFF) */}
       <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen relative overflow-hidden border-x border-[#E2E2E2]">
+        {isQrAccess && (qrMenuLoading || qrMenuError) && (
+          <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/95 p-6 text-center">
+            <div className="max-w-sm rounded-2xl border border-[#E2E2E2] bg-white p-5 shadow-lg">
+              <h2 className="text-base font-black text-[#34313A]">{qrMenuLoading ? 'Cargando la carta…' : 'No se pudo cargar la carta'}</h2>
+              <p className="mt-2 text-xs text-gray-600">{qrMenuLoading ? 'Estamos consultando los productos actuales del balneario.' : qrMenuError}</p>
+              {!qrMenuLoading && <button type="button" onClick={() => window.location.reload()} className="mt-4 rounded-xl bg-[#C1E7FF] px-4 py-2 text-xs font-black text-[#34313A]">Volver a intentar</button>}
+            </div>
+          </div>
+        )}
         {/* Hero Section with Gastronomic Atmosphere */}
         <div className="relative h-64 sm:h-72 w-full bg-[#34313A]">
           <img
@@ -163,7 +227,7 @@ export const DigitalMenuView: React.FC = () => {
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#34313A] text-[11px] font-bold shadow-md border border-[#E2E2E2]">
               <span className="w-2 h-2 rounded-full bg-[#F68F57] animate-pulse" />
               <span>
-                Powered by <strong className="font-black">{config.name}</strong>
+                Powered by <strong className="font-black">{visibleConfig.name}</strong>
               </span>
             </div>
 
@@ -180,18 +244,27 @@ export const DigitalMenuView: React.FC = () => {
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
             {/* Location selector dropdown */}
             <div className="relative">
-              <button
-                onClick={() => setIsLocationSelectorOpen(!isLocationSelectorOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#34313A]/90 backdrop-blur-md text-white text-xs font-bold border border-white/20 hover:bg-[#34313A] transition shadow-lg"
-              >
+              {isQrAccess ? (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#34313A]/90 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-lg">
                 <Utensils className="w-3.5 h-3.5 text-[#C1E7FF]" />
                 <span>
-                  Estás en: <strong>{selectedLocationCode}</strong>
+                  Estás en: <strong>{activeLocationCode}</strong>
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-300" />
-              </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsLocationSelectorOpen(!isLocationSelectorOpen)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#34313A]/90 backdrop-blur-md text-white text-xs font-bold border border-white/20 hover:bg-[#34313A] transition shadow-lg"
+                >
+                  <Utensils className="w-3.5 h-3.5 text-[#C1E7FF]" />
+                  <span>
+                    Estás en: <strong>{activeLocationCode}</strong>
+                  </span>
+                  <ChevronDown className="w-3.5 h-3.5 text-gray-300" />
+                </button>
+              )}
 
-              {isLocationSelectorOpen && (
+              {!isQrAccess && isLocationSelectorOpen && (
                 <div className="absolute bottom-full left-0 mb-2 w-64 bg-white rounded-2xl shadow-2xl border border-[#E2E2E2] p-2 z-50 text-[#34313A] max-h-60 overflow-y-auto">
                   <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 px-2 py-1">
                     Cambiar tu Carpa o Mesa
@@ -205,7 +278,7 @@ export const DigitalMenuView: React.FC = () => {
                           setIsLocationSelectorOpen(false);
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-bold ${
-                          selectedLocationCode === loc.code
+                          activeLocationCode === loc.code
                             ? 'bg-[#C1E7FF] text-[#34313A]'
                             : 'hover:bg-[#FBEEB9]/40 text-[#34313A]'
                         }`}
@@ -238,7 +311,7 @@ export const DigitalMenuView: React.FC = () => {
                 GASTRONOMÍA & PARADOR DE PLAYA
               </span>
               <h1 className="text-xl sm:text-2xl font-black text-[#34313A] tracking-tight leading-tight mt-0.5">
-                {config.branchName.toUpperCase()}
+                {visibleConfig.branchName.toUpperCase()}
               </h1>
               <p className="text-xs text-gray-500 font-medium">
                 Sector Playa Grande • Mar del Plata
@@ -261,11 +334,11 @@ export const DigitalMenuView: React.FC = () => {
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-[#34313A] font-bold text-[11px] border border-[#E2E2E2]">
               <Clock className="w-3 h-3 text-[#F68F57]" />
-              <span>{config.schedule}</span>
+              <span>{visibleConfig.schedule}</span>
             </div>
             <div className="flex items-center gap-1.5 text-gray-500 text-[11px]">
               <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
-              <span className="truncate">{config.address}</span>
+              <span className="truncate">{visibleConfig.address}</span>
             </div>
           </div>
 
@@ -299,6 +372,7 @@ export const DigitalMenuView: React.FC = () => {
             {/* Call waiter / Assistance */}
             <button
               onClick={handleRequestAssistance}
+              disabled={assistanceSubmitting || assistanceRequested}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition shadow-xs ${
                 assistanceRequested
                   ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] font-black'
@@ -307,10 +381,10 @@ export const DigitalMenuView: React.FC = () => {
             >
               <BellRing className={`w-3.5 h-3.5 ${assistanceRequested ? 'animate-bounce text-[#34313A]' : 'text-[#F68F57]'}`} />
               <span className="hidden sm:inline">
-                {assistanceRequested ? '¡Mozo notificado!' : 'Llamar Mozo'}
+                {assistanceSubmitting ? 'Enviando…' : assistanceRequested ? '¡Mozo notificado!' : 'Llamar Mozo'}
               </span>
               <span className="sm:hidden">
-                {assistanceRequested ? '¡Llamado!' : 'Mozo'}
+                {assistanceSubmitting ? '…' : assistanceRequested ? '¡Llamado!' : 'Mozo'}
               </span>
             </button>
           </div>
@@ -318,9 +392,10 @@ export const DigitalMenuView: React.FC = () => {
           {assistanceRequested && (
             <div className="mt-2 text-xs font-bold text-[#34313A] bg-[#C1E7FF]/40 p-2.5 rounded-2xl border border-[#a9dbfa] flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-[#34313A] shrink-0" />
-              <span>El mozo del sector {selectedLocationCode} se acerca a tu ubicación.</span>
+              <span>El personal recibió tu solicitud para la ubicación {activeLocationCode}.</span>
             </div>
           )}
+          {assistanceError && <p role="alert" className="mt-2 text-[11px] font-bold text-rose-700">{assistanceError}</p>}
         </div>
 
         {/* Search Bar & Voice / Barcode Input */}
@@ -417,7 +492,7 @@ export const DigitalMenuView: React.FC = () => {
             <span>Destacados</span>
           </button>
 
-          {categories.map((cat) => {
+          {visibleCategories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <button
@@ -615,7 +690,7 @@ export const DigitalMenuView: React.FC = () => {
               <span>Carta digital oficial • Identidad Oficial Gestión Balnearia</span>
             </div>
             <p className="text-[11px] text-gray-500">
-              {config.branchName} • Mar del Plata, Argentina. Los precios incluyen IVA.
+              {visibleConfig.branchName} • Mar del Plata, Argentina. Los precios incluyen IVA.
             </p>
           </div>
         </div>
@@ -704,7 +779,7 @@ export const DigitalMenuView: React.FC = () => {
                 Códigos de carta balnearia:
               </p>
               <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
-                {products.filter((p) => p.isActive).map((prod) => (
+                {visibleProducts.filter((p) => p.isActive).map((prod) => (
                   <button
                     key={prod.id}
                     type="button"

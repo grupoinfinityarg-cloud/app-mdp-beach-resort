@@ -13,12 +13,19 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
   const { setActiveView, setSelectedLocationCode } = useBalneario();
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const businessSlug = import.meta.env.VITE_SUPABASE_BUSINESS_SLUG?.trim();
+
+  const getTargetUrl = (locationCode: string) => {
+    const url = new URL('/', window.location.origin);
+    if (businessSlug) url.searchParams.set('balneario', businessSlug);
+    url.searchParams.set('mesa', locationCode);
+    return url.toString();
+  };
 
   useEffect(() => {
     if (!location) return;
 
-    const origin = window.location.origin;
-    const url = `${origin}/?mesa=${encodeURIComponent(location.code)}`;
+    const url = getTargetUrl(location.code);
 
     QRCode.toDataURL(url, {
       width: 320,
@@ -31,11 +38,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ location, onClose }) =
     })
       .then((dataUrl) => setQrDataUrl(dataUrl))
       .catch((err) => console.error('Error generating QR', err));
-  }, [location]);
+  }, [location, businessSlug]);
 
   if (!location) return null;
 
-  const targetUrl = `${window.location.origin}/?mesa=${encodeURIComponent(location.code)}`;
+  const targetUrl = getTargetUrl(location.code);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(targetUrl);

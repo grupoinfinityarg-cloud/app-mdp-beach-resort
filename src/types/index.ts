@@ -122,6 +122,18 @@ export type PaymentMethod =
   | 'tarjeta_credito'
   | 'cargo_a_carpa';
 
+export type CustomerApprovalStatus = 'not_required' | 'pending' | 'approved' | 'rejected';
+export type OrderSource = 'staff' | 'qr';
+
+export interface GuestAssistanceRequest {
+  id: string;
+  locationId: string;
+  locationCode: string;
+  locationName: string;
+  requestedAt: string;
+  requestCount: number;
+}
+
 export interface Order {
   id: string;
   orderNumber: string; // e.g. "#1054"
@@ -150,6 +162,10 @@ export interface Order {
   deliveredAt?: string;
   paidAt?: string;
   whatsappContactedAt?: string;
+  orderSource?: OrderSource;
+  currentVersion?: number;
+  customerApprovedVersion?: number;
+  customerApprovalStatus?: CustomerApprovalStatus;
   editAuditLog?: {
     timestamp: string;
     employee: string;

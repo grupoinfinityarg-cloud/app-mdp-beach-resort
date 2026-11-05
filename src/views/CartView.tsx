@@ -3,6 +3,7 @@ import { useBalneario } from '../context/BalnearioContext';
 import { formatCurrencyARS, validateArgentinePhone } from '../utils/balnearioLogic';
 import confetti from 'canvas-confetti';
 import { PaymentMethod } from '../types';
+import { supabase, supabaseBusinessSlug } from '../utils/supabase';
 import {
   ArrowLeft,
   Trash2,
@@ -36,6 +37,10 @@ export const CartView: React.FC = () => {
     setActiveView,
     locations,
   } = useBalneario();
+  const qrParams = new URLSearchParams(window.location.search);
+  const qrLocationCode = qrParams.get('mesa') || qrParams.get('carpa') || qrParams.get('spot');
+  const isQrAccess = ['mesa', 'carpa', 'spot'].some((param) => qrParams.has(param));
+  const activeLocationCode = qrLocationCode?.toUpperCase() || selectedLocationCode;
 
   // Customer required fields
   const [customerName, setCustomerName] = useState<string>('');
@@ -48,14 +53,16 @@ export const CartView: React.FC = () => {
   // Validation feedback
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<string | null>(null);
+  const [orderError, setOrderError] = useState<string | null>(null);
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
 
   // Modals
   const [showClearCartModal, setShowClearCartModal] = useState<boolean>(false);
   const [showLeaveWarningModal, setShowLeaveWarningModal] = useState<boolean>(false);
 
   // Location resolution
-  const loc = locations.find((l) => l.code.toUpperCase() === selectedLocationCode.toUpperCase());
-  const locationDisplayName = loc ? `${loc.name} (${loc.code})` : `Ubicación ${selectedLocationCode}`;
+  const loc = locations.find((l) => l.code.toUpperCase() === activeLocationCode.toUpperCase());
+  const locationDisplayName = loc ? `${loc.name} (${loc.code})` : `Ubicación ${activeLocationCode}`;
 
   // Phone validation
   const phoneValidation = validateArgentinePhone(customerPhone);
@@ -66,12 +73,47 @@ export const CartView: React.FC = () => {
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
   const total = subtotal;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setFormSubmitted(true);
-    if (!isFormValid || cart.length === 0) return;
+    setOrderError(null);
+    if (!isFormValid || cart.length === 0 || isSubmittingOrder) return;
+
+    if (isQrAccess) {
+      if (!supabase || !supabaseBusinessSlug) {
+        setOrderError('No se pudo conectar con el sistema de pedidos. Avisale al personal del balneario.');
+        return;
+      }
+      setIsSubmittingOrder(true);
+      try {
+        const { data, error } = await supabase.rpc('create_qr_order', {
+          p_business_slug: supabaseBusinessSlug,
+          p_location_code: activeLocationCode,
+          p_customer_name: customerName.trim(),
+          p_customer_phone: phoneValidation.cleanForWhatsApp,
+          p_payment_method: selectedPaymentMethod,
+          p_notes: deliveryNotes.trim() || null,
+          p_items: cart.map((item) => ({
+            product_id: item.productId, quantity: item.quantity,
+            variant_id: item.variant?.id ?? null,
+            addon_ids: item.selectedAddons.map((addon) => addon.id),
+            removed_ingredients: item.removedIngredients, notes: item.notes ?? null,
+          })),
+        });
+        if (error) throw error;
+        const result = data as { orderNumber?: string };
+        if (!result?.orderNumber) throw new Error('El servidor no confirmó el número del pedido.');
+        clearCart();
+        setPlacedOrderNumber(result.orderNumber);
+      } catch (error) {
+        setOrderError(error instanceof Error ? error.message : 'No se pudo enviar el pedido. Probá nuevamente.');
+      } finally {
+        setIsSubmittingOrder(false);
+      }
+      return;
+    }
 
     const order = createCustomerOrder(
-      selectedLocationCode,
+      activeLocationCode,
       customerName.trim(),
       phoneValidation.cleanForWhatsApp,
       selectedPaymentMethod,
@@ -123,19 +165,26 @@ export const CartView: React.FC = () => {
             <span>Volver a la Carta</span>
           </button>
 
-          <button
-            onClick={() => setShowLocationPicker(!showLocationPicker)}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold hover:bg-[#aee0ff] transition"
-            title="Tocar para cambiar tu sector de entrega"
-          >
+          {isQrAccess ? (
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold">
             <MapPin className="w-3.5 h-3.5 text-[#34313A]" />
             <span>{locationDisplayName}</span>
-            <ChevronDown className="w-3 h-3 text-[#34313A]" />
-          </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLocationPicker(!showLocationPicker)}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold hover:bg-[#aee0ff] transition"
+              title="Tocar para cambiar tu sector de entrega"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#34313A]" />
+              <span>{locationDisplayName}</span>
+              <ChevronDown className="w-3 h-3 text-[#34313A]" />
+            </button>
+          )}
         </div>
 
         {/* Location Picker dropdown modal */}
-        {showLocationPicker && (
+        {!isQrAccess && showLocationPicker && (
           <div className="bg-[#FBEEB9]/30 border-b border-[#E2E2E2] p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
@@ -231,7 +280,7 @@ export const CartView: React.FC = () => {
                 </div>
                 <p className="text-gray-700 leading-normal text-[11px]">
                   1. <strong>Contacto por WhatsApp:</strong> El personal del balneario revisará tu pedido y se comunicará a tu celular (<strong>{customerPhone}</strong>) para confirmar los productos e importe.<br />
-                  2. <strong>Envío a Cocina KDS:</strong> Una vez confirmado, se despacha inmediatamente a preparación.<br />
+                  2. <strong>Envío a Cocina KDS:</strong> Caja registra tu aprobación de la versión actual y recién entonces la envía a preparación.<br />
                   3. <strong>Entrega:</strong> Te lo llevamos directamente a tu sector.
                 </p>
               </div>
@@ -240,11 +289,11 @@ export const CartView: React.FC = () => {
                 <button
                   onClick={() => {
                     setPlacedOrderNumber(null);
-                    setActiveView('comandas');
+                    setActiveView(isQrAccess ? 'carta' : 'comandas');
                   }}
                   className="w-full py-3 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs transition shadow-sm border border-[#a9dbfa]"
                 >
-                  Ver Estado en Comandas
+                  {isQrAccess ? 'Volver a la Carta' : 'Ver Estado en Comandas'}
                 </button>
                 <button
                   onClick={() => {
@@ -469,19 +518,48 @@ export const CartView: React.FC = () => {
                       <MapPin className="w-3 h-3 text-[#34313A]" />
                       <span>Sector de Entrega Confirmado:</span>
                     </label>
-                    <button
-                      type="button"
-                      onClick={() => setShowLocationPicker(true)}
-                      className="text-[11px] font-bold text-[#34313A] underline hover:text-[#F68F57]"
-                    >
-                      Cambiar sector
-                    </button>
+                    {!isQrAccess && (
+                      <button
+                        type="button"
+                        onClick={() => setShowLocationPicker(true)}
+                        className="text-[11px] font-bold text-[#34313A] underline hover:text-[#F68F57]"
+                      >
+                        Cambiar sector
+                      </button>
+                    )}
                   </div>
                   <div className="bg-white p-2.5 rounded-xl border border-[#E2E2E2] flex items-center justify-between text-xs">
                     <span className="font-bold text-[#34313A]">{locationDisplayName}</span>
                     <span className="px-2 py-0.5 rounded-md bg-[#C1E7FF] text-[#34313A] font-black text-[10px] uppercase">
                       {loc?.type.replace(/_/g, ' ') || 'Playa'}
                     </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-1">
+                  <label className="text-[11px] font-bold text-[#34313A]">¿Cómo vas a abonar?</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {([
+                      { value: 'efectivo', label: 'Efectivo', Icon: Banknote },
+                      { value: 'mercadopago_qr', label: 'QR', Icon: QrCode },
+                      { value: 'transferencia', label: 'Transferencia', Icon: Landmark },
+                      { value: 'debito/credito', label: 'Tarjeta', Icon: CreditCard },
+                    ] as const).map(({ value, label, Icon }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        aria-pressed={selectedPaymentMethod === value}
+                        onClick={() => setSelectedPaymentMethod(value)}
+                        className={`flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition ${
+                          selectedPaymentMethod === value
+                            ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
+                            : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                        }`}
+                      >
+                        <Icon className="h-3.5 w-3.5" />
+                        <span>{label}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
 
@@ -526,16 +604,19 @@ export const CartView: React.FC = () => {
           <div className="sticky bottom-0 z-20 bg-white border-t border-[#E2E2E2] p-4 shadow-lg">
             <button
               onClick={handlePlaceOrder}
+              disabled={isSubmittingOrder}
               className="w-full flex items-center justify-between py-3.5 px-5 rounded-2xl bg-[#F68F57] hover:bg-[#e07f4a] text-white font-extrabold text-sm shadow-lg shadow-[#F68F57]/25 transition active:scale-[0.99]"
             >
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
-                <span>CONFIRMAR Y ENVIAR PEDIDO</span>
+                <span>{isSubmittingOrder ? 'ENVIANDO PEDIDO…' : 'CONFIRMAR Y ENVIAR PEDIDO'}</span>
               </div>
               <span className="bg-[#34313A]/25 px-3 py-1 rounded-xl text-white text-xs font-black">
                 {formatCurrencyARS(total)}
               </span>
             </button>
+
+            {orderError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{orderError}</p>}
 
             <p className="text-[10px] text-gray-500 text-center mt-2">
               Se creará el pedido para <strong>{locationDisplayName}</strong> y el personal te contactará por WhatsApp para confirmar.

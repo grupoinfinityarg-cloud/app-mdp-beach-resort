@@ -6,6 +6,7 @@ import {
   CashRegisterState,
   Category,
   CommercialPlan,
+  GuestAssistanceRequest,
   LocationItem,
   LocationStatus,
   LocationType,
@@ -29,6 +30,7 @@ import {
   INITIAL_CASH_MOVEMENTS,
 } from '../data/seedData';
 import { calculateItemUnitPrice, canTransitionOrderStatus } from '../utils/balnearioLogic';
+import { isSupabaseConfigured, supabase, supabaseBusinessSlug } from '../utils/supabase';
 
 export type ActiveView =
   | 'panel'
@@ -48,6 +50,7 @@ export type ActiveView =
 
 interface BalnearioContextType {
   config: BalnearioConfig;
+  businessDisplayName: string;
   updateConfig: (patch: Partial<BalnearioConfig>) => void;
   switchPlan: (plan: CommercialPlan) => void;
 
@@ -89,6 +92,8 @@ interface BalnearioContextType {
   setProductBeingCustomized: (product: Product | null) => void;
 
   orders: Order[];
+  guestAssistanceRequests: GuestAssistanceRequest[];
+  resolveGuestAssistanceRequest: (requestId: string) => Promise<boolean>;
   activePosOrder: Order | null;
   setActivePosOrder: (order: Order | null) => void;
   openPosForOrder: (order: Order) => void;
@@ -107,6 +112,9 @@ interface BalnearioContextType {
     changeDescription?: string
   ) => boolean;
   recordWhatsAppContact: (orderId: string) => void;
+  recordQrCustomerApproval: (order: Order) => Promise<boolean>;
+  sendQrOrderToKitchen: (order: Order) => Promise<boolean>;
+  editQrOrderVersion: (order: Order, items: CartItem[], notes: string | undefined, employee: string, reason: string) => Promise<boolean>;
   confirmAndSendToKitchen: (orderId: string) => boolean;
   updateOrderStatus: (orderId: string, nextStatus: OrderStatus) => boolean;
   cancelOrder: (orderId: string, reason: string) => boolean;
@@ -165,6 +173,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [config, setConfig] = useState<BalnearioConfig>(() =>
     loadStored('config', INITIAL_CONFIG)
   );
+  const [businessDisplayName, setBusinessDisplayName] = useState(INITIAL_CONFIG.branchName);
   const [sectors] = useState<Sector[]>(() =>
     loadStored('sectors', INITIAL_SECTORS)
   );
@@ -183,6 +192,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [orders, setOrders] = useState<Order[]>(() =>
     loadStored('orders', INITIAL_ORDERS)
   );
+  const [guestAssistanceRequests, setGuestAssistanceRequests] = useState<GuestAssistanceRequest[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>(() =>
     loadStored('reservations', INITIAL_RESERVATIONS)
   );
@@ -204,6 +214,121 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [cart, setCart] = useState<CartItem[]>(() => loadStored('cart', []));
   const [productBeingCustomized, setProductBeingCustomized] = useState<Product | null>(null);
   const [activePosOrder, setActivePosOrder] = useState<Order | null>(null);
+
+  // Carga y mantiene sincronizados los pedidos QR visibles para el personal.
+  useEffect(() => {
+    const client = supabase;
+    if (!isSupabaseConfigured || !client || !supabaseBusinessSlug) return;
+    let alive = true;
+    let businessId: string | null = null;
+    const loadQrOrders = async () => {
+      const { data: business } = await client
+        .from('businesses').select('id,name').eq('slug', supabaseBusinessSlug).maybeSingle();
+      if (!alive || !business?.id) return;
+      if (business.name) {
+        setBusinessDisplayName(business.name);
+        setConfig((current) => ({ ...current, branchName: business.name }));
+      }
+      businessId = business.id;
+
+      const { data: assistanceRows, error: assistanceError } = await client
+        .from('guest_assistance_requests').select('*').eq('business_id', businessId)
+        .is('resolved_at', null).order('created_at', { ascending: true });
+      if (alive && !assistanceError && assistanceRows) {
+        const assistanceLocationIds = [...new Set(assistanceRows.map((request) => request.location_id))];
+        const { data: assistanceLocations } = assistanceLocationIds.length
+          ? await client.from('locations').select('id,code,name').eq('business_id', businessId).in('id', assistanceLocationIds)
+          : { data: [] };
+        const assistanceLocationById = new Map((assistanceLocations ?? []).map((location) => [location.id, location]));
+        setGuestAssistanceRequests(assistanceRows.map((request) => {
+          const location = assistanceLocationById.get(request.location_id);
+          return {
+            id: request.id, locationId: request.location_id,
+            locationCode: location?.code ?? '', locationName: location?.name ?? 'Ubicación',
+            requestedAt: request.created_at, requestCount: request.request_count,
+          };
+        }));
+      }
+
+      const { data: rows, error } = await client
+        .from('orders').select('*').eq('business_id', businessId).eq('order_source', 'qr')
+        .order('created_at', { ascending: false });
+      if (!alive || error || !rows) return;
+      const ids = rows.map((row) => row.id);
+      const { data: itemRows } = ids.length
+        ? await client.from('order_items').select('*').eq('business_id', businessId).in('order_id', ids)
+        : { data: [] };
+      const byOrder = new Map<string, CartItem[]>();
+      for (const item of itemRows ?? []) {
+        const list = byOrder.get(item.order_id) ?? [];
+        list.push({
+          id: item.id, productId: item.product_id, productName: item.product_name,
+          productImage: item.product_image, basePrice: Number(item.base_price),
+          unitPrice: Number(item.unit_price), quantity: item.quantity,
+          variant: item.variant ?? undefined, removedIngredients: item.removed_ingredients ?? [],
+          selectedAddons: item.selected_addons ?? [], notes: item.notes ?? undefined,
+          subtotal: Number(item.subtotal),
+        });
+        byOrder.set(item.order_id, list);
+      }
+      const locationIds = [...new Set(rows.map((row) => row.location_id))];
+      const { data: locationRows } = locationIds.length
+        ? await client.from('locations').select('id,code,name,type').eq('business_id', businessId).in('id', locationIds)
+        : { data: [] };
+      const locationById = new Map((locationRows ?? []).map((loc) => [loc.id, loc]));
+      const remoteOrders: Order[] = rows.map((row) => {
+        const location = locationById.get(row.location_id);
+        return {
+          id: row.id, orderNumber: row.order_number, ticketNumber: row.ticket_number ?? undefined,
+          locationId: row.location_id, locationCode: location?.code ?? '',
+          locationName: location?.name ?? 'Ubicación', locationType: location?.type ?? 'carpa',
+          customerName: row.customer_name ?? undefined, customerPhone: row.customer_phone ?? undefined,
+          items: byOrder.get(row.id) ?? [], subtotal: Number(row.subtotal), discount: Number(row.discount),
+          discountReason: row.discount_reason ?? undefined, serviceFee: Number(row.service_fee),
+          total: Number(row.total), status: row.status, paymentStatus: row.payment_status,
+          paymentMethod: row.payment_method ?? undefined, cancellationReason: row.cancellation_reason ?? undefined,
+          notes: row.notes ?? undefined, createdAt: row.created_at, confirmedAt: row.confirmed_at ?? undefined,
+          preparingAt: row.preparing_at ?? undefined, readyAt: row.ready_at ?? undefined,
+          deliveredAt: row.delivered_at ?? undefined, paidAt: row.paid_at ?? undefined,
+          whatsappContactedAt: row.whatsapp_contacted_at ?? undefined, orderSource: 'qr',
+          currentVersion: row.current_version, customerApprovedVersion: row.customer_approved_version ?? undefined,
+          customerApprovalStatus: row.customer_approval_status, editAuditLog: row.edit_audit_log ?? [],
+        };
+      });
+      if (alive) setOrders((current) => [...remoteOrders, ...current.filter((order) => order.orderSource !== 'qr')]);
+    };
+    void loadQrOrders();
+    const { data: authListener } = client.auth.onAuthStateChange((event) => {
+      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') void loadQrOrders();
+    });
+    const channel = client.channel(`qr-orders-${supabaseBusinessSlug}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => void loadQrOrders())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'guest_assistance_requests' }, () => void loadQrOrders())
+      .subscribe();
+    return () => { alive = false; authListener.subscription.unsubscribe(); void client.removeChannel(channel); };
+  }, []);
+
+  const callQrOrderRpc = async (name: string, order: Order): Promise<boolean> => {
+    if (!supabase || !supabaseBusinessSlug) return false;
+    const { error } = await supabase.rpc(name, {
+      p_business_slug: supabaseBusinessSlug,
+      p_order_id: order.id,
+      p_version: order.currentVersion ?? 1,
+    });
+    if (error) { window.alert(error.message); return false; }
+    return true;
+  };
+
+  const resolveGuestAssistanceRequest = async (requestId: string): Promise<boolean> => {
+    if (!supabase) return false;
+    const { error } = await supabase.rpc('resolve_guest_assistance_request', { p_request_id: requestId });
+    if (error) {
+      window.alert(error.message);
+      return false;
+    }
+    setGuestAssistanceRequests((current) => current.filter((request) => request.id !== requestId));
+    return true;
+  };
 
   const openPosForOrder = (order: Order) => {
     setActivePosOrder(order);
@@ -481,6 +606,13 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Registra que el empleado abrió WhatsApp para contactar al cliente
   const recordWhatsAppContact = (orderId: string) => {
+    const target = orders.find((order) => order.id === orderId);
+    if (target?.orderSource === 'qr' && supabase && supabaseBusinessSlug) {
+      void supabase.rpc('record_qr_order_whatsapp_contact', {
+        p_business_slug: supabaseBusinessSlug, p_order_id: target.id,
+        p_version: target.currentVersion ?? 1,
+      }).then(({ error }) => { if (error) window.alert(error.message); });
+    }
     setOrders((prev) =>
       prev.map((ord) => {
         if (ord.id === orderId) {
@@ -499,6 +631,45 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return ord;
       })
     );
+  };
+
+  const recordQrCustomerApproval = async (order: Order): Promise<boolean> => {
+    const success = await callQrOrderRpc('record_qr_customer_approval', order);
+    if (success) setOrders((prev) => prev.map((item) => item.id === order.id
+      ? { ...item, customerApprovedVersion: order.currentVersion ?? 1, customerApprovalStatus: 'approved' }
+      : item));
+    return success;
+  };
+
+  const editQrOrderVersion = async (order: Order, items: CartItem[], notes: string | undefined, employee: string, reason: string): Promise<boolean> => {
+    if (!supabase || !supabaseBusinessSlug) return false;
+    const { error } = await supabase.rpc('edit_qr_order_version', {
+      p_business_slug: supabaseBusinessSlug,
+      p_order_id: order.id,
+      p_items: items.map((item) => ({
+        product_id: item.productId, quantity: item.quantity,
+        variant_id: item.variant?.id ?? null,
+        addon_ids: item.selectedAddons.map((addon) => addon.id),
+        removed_ingredients: item.removedIngredients, notes: item.notes ?? null,
+      })),
+      p_notes: notes ?? null, p_employee_name: employee, p_change_reason: reason,
+    });
+    if (error) { window.alert(error.message); return false; }
+    setOrders((prev) => prev.map((item) => item.id === order.id ? {
+      ...item, items, notes, currentVersion: (order.currentVersion ?? 1) + 1,
+      customerApprovedVersion: undefined, customerApprovalStatus: 'pending', whatsappContactedAt: undefined,
+      subtotal: items.reduce((sum, entry) => sum + entry.subtotal, 0),
+      total: items.reduce((sum, entry) => sum + entry.subtotal, 0) - item.discount + item.serviceFee,
+    } : item));
+    return true;
+  };
+
+  const sendQrOrderToKitchen = async (order: Order): Promise<boolean> => {
+    const success = await callQrOrderRpc('send_qr_order_to_kitchen', order);
+    if (success) setOrders((prev) => prev.map((item) => item.id === order.id
+      ? { ...item, status: 'confirmado_en_cocina', confirmedAt: new Date().toISOString() }
+      : item));
+    return success;
   };
 
   // PASO 6: Empleado confirma comanda comercial y la envía a cocina KDS
@@ -524,6 +695,16 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // PASO 8 / 9: Estados de cocina y entrega
   const updateOrderStatus = (orderId: string, nextStatus: OrderStatus): boolean => {
+    const target = orders.find((order) => order.id === orderId);
+    if (target?.orderSource === 'qr' && supabase && supabaseBusinessSlug) {
+      void supabase.rpc('update_qr_order_status', {
+        p_business_slug: supabaseBusinessSlug, p_order_id: target.id, p_next_status: nextStatus,
+      }).then(({ error }) => {
+        if (error) { window.alert(error.message); return; }
+        setOrders((prev) => prev.map((order) => order.id === orderId ? { ...order, status: nextStatus } : order));
+      });
+      return true;
+    }
     let success = false;
     setOrders((prev) =>
       prev.map((ord) => {
@@ -669,18 +850,18 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       total,
       // If items need kitchen preparation, mark as confirmed_en_cocina; otherwise directly entregado
       status: sendToKitchen ? 'confirmado_en_cocina' : 'entregado',
-      paymentStatus: 'cobrado',
-      paymentMethod,
+      paymentStatus: sendToKitchen ? 'pendiente' : 'cobrado',
+      paymentMethod: sendToKitchen ? undefined : paymentMethod,
       createdAt: now,
-      confirmedAt: now,
-      paidAt: now,
+      confirmedAt: sendToKitchen ? now : undefined,
+      paidAt: sendToKitchen ? undefined : now,
       deliveredAt: !sendToKitchen ? now : undefined,
     };
 
     setOrders((prev) => [newOrder, ...prev]);
 
     // Record cash movement if cash
-    if (paymentMethod === 'efectivo') {
+    if (!sendToKitchen && paymentMethod === 'efectivo') {
       const move: CashMovement = {
         id: `cm-${Date.now()}`,
         type: 'venta',
@@ -825,6 +1006,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <BalnearioContext.Provider
       value={{
         config,
+        businessDisplayName,
         updateConfig,
         switchPlan,
         activeView,
@@ -855,12 +1037,17 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         productBeingCustomized,
         setProductBeingCustomized,
         orders,
+        guestAssistanceRequests,
+        resolveGuestAssistanceRequest,
         activePosOrder,
         setActivePosOrder,
         openPosForOrder,
         createCustomerOrder,
         editOrder,
         recordWhatsAppContact,
+        recordQrCustomerApproval,
+        sendQrOrderToKitchen,
+        editQrOrderVersion,
         confirmAndSendToKitchen,
         updateOrderStatus,
         cancelOrder,

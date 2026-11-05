@@ -351,7 +351,7 @@ export function formatWhatsAppOrderMessage(
     ? `\nMedio de pago: *${paymentMethodLabels[order.paymentMethod] || order.paymentMethod}*`
     : '';
 
-  return `Hola, *${customerName}*. Somos de *${branchName}*.\n\nRecibimos tu pedido *${order.orderNumber}*${locationText}:\n\n${itemsText}\n\nTotal: *${formattedTotal}*.${paymentLine}\n\nTu pedido se encuentra pendiente de confirmación. ¿Confirmás que está correcto o querés realizar alguna modificación?\n\n¡Gracias!`;
+  return `Hola, *${customerName}*. Somos de *${branchName}*.\n\nRecibimos tu pedido *${order.orderNumber}*${locationText}:\n\n${itemsText}\n\nTotal: *${formattedTotal}*.${paymentLine}\n\nRespondé con una opción:\n✅ *CONFIRMAR* si está correcto.\n✏️ *EDITAR* y contanos qué querés cambiar.\n❌ *CANCELAR* si ya no lo necesitás.\n\n¡Gracias!`;
 }
 
 /**

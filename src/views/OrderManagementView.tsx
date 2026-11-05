@@ -41,9 +41,13 @@ export const OrderManagementView: React.FC = () => {
     cancelOrder,
     editOrder,
     recordWhatsAppContact,
+    recordQrCustomerApproval,
+    sendQrOrderToKitchen,
+    editQrOrderVersion,
     setActiveView,
     setSelectedLocationCode,
     config,
+    businessDisplayName,
     products,
   } = useBalneario();
 
@@ -84,7 +88,7 @@ export const OrderManagementView: React.FC = () => {
   };
 
   const handleCopyWhatsAppMessage = (order: Order) => {
-    const message = formatWhatsAppOrderMessage(order, config.branchName);
+    const message = formatWhatsAppOrderMessage(order, businessDisplayName);
     navigator.clipboard.writeText(message);
     setCopiedOrderId(order.id);
     recordWhatsAppContact(order.id);
@@ -142,7 +146,7 @@ export const OrderManagementView: React.FC = () => {
     setSelectedProductToAdd('');
   };
 
-  const handleSaveOrderEdits = () => {
+  const handleSaveOrderEdits = async () => {
     if (!editingOrder) return;
     if (editItems.length === 0) {
       alert('La comanda debe tener al menos un producto.');
@@ -152,8 +156,12 @@ export const OrderManagementView: React.FC = () => {
     const employee = editEmployeeName.trim() || 'Personal Balneario';
     const reason = editChangeReason.trim() || 'Modificación acordada con el cliente';
 
-    editOrder(editingOrder.id, editItems, editNotes, employee, reason);
-    setEditingOrder(null);
+    if (editingOrder.orderSource === 'qr') {
+      if (await editQrOrderVersion(editingOrder, editItems, editNotes, employee, reason)) setEditingOrder(null);
+    } else {
+      editOrder(editingOrder.id, editItems, editNotes, employee, reason);
+      setEditingOrder(null);
+    }
   };
 
   return (
@@ -428,13 +436,25 @@ export const OrderManagementView: React.FC = () => {
               <div className="pt-4 mt-3 border-t border-[#E2E2E2] space-y-2">
                 {isPending && (
                   <div className="space-y-2">
+                    {ord.orderSource === 'qr' && (
+                      <div className="rounded-xl border border-[#a9dbfa] bg-[#C1E7FF]/25 px-3 py-2 text-[11px] text-[#34313A]">
+                        <div className="font-black">Pedido QR · versión {ord.currentVersion ?? 1}</div>
+                        <div className="mt-0.5">
+                          {ord.customerApprovalStatus === 'approved' && ord.customerApprovedVersion === ord.currentVersion
+                            ? 'El cliente aprobó esta versión por WhatsApp.'
+                            : ord.whatsappContactedAt
+                              ? 'Después de recibir su respuesta, registrá la aprobación acá.'
+                              : 'Contactá al cliente y confirmá por WhatsApp los productos e importe.'}
+                        </div>
+                      </div>
+                    )}
                     {/* Botón WhatsApp prioritario (Requisito 2) */}
                     <div className="flex gap-1.5">
                       {(() => {
                         const rawPhone = ord.customerPhone || '';
                         const phoneVal = validateArgentinePhone(rawPhone);
                         const cleanPhone = phoneVal.cleanForWhatsApp || '5492235551234';
-                        const message = formatWhatsAppOrderMessage(ord, config.branchName);
+                        const message = formatWhatsAppOrderMessage(ord, businessDisplayName);
                         const waLink = buildWhatsAppLink(cleanPhone, message);
                         return (
                           <a
@@ -474,13 +494,26 @@ export const OrderManagementView: React.FC = () => {
                         <span>Editar Pedido</span>
                       </button>
 
-                      <button
-                        onClick={() => confirmAndSendToKitchen(ord.id)}
-                        className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
-                      >
-                        <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
-                        <span>A Cocina KDS</span>
-                      </button>
+                      {ord.orderSource === 'qr' && ord.customerApprovalStatus !== 'approved' ? (
+                        <button
+                          onClick={() => void recordQrCustomerApproval(ord)}
+                          disabled={!ord.whatsappContactedAt}
+                          className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-50 disabled:cursor-not-allowed text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
+                          title="Caja confirma que el cliente respondió y aprobó por WhatsApp"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#34313A]" />
+                          <span>Registrar aprobación</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => ord.orderSource === 'qr' ? void sendQrOrderToKitchen(ord) : confirmAndSendToKitchen(ord.id)}
+                          disabled={ord.orderSource === 'qr' && ord.customerApprovedVersion !== ord.currentVersion}
+                          className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-50 disabled:cursor-not-allowed text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
+                        >
+                          <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
+                          <span>A Cocina KDS</span>
+                        </button>
+                      )}
                     </div>
 
                     <button

@@ -57,7 +57,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
   });
 
   return (
-    <header className="sticky top-0 z-40 bg-[#34313A] text-white border-b border-[#47434e] shadow-md">
+    <header className="sticky top-0 z-[60] bg-[#34313A] text-white border-b border-[#47434e] shadow-md">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-3">
         {/* Left: Mobile hamburger + Personalized greetings */}
         <div className="flex items-center gap-3 min-w-0">
@@ -114,6 +114,9 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
               onClick={() => setShowNotifications(!showNotifications)}
               className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition"
               title="Avisos y Notificaciones"
+              aria-label="Avisos y Notificaciones"
+              aria-expanded={showNotifications}
+              aria-controls="header-notifications-panel"
             >
               <Bell className="w-4 h-4" />
               {totalNotifications > 0 && (
@@ -125,7 +128,12 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
 
             {/* Notifications Dropdown Modal */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white text-[#34313A] rounded-3xl p-4 shadow-2xl border border-[#E2E2E2] z-50 space-y-3">
+              <div
+                id="header-notifications-panel"
+                role="dialog"
+                aria-label="Avisos y Notificaciones"
+                className="fixed left-3 right-3 top-[4.5rem] z-[70] mx-auto flex max-h-[calc(100dvh-5.5rem)] w-auto max-w-sm flex-col space-y-3 overflow-hidden rounded-3xl border border-[#E2E2E2] bg-white p-4 text-[#34313A] shadow-2xl sm:left-auto sm:right-4 sm:mx-0 sm:w-80"
+              >
                 <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
                   <div className="flex items-center gap-1.5">
                     <Bell className="w-4 h-4 text-[#F68F57]" />
@@ -139,7 +147,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                   </button>
                 </div>
 
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain">
                   {guestAssistanceRequests.map((request) => (
                     <div key={request.id} className="p-2.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs">
                       <div className="font-black text-rose-700 flex items-center gap-1">

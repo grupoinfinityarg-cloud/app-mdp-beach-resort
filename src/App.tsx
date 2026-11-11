@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BalnearioProvider, useBalneario } from './context/BalnearioContext';
 import { HeaderTopBar } from './components/HeaderTopBar';
+import { DemoRoleSwitcherBar } from './components/DemoRoleSwitcherBar';
 import { Sidebar } from './components/Sidebar';
 import { DigitalMenuView } from './views/DigitalMenuView';
 import { CartView } from './views/CartView';
@@ -167,6 +168,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen sand-textured-bg text-[#34313A] flex flex-col font-sans selection:bg-[#C1E7FF] selection:text-[#34313A]">
+      {/* Barra de Demostración Comercial y Selector de Roles */}
+      <DemoRoleSwitcherBar />
+
       {/* Offline PWA Banner */}
       {!isOnline && !isQrAccess && (
         <div className="bg-[#F68F57] text-white text-xs font-bold py-1.5 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md">

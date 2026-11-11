@@ -43,3 +43,19 @@ To enable this on the connected project, in Supabase Dashboard > SQL Editor:
 5. Open a generated QR link for a location that exists in the seeded catalog, submit a test order, and verify it appears in Comandas. Contact the customer in WhatsApp, record approval in Caja, then send it to Cocina. Use “Llamar Mozo” to verify the request appears in the staff notification dropdown.
 
 The application changes and SQL files are local until you apply the SQL yourself. No production migration or seed was run from this workspace. The browser publishable key is public by design; the order rules and customer price calculation are enforced by the database functions and grants, but the app itself has not been deployed or remotely tested.
+
+## WhatsApp order approval buttons
+
+QR order confirmation now uses the WhatsApp Business Platform Cloud API instead of opening a prefilled `wa.me` draft. The Supabase Edge Function `whatsapp-order-approval` sends a template with three quick replies (`CONFIRMAR`, `EDITAR`, `CANCELAR`) and receives the button response through the Meta webhook. The webhook checks Meta's HMAC signature, matches the replying phone to the order, and accepts each response only once for the current order version.
+
+Before enabling it:
+
+1. In Meta Business Manager / WhatsApp Manager, confirm the balneario's WhatsApp number is registered for the Cloud API and can receive webhook events. Do not disconnect or migrate the existing WhatsApp Business number until its current setup has been checked.
+2. Create and get approval for a Spanish utility template with four body variables in this order: customer name, order number, location, total. Add exactly three quick-reply buttons, in this order: `👍 CONFIRMAR`, `✏️ EDITAR`, `🚫 CANCELAR`.
+3. Apply `migrations/20261107000100_whatsapp_order_approval_buttons.sql` in the connected Supabase project.
+4. Deploy the `whatsapp-order-approval` Edge Function.
+5. Add these function secrets in Supabase: `META_WHATSAPP_ACCESS_TOKEN`, `META_WHATSAPP_PHONE_NUMBER_ID`, `META_WHATSAPP_APP_SECRET`, `META_WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `META_WHATSAPP_API_VERSION`, `META_WHATSAPP_ORDER_TEMPLATE_NAME`, and `META_WHATSAPP_ORDER_TEMPLATE_LANGUAGE` (`es_AR` for the template above).
+6. In Meta's webhook configuration, use `https://<project-ref>.supabase.co/functions/v1/whatsapp-order-approval`, enter the same verification token, and subscribe to the `messages` field.
+7. Send a test QR order to a number controlled by the balneario. Confirm each button updates the order in Comandas before using the flow with customers.
+
+The service-role key stays in Supabase's managed function environment and is never added to Vercel or browser variables. Until the migration, function, template, and Meta webhook are configured, the new QR send button cannot deliver a WhatsApp message. A tap on `EDITAR` records a request for staff to contact the customer and create a new order version; `CANCELAR` cancels the pending order; `CONFIRMAR` approves only the version shown in that message.

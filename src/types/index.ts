@@ -122,7 +122,7 @@ export type PaymentMethod =
   | 'tarjeta_credito'
   | 'cargo_a_carpa';
 
-export type CustomerApprovalStatus = 'not_required' | 'pending' | 'approved' | 'rejected';
+export type CustomerApprovalStatus = 'not_required' | 'pending' | 'approved' | 'rejected' | 'edit_requested';
 export type OrderSource = 'staff' | 'qr';
 
 export interface GuestAssistanceRequest {

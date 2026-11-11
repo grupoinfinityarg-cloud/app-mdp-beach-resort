@@ -111,8 +111,9 @@ interface BalnearioContextType {
     employeeName?: string,
     changeDescription?: string
   ) => boolean;
-  recordWhatsAppContact: (orderId: string) => void;
+  recordWhatsAppContact: (orderId: string, alreadyPersistedRemotely?: boolean) => void;
   recordQrCustomerApproval: (order: Order) => Promise<boolean>;
+  recordQrCustomerEditRequest: (order: Order) => Promise<boolean>;
   sendQrOrderToKitchen: (order: Order) => Promise<boolean>;
   editQrOrderVersion: (order: Order, items: CartItem[], notes: string | undefined, employee: string, reason: string) => Promise<boolean>;
   confirmAndSendToKitchen: (orderId: string) => boolean;
@@ -309,7 +310,10 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   const callQrOrderRpc = async (name: string, order: Order): Promise<boolean> => {
-    if (!supabase || !supabaseBusinessSlug) return false;
+    if (!supabase || !supabaseBusinessSlug) {
+      // En modo demostración / local (sin Supabase conectado), permitimos continuar en memoria
+      return true;
+    }
     const { error } = await supabase.rpc(name, {
       p_business_slug: supabaseBusinessSlug,
       p_order_id: order.id,
@@ -605,9 +609,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   // Registra que el empleado abrió WhatsApp para contactar al cliente
-  const recordWhatsAppContact = (orderId: string) => {
+  const recordWhatsAppContact = (orderId: string, alreadyPersistedRemotely = false) => {
     const target = orders.find((order) => order.id === orderId);
-    if (target?.orderSource === 'qr' && supabase && supabaseBusinessSlug) {
+    if (!alreadyPersistedRemotely && target?.orderSource === 'qr' && supabase && supabaseBusinessSlug) {
       void supabase.rpc('record_qr_order_whatsapp_contact', {
         p_business_slug: supabaseBusinessSlug, p_order_id: target.id,
         p_version: target.currentVersion ?? 1,
@@ -639,6 +643,27 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       ? { ...item, customerApprovedVersion: order.currentVersion ?? 1, customerApprovalStatus: 'approved' }
       : item));
     return success;
+  };
+
+  const recordQrCustomerEditRequest = async (order: Order): Promise<boolean> => {
+    const now = new Date().toISOString();
+    const newAuditEntry = {
+      timestamp: now,
+      employee: 'Cliente por WhatsApp',
+      description: 'El cliente pidió editar el pedido desde el botón de WhatsApp (✏️ EDITAR).',
+    };
+    setOrders((prev) =>
+      prev.map((item) =>
+        item.id === order.id
+          ? {
+              ...item,
+              customerApprovalStatus: 'edit_requested',
+              editAuditLog: [...(item.editAuditLog || []), newAuditEntry],
+            }
+          : item
+      )
+    );
+    return true;
   };
 
   const editQrOrderVersion = async (order: Order, items: CartItem[], notes: string | undefined, employee: string, reason: string): Promise<boolean> => {
@@ -1065,6 +1090,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         editOrder,
         recordWhatsAppContact,
         recordQrCustomerApproval,
+        recordQrCustomerEditRequest,
         sendQrOrderToKitchen,
         editQrOrderVersion,
         confirmAndSendToKitchen,

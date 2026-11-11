@@ -31,7 +31,9 @@ import {
   History,
   X,
   FileText,
+  Smartphone,
 } from 'lucide-react';
+import { supabase, supabaseBusinessSlug } from '../utils/supabase';
 
 export const OrderManagementView: React.FC = () => {
   const {
@@ -42,6 +44,7 @@ export const OrderManagementView: React.FC = () => {
     editOrder,
     recordWhatsAppContact,
     recordQrCustomerApproval,
+    recordQrCustomerEditRequest,
     sendQrOrderToKitchen,
     editQrOrderVersion,
     setActiveView,
@@ -69,6 +72,14 @@ export const OrderManagementView: React.FC = () => {
 
   // WhatsApp copied feedback
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
+  const [sendingWhatsAppOrderId, setSendingWhatsAppOrderId] = useState<string | null>(null);
+  const [simulatedWhatsAppOrder, setSimulatedWhatsAppOrder] = useState<Order | null>(null);
+  const [whatsAppToast, setWhatsAppToast] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setWhatsAppToast(msg);
+    setTimeout(() => setWhatsAppToast(null), 4000);
+  };
 
   const filteredOrders = orders.filter((o) => {
     if (activeTab === 'pendientes') return o.status === 'pendiente_confirmacion';
@@ -91,8 +102,39 @@ export const OrderManagementView: React.FC = () => {
     const message = formatWhatsAppOrderMessage(order, businessDisplayName);
     navigator.clipboard.writeText(message);
     setCopiedOrderId(order.id);
-    recordWhatsAppContact(order.id);
+    if (order.orderSource !== 'qr') recordWhatsAppContact(order.id);
     setTimeout(() => setCopiedOrderId(null), 3000);
+  };
+
+  const handleSendQrApprovalButtons = async (order: Order) => {
+    if (sendingWhatsAppOrderId) return;
+    setSendingWhatsAppOrderId(order.id);
+    try {
+      if (supabase && supabaseBusinessSlug) {
+        const { data, error } = await supabase.functions.invoke('whatsapp-order-approval', {
+          body: {
+            action: 'send_order_approval',
+            businessSlug: supabaseBusinessSlug,
+            orderId: order.id,
+            version: order.currentVersion ?? 1,
+          },
+        });
+        if (error) throw new Error(data?.error || error.message);
+        if (data?.error) throw new Error(data.error);
+        recordWhatsAppContact(order.id, true);
+        showToast(`Botones de WhatsApp enviados a ${order.customerName || 'Cliente'}.`);
+      } else {
+        // En modo demostración/local sin backend de Meta, registramos el envío y abrimos el simulador interactivo
+        recordWhatsAppContact(order.id, true);
+        setSimulatedWhatsAppOrder(order);
+        showToast('Botones enviados. Podés simular la respuesta del cliente.');
+      }
+    } catch (failure) {
+      const message = failure instanceof Error ? failure.message : 'No se pudo enviar el mensaje de WhatsApp.';
+      window.alert(message);
+    } finally {
+      setSendingWhatsAppOrderId(null);
+    }
   };
 
   // Open Edit Order Modal
@@ -166,6 +208,14 @@ export const OrderManagementView: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
+      {/* Toast Feedback de WhatsApp */}
+      {whatsAppToast && (
+        <div className="fixed top-5 right-5 z-50 bg-[#34313A] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold border border-white/20">
+          <MessageCircle className="w-4 h-4 text-emerald-400" />
+          <span>{whatsAppToast}</span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -442,6 +492,8 @@ export const OrderManagementView: React.FC = () => {
                         <div className="mt-0.5">
                           {ord.customerApprovalStatus === 'approved' && ord.customerApprovedVersion === ord.currentVersion
                             ? 'El cliente aprobó esta versión por WhatsApp.'
+                            : ord.customerApprovalStatus === 'edit_requested'
+                              ? 'El cliente pidió editar el pedido por WhatsApp. Revisá qué cambios necesita y enviá una nueva versión.'
                             : ord.whatsappContactedAt
                               ? 'Después de recibir su respuesta, registrá la aprobación acá.'
                               : 'Contactá al cliente y confirmá por WhatsApp los productos e importe.'}
@@ -456,6 +508,31 @@ export const OrderManagementView: React.FC = () => {
                         const cleanPhone = phoneVal.cleanForWhatsApp || '5492235551234';
                         const message = formatWhatsAppOrderMessage(ord, businessDisplayName);
                         const waLink = buildWhatsAppLink(cleanPhone, message);
+                        if (ord.orderSource === 'qr') {
+                          return (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => void handleSendQrApprovalButtons(ord)}
+                                disabled={sendingWhatsAppOrderId !== null}
+                                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-sm transition active:scale-98 disabled:opacity-60"
+                                title="Enviar al cliente una plantilla de WhatsApp con botones de respuesta (👍 CONFIRMAR, ✏️ EDITAR, 🚫 CANCELAR)"
+                              >
+                                <MessageCircle className="w-4 h-4 fill-white" />
+                                <span>{sendingWhatsAppOrderId === ord.id ? 'Enviando…' : ord.whatsappContactedAt ? 'Reenviar botones' : 'Enviar botones por WhatsApp'}</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setSimulatedWhatsAppOrder(ord)}
+                                className="px-2.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition flex items-center gap-1 text-xs font-bold"
+                                title="Simular cómo ve el cliente los botones en su celular"
+                              >
+                                <Smartphone className="w-4 h-4 text-emerald-700" />
+                                <span className="hidden sm:inline">Simular</span>
+                              </button>
+                            </>
+                          );
+                        }
                         return (
                           <a
                             href={waLink}
@@ -497,7 +574,7 @@ export const OrderManagementView: React.FC = () => {
                       {ord.orderSource === 'qr' && ord.customerApprovalStatus !== 'approved' ? (
                         <button
                           onClick={() => void recordQrCustomerApproval(ord)}
-                          disabled={!ord.whatsappContactedAt}
+                          disabled={!ord.whatsappContactedAt || ord.customerApprovalStatus === 'edit_requested'}
                           className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-50 disabled:cursor-not-allowed text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
                           title="Caja confirma que el cliente respondió y aprobó por WhatsApp"
                         >
@@ -757,6 +834,116 @@ export const OrderManagementView: React.FC = () => {
                   Guardar Cambios
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Simulador Interactivo de WhatsApp con Botones Rápidos */}
+      {simulatedWhatsAppOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#ECE5DD] rounded-3xl overflow-hidden shadow-2xl border border-gray-300 flex flex-col max-h-[90vh]">
+            {/* Header estilo WhatsApp */}
+            <div className="bg-[#075E54] text-white px-4 py-3 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-800 border-2 border-emerald-400 flex items-center justify-center font-bold text-white text-sm">
+                  🏖️
+                </div>
+                <div>
+                  <div className="font-bold text-sm leading-tight flex items-center gap-1.5">
+                    <span>{businessDisplayName}</span>
+                    <span className="text-[10px] bg-emerald-700/80 px-1.5 py-0.5 rounded text-emerald-100 font-semibold">Oficial</span>
+                  </div>
+                  <div className="text-[11px] text-emerald-200">en línea · WhatsApp Business</div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSimulatedWhatsAppOrder(null)}
+                className="w-8 h-8 rounded-full hover:bg-black/20 flex items-center justify-center text-white transition"
+                title="Cerrar simulación"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Banner explicativo para demo */}
+            <div className="bg-emerald-50 px-4 py-1.5 border-b border-emerald-200 text-emerald-800 text-[11px] text-center font-semibold">
+              Vista del cliente en su celular con botones interactivos
+            </div>
+
+            {/* Chat Body */}
+            <div className="p-4 space-y-3 overflow-y-auto flex-1">
+              {/* Mensaje Entrante */}
+              <div className="max-w-[92%] bg-white rounded-2xl rounded-tl-xs p-3.5 shadow-sm text-xs text-gray-800 space-y-2 border border-gray-200/80">
+                <p className="font-medium whitespace-pre-line leading-relaxed">
+                  {formatWhatsAppOrderMessage(simulatedWhatsAppOrder, businessDisplayName)}
+                </p>
+                <div className="text-[10px] text-gray-400 text-right font-mono">
+                  {new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })} ✓✓
+                </div>
+              </div>
+
+              {/* Botones Interactivos de WhatsApp Quick Reply */}
+              <div className="space-y-1.5 pt-1">
+                <div className="text-[10px] uppercase font-bold text-gray-600 text-center tracking-wider">
+                  Tocá una opción para responder:
+                </div>
+
+                {/* Botón 1: Confirmar */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await recordQrCustomerApproval(simulatedWhatsAppOrder);
+                    setSimulatedWhatsAppOrder(null);
+                    showToast('¡Pedido confirmado por el cliente con el botón 👍 CONFIRMAR!');
+                  }}
+                  className="w-full py-2.5 px-4 bg-white hover:bg-emerald-50 active:bg-emerald-100 text-emerald-700 font-black text-xs rounded-xl shadow-xs border border-emerald-200 flex items-center justify-center gap-2 transition hover:scale-[1.01]"
+                >
+                  <span className="text-base">👍</span>
+                  <span>CONFIRMAR</span>
+                </button>
+
+                {/* Botón 2: Editar */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await recordQrCustomerEditRequest(simulatedWhatsAppOrder);
+                    setSimulatedWhatsAppOrder(null);
+                    showToast('El cliente solicitó cambios con el botón ✏️ EDITAR.');
+                  }}
+                  className="w-full py-2.5 px-4 bg-white hover:bg-sky-50 active:bg-sky-100 text-sky-700 font-black text-xs rounded-xl shadow-xs border border-sky-200 flex items-center justify-center gap-2 transition hover:scale-[1.01]"
+                >
+                  <span className="text-base">✏️</span>
+                  <span>EDITAR</span>
+                </button>
+
+                {/* Botón 3: Cancelar */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    cancelOrder(simulatedWhatsAppOrder.id, 'Cancelado por el cliente desde el botón de WhatsApp (🚫 CANCELAR)');
+                    setSimulatedWhatsAppOrder(null);
+                    showToast('Pedido cancelado por el cliente con el botón 🚫 CANCELAR.');
+                  }}
+                  className="w-full py-2.5 px-4 bg-white hover:bg-rose-50 active:bg-rose-100 text-rose-700 font-black text-xs rounded-xl shadow-xs border border-rose-200 flex items-center justify-center gap-2 transition hover:scale-[1.01]"
+                >
+                  <span className="text-base">🚫</span>
+                  <span>CANCELAR</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Footer con info */}
+            <div className="bg-white/80 p-3 border-t border-gray-300 flex items-center justify-between text-[11px] text-gray-500">
+              <span>El cliente no necesita escribir: solo presiona un botón.</span>
+              <button
+                type="button"
+                onClick={() => setSimulatedWhatsAppOrder(null)}
+                className="font-bold text-gray-700 hover:text-black underline"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>

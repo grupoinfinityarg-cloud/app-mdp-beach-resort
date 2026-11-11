@@ -351,12 +351,7 @@ export function formatWhatsAppOrderMessage(
     ? `\nMedio de pago: *${paymentMethodLabels[order.paymentMethod] || order.paymentMethod}*`
     : '';
 
-  const originUrl = typeof window !== 'undefined' && window.location?.origin
-    ? window.location.origin
-    : 'https://mdp-beach.grupoinfinity.site';
-  const cleanOrderNum = (order.orderNumber || '').replace(/[^0-9]/g, '') || order.id;
-
-  return `Hola, *${customerName}*. Somos de *${branchName}*.\n\nRecibimos tu pedido *${order.orderNumber}*${locationText}:\n\n${itemsText}\n\nTotal: *${formattedTotal}*.${paymentLine}\n\nRespondé con una opción:\n👍 *CONFIRMAR*: ${originUrl}/?confirmar=${cleanOrderNum}\n✏️ *EDITAR*: ${originUrl}/?editar=${cleanOrderNum}\n🚫 *CANCELAR*: ${originUrl}/?cancelar=${cleanOrderNum}\n\n¡Gracias!`;
+  return `Hola, *${customerName}*. Somos de *${branchName}*.\n\nRecibimos tu pedido *${order.orderNumber}*${locationText}:\n\n${itemsText}\n\nTotal: *${formattedTotal}*.${paymentLine}\n\n¡Gracias!`;
 }
 
 /**

@@ -28,6 +28,8 @@ import {
   Check,
   Sparkles,
   Info,
+  Tent,
+  Store,
 } from 'lucide-react';
 
 export const CartView: React.FC = () => {
@@ -53,6 +55,8 @@ export const CartView: React.FC = () => {
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [deliveryNotes, setDeliveryNotes] = useState<string>('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('efectivo');
+  const [selectedCardBrand, setSelectedCardBrand] = useState<string>('Visa Débito');
+  const [cardPaymentLocation, setCardPaymentLocation] = useState<'carpa' | 'caja'>('carpa');
   const [showLocationPicker, setShowLocationPicker] = useState<boolean>(false);
   const [selectedSectorTypeFilter, setSelectedSectorTypeFilter] = useState<string>('todos');
 
@@ -113,6 +117,11 @@ export const CartView: React.FC = () => {
     setOrderError(null);
     if (!isFormValid || cart.length === 0 || isSubmittingOrder) return;
 
+    const cardNote = selectedPaymentMethod === 'debito/credito'
+      ? `[Tarjeta: ${selectedCardBrand} • Modalidad: ${cardPaymentLocation === 'carpa' ? 'Cobro en carpa (llevar posnet)' : 'Paga en caja'}]`
+      : '';
+    const finalNotes = [deliveryNotes.trim(), cardNote].filter(Boolean).join(' | ');
+
     if (isQrAccess) {
       if (!supabase || !supabaseBusinessSlug) {
         setOrderError('No se pudo conectar con el sistema de pedidos. Avisale al personal del balneario.');
@@ -126,7 +135,7 @@ export const CartView: React.FC = () => {
           p_customer_name: customerName.trim(),
           p_customer_phone: phoneValidation.cleanForWhatsApp,
           p_payment_method: selectedPaymentMethod,
-          p_notes: deliveryNotes.trim() || null,
+          p_notes: finalNotes || null,
           p_items: cart.map((item) => ({
             product_id: item.productId, quantity: item.quantity,
             variant_id: item.variant?.id ?? null,
@@ -152,7 +161,7 @@ export const CartView: React.FC = () => {
       customerName.trim(),
       phoneValidation.cleanForWhatsApp,
       selectedPaymentMethod,
-      deliveryNotes.trim() || undefined
+      finalNotes || undefined
     );
 
     if (order) {
@@ -352,14 +361,27 @@ export const CartView: React.FC = () => {
               )}
 
               {selectedPaymentMethod === 'debito/credito' && (
-                <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 max-w-sm mx-auto text-left space-y-1.5 text-xs text-[#34313A]">
-                  <div className="font-black text-indigo-900 flex items-center gap-1.5">
-                    <CreditCard className="w-4 h-4 text-indigo-600" />
-                    <span>Pago con Tarjeta en tu Ubicación</span>
+                <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 max-w-sm mx-auto text-left space-y-2 text-xs text-[#34313A]">
+                  <div className="font-black text-indigo-900 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <CreditCard className="w-4 h-4 text-indigo-600" />
+                      <span>Pago con Tarjeta: <strong>{selectedCardBrand}</strong></span>
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold">
+                      {cardPaymentLocation === 'carpa' ? 'En Carpa' : 'En Caja'}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-gray-700 leading-normal">
-                    El camarero o mozo se acercará con la <strong>terminal inalámbrica (POS / Clover)</strong> a tu sector para procesar el cobro con tu tarjeta de débito o crédito.
-                  </p>
+                  <div className="p-2.5 rounded-xl bg-white border border-indigo-100 text-[11px] text-gray-700 leading-normal">
+                    {cardPaymentLocation === 'carpa' ? (
+                      <span>
+                        📍 <strong>Modalidad Carpa:</strong> El camarero o mozo se acercará con la <strong>terminal inalámbrica (POS)</strong> a tu sector para procesar el cobro con <strong>{selectedCardBrand}</strong>.
+                      </span>
+                    ) : (
+                      <span>
+                        🏪 <strong>Modalidad Caja:</strong> Te esperamos en la <strong>caja / mostrador del parador</strong> para abonar tu pedido con tu tarjeta <strong>{selectedCardBrand}</strong>.
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -740,47 +762,132 @@ export const CartView: React.FC = () => {
 
                   {/* Tarjeta Interactiva de Tarjetas Aceptadas & Promociones Bancarias */}
                   {selectedPaymentMethod === 'debito/credito' && (
-                    <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-sky-50/50 to-white border-2 border-indigo-200 space-y-3 animate-in fade-in duration-200 text-[#34313A]">
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-sky-50/50 to-white border-2 border-indigo-200 space-y-3.5 animate-in fade-in duration-200 text-[#34313A]">
                       {/* Encabezado */}
                       <div className="flex items-center justify-between pb-2 border-b border-indigo-100 flex-wrap gap-1.5">
                         <div className="flex items-center gap-1.5 text-xs font-black text-indigo-950">
                           <CreditCard className="w-4 h-4 text-indigo-600" />
-                          <span>Tarjetas Aceptadas & Promociones</span>
+                          <span>Pago con Tarjeta: Selección & Modalidad</span>
                         </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white">
-                          Cobro en tu Carpa
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white flex items-center gap-1">
+                          {cardPaymentLocation === 'carpa' ? (
+                            <>
+                              <Tent className="w-3 h-3" />
+                              <span>Llevar POS a Carpa</span>
+                            </>
+                          ) : (
+                            <>
+                              <Store className="w-3 h-3" />
+                              <span>Paga en Mostrador/Caja</span>
+                            </>
+                          )}
                         </span>
                       </div>
 
-                      {/* Tarjetas habilitadas: Débito y Crédito */}
+                      {/* 1. SELECCIÓN DE TARJETA OBLIGATORIA */}
                       <div className="space-y-1.5">
-                        <div className="text-[10px] font-mono uppercase tracking-wider font-bold text-gray-500">
-                          Tarjetas operativas (Débito y Crédito):
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono uppercase tracking-wider font-extrabold text-indigo-950 flex items-center gap-1">
+                            <span>1. Seleccioná con qué tarjeta vas a abonar:</span>
+                          </span>
+                          <span className="text-[10px] font-bold text-indigo-600">
+                            {selectedCardBrand}
+                          </span>
                         </div>
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                           {[
                             { name: 'Visa Débito', type: 'Débito' },
                             { name: 'Visa Crédito', type: 'Crédito' },
                             { name: 'Mastercard Débito', type: 'Débito' },
-                            { name: 'Mastercard', type: 'Crédito' },
-                            { name: 'American Express', type: 'Crédito' },
+                            { name: 'Mastercard Crédito', type: 'Crédito' },
+                            { name: 'Cuenta DNI / BAPRO', type: 'Débito / App' },
                             { name: 'Tarjeta Naranja X', type: 'Crédito / Z' },
-                            { name: 'Cabal Débito / Crédito', type: 'Ambas' },
-                            { name: 'Maestro', type: 'Débito' },
-                          ].map((t) => (
-                            <span
-                              key={t.name}
-                              className="px-2 py-1 rounded-lg bg-white border border-indigo-200/90 text-[10px] font-bold text-indigo-950 shadow-2xs flex items-center gap-1"
-                            >
-                              <CreditCard className="w-3 h-3 text-indigo-500" />
-                              <span>{t.name}</span>
-                            </span>
-                          ))}
+                            { name: 'American Express', type: 'Crédito' },
+                            { name: 'Cabal / Maestro', type: 'Débito / Créd.' },
+                          ].map((t) => {
+                            const isSelected = selectedCardBrand === t.name;
+                            return (
+                              <button
+                                key={t.name}
+                                type="button"
+                                onClick={() => setSelectedCardBrand(t.name)}
+                                className={`px-2 py-1.5 rounded-xl border text-left transition flex flex-col justify-between cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-indigo-600 text-white border-indigo-700 shadow-sm ring-2 ring-indigo-400/40'
+                                    : 'bg-white text-gray-800 border-indigo-200/90 hover:border-indigo-400 hover:bg-indigo-50/50'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between w-full">
+                                  <CreditCard className={`w-3 h-3 ${isSelected ? 'text-indigo-200' : 'text-indigo-500'}`} />
+                                  <span className={`text-[8.5px] font-bold px-1 rounded ${isSelected ? 'bg-indigo-700/80 text-white' : 'bg-gray-100 text-gray-600'}`}>
+                                    {t.type}
+                                  </span>
+                                </div>
+                                <span className="font-bold text-[10.5px] mt-1 leading-snug">
+                                  {t.name}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* 2. SELECCIÓN DE MODALIDAD DE COBRO */}
+                      <div className="space-y-1.5 pt-1 border-t border-indigo-100">
+                        <div className="text-[10px] font-mono uppercase tracking-wider font-extrabold text-indigo-950">
+                          2. ¿Dónde preferís que te cobren?
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setCardPaymentLocation('carpa')}
+                            className={`p-2.5 rounded-xl border text-left transition flex items-start gap-2.5 cursor-pointer ${
+                              cardPaymentLocation === 'carpa'
+                                ? 'bg-white border-indigo-600 ring-2 ring-indigo-500/30 shadow-sm'
+                                : 'bg-white/70 border-indigo-100 hover:bg-white text-gray-600'
+                            }`}
+                          >
+                            <div className={`p-1.5 rounded-lg shrink-0 ${cardPaymentLocation === 'carpa' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                              <Tent className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-extrabold text-xs text-indigo-950 flex items-center justify-between">
+                                <span>Cobro en la Carpa / Sombrilla</span>
+                                {cardPaymentLocation === 'carpa' && <Check className="w-3.5 h-3.5 text-indigo-600" />}
+                              </div>
+                              <p className="text-[10.5px] text-gray-600 leading-tight mt-0.5">
+                                El mozo se acerca a tu sector ({activeLocationCode}) con el <strong>posnet inalámbrico</strong>.
+                              </p>
+                            </div>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setCardPaymentLocation('caja')}
+                            className={`p-2.5 rounded-xl border text-left transition flex items-start gap-2.5 cursor-pointer ${
+                              cardPaymentLocation === 'caja'
+                                ? 'bg-white border-indigo-600 ring-2 ring-indigo-500/30 shadow-sm'
+                                : 'bg-white/70 border-indigo-100 hover:bg-white text-gray-600'
+                            }`}
+                          >
+                            <div className={`p-1.5 rounded-lg shrink-0 ${cardPaymentLocation === 'caja' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                              <Store className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-extrabold text-xs text-indigo-950 flex items-center justify-between">
+                                <span>Me acerco a la Caja / Mostrador</span>
+                                {cardPaymentLocation === 'caja' && <Check className="w-3.5 h-3.5 text-indigo-600" />}
+                              </div>
+                              <p className="text-[10.5px] text-gray-600 leading-tight mt-0.5">
+                                Pasás por la caja del parador a abonar con tu tarjeta cuando lo desees.
+                              </p>
+                            </div>
+                          </button>
                         </div>
                       </div>
 
                       {/* Promociones Bancarias de Temporada */}
-                      <div className="space-y-1.5 pt-1.5 border-t border-indigo-100">
+                      <div className="space-y-1.5 pt-1 border-t border-indigo-100">
                         <div className="text-[10px] font-mono uppercase tracking-wider font-bold text-indigo-900 flex items-center gap-1">
                           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                           <span>Promociones Bancarias Vigentes de Temporada:</span>
@@ -849,11 +956,19 @@ export const CartView: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Leyenda operativa */}
+                      {/* Leyenda operativa dinámica */}
                       <div className="p-2 rounded-xl bg-indigo-100/70 border border-indigo-200 text-[11px] text-indigo-950 flex items-center gap-2">
                         <Info className="w-4 h-4 text-indigo-600 shrink-0" />
                         <span>
-                          El mozo llevará la <strong>terminal inalámbrica (POS / Clover)</strong> directamente a tu sector ({activeLocationCode}) para que abones sin moverte.
+                          {cardPaymentLocation === 'carpa' ? (
+                            <>
+                              El mozo llevará la <strong>terminal inalámbrica (POS)</strong> a tu sector (<strong>{activeLocationCode}</strong>) para cobrarte con <strong>{selectedCardBrand}</strong>.
+                            </>
+                          ) : (
+                            <>
+                              Se notificará al cajero que te acercás a la <strong>caja / mostrador</strong> a abonar con <strong>{selectedCardBrand}</strong>.
+                            </>
+                          )}
                         </span>
                       </div>
                     </div>

@@ -688,6 +688,43 @@ export const PosView: React.FC = () => {
               </div>
             </div>
 
+            {/* Aviso de Pago, Tarjeta y Modalidad de Cobro para el Cajero/Mozo */}
+            {(loadedPendingOrder || existingOrderForLocation) && (
+              <div className="space-y-1.5 pb-2 border-b border-[#E2E2E2]">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-500 font-medium">Cliente:</span>
+                  <span className="font-bold text-[#34313A]">
+                    {(loadedPendingOrder || existingOrderForLocation)?.customerName || 'Cliente'}
+                    {(loadedPendingOrder || existingOrderForLocation)?.customerPhone && ` • ${(loadedPendingOrder || existingOrderForLocation)?.customerPhone}`}
+                  </span>
+                </div>
+
+                {(loadedPendingOrder || existingOrderForLocation)?.notes && (
+                  <div className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-sky-50/60 to-white border-2 border-indigo-200 text-xs text-[#34313A] space-y-1 shadow-2xs">
+                    <div className="flex items-center justify-between gap-1 flex-wrap">
+                      <span className="font-black text-[10px] uppercase text-indigo-900 flex items-center gap-1">
+                        <CreditCard className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Instrucción de Cobro:</span>
+                      </span>
+                      {(loadedPendingOrder || existingOrderForLocation)?.notes?.toLowerCase().includes('posnet') && (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider animate-pulse shadow-2xs">
+                          💳 Llevar POS a Carpa
+                        </span>
+                      )}
+                      {(loadedPendingOrder || existingOrderForLocation)?.notes?.toLowerCase().includes('caja') && (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black uppercase tracking-wider shadow-2xs">
+                          🏪 Paga en Caja
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[11.5px] font-bold text-indigo-950 font-mono leading-tight">
+                      {(loadedPendingOrder || existingOrderForLocation)?.notes}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* List of items */}
             <div className="max-h-[36vh] overflow-y-auto space-y-2.5 pr-1">
               {posItems.map((item) => (

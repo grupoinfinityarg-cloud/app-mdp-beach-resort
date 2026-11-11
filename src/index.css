@@ -1,19 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --color-arena: #FBEEB9;
-  --color-celeste: #C1E7FF;
-  --color-naranja: #F68F57;
-  --color-gris: #E2E2E2;
-  --color-texto: #34313A;
+  /* Ocean & Warm Sand Palette (Azul Atlántico & Arena Costera) */
+  --color-navy: #0F2942;
+  --color-navy-border: #1E3A5F;
+  --color-navy-dark: #0A1D30;
+  --color-navy-light: #163B5C;
+
+  --color-ocean: #0284C7;
+  --color-ocean-hover: #0369A1;
+  --color-ocean-light: #E0F2FE;
+  --color-ocean-dark: #075985;
+
+  --color-sand: #FFFBEB;
+  --color-sand-border: #FDE68A;
+  --color-sand-text: #92400E;
+  --color-sand-accent: #B45309;
+  --color-amber-alert: #F59E0B;
+  --color-amber-bg: #FEF3C7;
+  --color-gold: #D97706;
+
+  --color-coastal-bg: #F0F4F8;
+  --color-card-border: #E2E8F0;
+  --color-card-border-strong: #CBD5E1;
+
+  --color-status-available: #10B981;
+  --color-status-available-bg: #D1FAE5;
+  --color-status-occupied: #EF4444;
+  --color-status-occupied-bg: #FEE2E2;
+  --color-status-reserved: #0284C7;
+  --color-status-reserved-bg: #E0F2FE;
+  --color-status-cleaning: #FBBF24;
+  --color-status-cleaning-bg: #FEF3C7;
+
+  /* Legacy aliases mapped to the new palette for full backward compatibility */
+  --color-arena: #F0F4F8;
+  --color-celeste: #E0F2FE;
+  --color-naranja: #0284C7;
+  --color-gris: #E2E8F0;
+  --color-texto: #0F172A;
   --color-blanco: #FFFFFF;
 
   /* Semantic aliases */
-  --color-fondo-principal: #FBEEB9;
-  --color-interactivo: #C1E7FF;
-  --color-destacado: #F68F57;
-  --color-borde: #E2E2E2;
-  --color-tipografia: #34313A;
+  --color-fondo-principal: #F0F4F8;
+  --color-interactivo: #0284C7;
+  --color-destacado: #F59E0B;
+  --color-borde: #E2E8F0;
+  --color-tipografia: #0F172A;
 }
 
 @layer base {
@@ -24,8 +57,8 @@
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     -webkit-tap-highlight-color: transparent;
-    background-color: #FBEEB9;
-    color: #34313A;
+    background-color: #F0F4F8;
+    color: #0F172A;
   }
 
   input, textarea, select {
@@ -33,13 +66,13 @@
   }
 }
 
-/* Subtle, fine-grain sunlit sand texture strictly on #FBEEB9 base */
+/* Subtle, fine-grain coastal texture on #F0F4F8 base */
 .sand-textured-bg {
-  background-color: #FBEEB9;
+  background-color: #F0F4F8;
   background-image: 
-    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.45) 0%, transparent 45%),
-    radial-gradient(circle at 86% 80%, rgba(246, 143, 87, 0.05) 0%, transparent 48%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='sandGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.20 0 0 0 0 0.19 0 0 0 0 0.23 0 0 0 0.038 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23sandGrain)'/%3E%3C/svg%3E");
+    radial-gradient(circle at 14% 18%, rgba(2, 132, 199, 0.04) 0%, transparent 45%),
+    radial-gradient(circle at 86% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 48%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='sandGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.06 0 0 0 0 0.16 0 0 0 0 0.26 0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23sandGrain)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-attachment: fixed;
 }
@@ -51,16 +84,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(52, 49, 58, 0.04);
+  background: rgba(15, 41, 66, 0.04);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(52, 49, 58, 0.2);
+  background: rgba(15, 41, 66, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(52, 49, 58, 0.35);
+  background: rgba(2, 132, 199, 0.45);
 }
 
 html, body {

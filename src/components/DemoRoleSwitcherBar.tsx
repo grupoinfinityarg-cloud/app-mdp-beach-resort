@@ -82,7 +82,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
       const dataUrl = await QRCode.toDataURL(url.toString(), {
         width: 320,
         margin: 2,
-        color: { dark: '#34313A', light: '#FFFFFF' },
+        color: { dark: '#0F2942', light: '#FFFFFF' },
       });
       setQrCodeUrl(dataUrl);
       setShowQrModal(true);
@@ -112,10 +112,10 @@ export const DemoRoleSwitcherBar: React.FC = () => {
       <div className="fixed bottom-4 right-4 z-50">
         <button
           onClick={() => setIsCollapsed(false)}
-          className="flex items-center gap-2 bg-[#34313A] text-white px-3.5 py-2 rounded-full shadow-2xl border-2 border-[#F68F57] hover:bg-[#47434e] transition text-xs font-black animate-bounce"
+          className="flex items-center gap-2 bg-[#0F2942] text-white px-3.5 py-2 rounded-full shadow-2xl border-2 border-[#0284C7] hover:bg-[#1E3A5F] transition text-xs font-black animate-bounce"
           title="Abrir barra de roles de demostración"
         >
-          <Sparkles className="w-4 h-4 text-[#FBEEB9]" />
+          <Sparkles className="w-4 h-4 text-[#F59E0B]" />
           <span>Barra de Demo</span>
           <ChevronUp className="w-3.5 h-3.5 text-gray-300" />
         </button>
@@ -125,33 +125,33 @@ export const DemoRoleSwitcherBar: React.FC = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-[#242129] via-[#34313A] to-[#242129] text-white border-b-2 border-[#F68F57] shadow-lg sticky top-0 z-[70]">
+      <div className="bg-[#0F2942] text-white border-b border-[#1E3A5F] shadow-lg sticky top-0 z-[70]">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
           {/* Tag Demo */}
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F68F57] text-white font-black text-[11px] tracking-wide uppercase shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#FBEEB9]" />
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0284C7] text-white font-black text-[11px] tracking-wide uppercase shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
               <span>Modo Demo</span>
             </span>
-            <span className="hidden md:inline text-[11px] text-gray-300 font-medium">
+            <span className="hidden md:inline text-[11px] text-[#E0F2FE] font-medium">
               Elegí un rol para experimentar la app:
             </span>
           </div>
 
           {/* Selector de 4 Roles */}
-          <div className="flex items-center gap-1 sm:gap-1.5 bg-black/30 p-1 rounded-xl border border-white/10 overflow-x-auto">
+          <div className="flex items-center gap-1 sm:gap-1.5 bg-black/25 p-1 rounded-xl border border-white/10 overflow-x-auto">
             {/* 1. Cliente en Carpa */}
             <button
               type="button"
               onClick={() => handleSelectRole('cliente')}
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-black transition text-xs ${
                 currentRole === 'cliente'
-                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm'
+                  ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
               title="Ver la carta digital interactiva desde la Carpa C-01"
             >
-              <ShoppingBag className="w-3.5 h-3.5 text-[#F68F57]" />
+              <ShoppingBag className="w-3.5 h-3.5 text-[#38BDF8]" />
               <span>1. Cliente (Carpa)</span>
             </button>
 
@@ -161,7 +161,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               onClick={() => handleSelectRole('cajero')}
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-black transition text-xs ${
                 currentRole === 'cajero'
-                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm'
+                  ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
               title="Punto de venta táctil para cajeros y cobro rápido"
@@ -176,7 +176,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               onClick={() => handleSelectRole('cocina')}
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-black transition text-xs ${
                 currentRole === 'cocina'
-                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm'
+                  ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
               title="Pantalla KDS en tiempo real para cocineros y barman"
@@ -191,12 +191,12 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               onClick={() => handleSelectRole('dueno')}
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-black transition text-xs ${
                 currentRole === 'dueno'
-                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm'
+                  ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
               title="Panel del dueño: ocupación de playa, recaudación y arqueo de caja"
             >
-              <BarChart3 className="w-3.5 h-3.5 text-[#FBEEB9]" />
+              <BarChart3 className="w-3.5 h-3.5 text-[#FDE68A]" />
               <span>4. Dueño (Panel)</span>
             </button>
           </div>
@@ -259,11 +259,11 @@ export const DemoRoleSwitcherBar: React.FC = () => {
       {/* Modal QR Interactivo para Celular */}
       {showQrModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl text-[#34313A] space-y-4 animate-in fade-in zoom-in-95">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl text-[#0F172A] border border-[#E2E8F0] space-y-4 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-2 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-[#C1E7FF] flex items-center justify-center">
-                  <QrCode className="w-4 h-4 text-[#34313A]" />
+                <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] flex items-center justify-center">
+                  <QrCode className="w-4 h-4 text-[#0284C7]" />
                 </div>
                 <div>
                   <h3 className="font-black text-sm">Escaneá con tu celular</h3>
@@ -278,7 +278,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex flex-col items-center justify-center p-3 bg-[#f8f9fa] rounded-2xl border border-dashed border-gray-300">
+            <div className="flex flex-col items-center justify-center p-3 bg-[#F0F4F8] rounded-2xl border border-dashed border-sky-200">
               {qrCodeUrl ? (
                 <img
                   src={qrCodeUrl}
@@ -299,11 +299,11 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               <button
                 type="button"
                 onClick={handleCopyDemoLink}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs transition flex items-center justify-center gap-2 shadow-xs"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs transition flex items-center justify-center gap-2 shadow-xs"
               >
                 {copiedLink ? (
                   <>
-                    <Check className="w-4 h-4 text-emerald-700" />
+                    <Check className="w-4 h-4 text-emerald-300" />
                     <span>¡Enlace copiado al portapapeles!</span>
                   </>
                 ) : (
@@ -320,7 +320,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
                   setShowQrModal(false);
                   handleSelectRole('cliente');
                 }}
-                className="w-full py-2 px-4 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-xs font-bold transition flex items-center justify-center gap-1.5"
+                className="w-full py-2 px-4 rounded-xl border border-[#E2E8F0] text-gray-600 hover:bg-[#F0F4F8] text-xs font-bold transition flex items-center justify-center gap-1.5"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Abrir vista en esta misma pestaña</span>
@@ -332,8 +332,8 @@ export const DemoRoleSwitcherBar: React.FC = () => {
 
       {/* Modal Interactivo de Tutorial por Planes (ORO, PLATINO, DIAMANTE) */}
       {showTutorialModal && (
-        <div className="fixed inset-0 z-[100] bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 text-[#34313A]">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 p-5 sm:p-6 space-y-4 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 text-[#0F172A]">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-[#E2E8F0] p-5 sm:p-6 space-y-4 animate-in zoom-in-95 duration-200">
             {/* Header del Modal */}
             <div className="flex items-center justify-between pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2.5">
@@ -341,7 +341,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-base text-[#34313A]">
+                  <h3 className="font-heading font-black text-base text-[#0F172A]">
                     Guía Rápida para Demostración a Clientes
                   </h3>
                   <p className="text-xs text-gray-500 font-medium">

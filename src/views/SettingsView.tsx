@@ -107,7 +107,7 @@ export const SettingsView: React.FC = () => {
         'Punto de Venta POS y Caja',
       ],
       description: 'Acceso total e irrestricto a todos los módulos para pruebas comerciales.',
-      badgeColor: 'bg-[#34313A] text-white',
+      badgeColor: 'bg-[#0F2942] text-white',
     },
     {
       id: 'ORO',
@@ -166,19 +166,19 @@ export const SettingsView: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-5xl mx-auto text-[#34313A]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-5xl mx-auto text-[#0F172A]">
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
+            <h1 className="text-xl font-black text-[#0F172A] tracking-tight">
               Configuración de Marca & Planes
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
               WHITE-LABEL ACTIVO
             </span>
           </div>
-          <p className="text-xs text-[#34313A]/70 mt-0.5">
+          <p className="text-xs text-[#64748B] mt-0.5">
             Personalizá el nombre del cliente, subí su logo y visualizá los planes comerciales de la temporada.
           </p>
         </div>
@@ -194,18 +194,18 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* Identidad del Balneario & White-Label en Vivo (Paso 1) */}
-      <div className="bg-white p-6 rounded-3xl border border-[#E2E2E2] shadow-sm space-y-5">
+      <div className="bg-white p-6 rounded-3xl border border-[#E2E8F0] shadow-sm space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-amber-500" />
-            <h2 className="text-base font-black text-[#34313A]">Identidad del Balneario / Cliente</h2>
+            <h2 className="text-base font-black text-[#0F172A]">Identidad del Balneario / Cliente</h2>
           </div>
           <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
             ⚡ Cambia en vivo en 1 segundo
           </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#C1E7FF]/20 border border-[#a9dbfa] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-4 rounded-2xl bg-[#E0F2FE]/40 border border-[#BAE6FD] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             {logoUrl ? (
               <img
@@ -214,25 +214,25 @@ export const SettingsView: React.FC = () => {
                 className="w-16 h-16 rounded-2xl object-cover border border-white shadow-md shrink-0 bg-white"
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-[#34313A] flex items-center justify-center text-white font-black text-xl shrink-0 shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-[#0F2942] flex items-center justify-center text-white font-black text-xl shrink-0 shadow-sm">
                 🏖️
               </div>
             )}
             <div>
-              <div className="text-base font-black text-[#34313A]">
+              <div className="text-base font-black text-[#0F172A]">
                 {branchName || 'Tu Balneario'}
               </div>
-              <div className="text-xs text-[#F68F57] font-semibold mt-0.5">
+              <div className="text-xs text-[#0284C7] font-semibold mt-0.5">
                 {slogan || 'Tu balneario, mejor gestionado'}
               </div>
-              <div className="text-[11px] text-gray-500 mt-1">
+              <div className="text-[11px] text-[#64748B] mt-1">
                 Logo activo visible en la Carta QR, Barra superior y Comandas.
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-300 text-[#34313A] font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+            <label className="cursor-pointer px-3.5 py-2 rounded-xl bg-white hover:bg-gray-50 border border-gray-300 text-[#0F172A] font-bold text-xs shadow-xs transition flex items-center gap-1.5">
               <Upload className="w-4 h-4 text-emerald-600" />
               <span>{logoUrl ? 'Cambiar Logo' : 'Subir Logo / Imagen'}</span>
               <input
@@ -258,7 +258,7 @@ export const SettingsView: React.FC = () => {
         {/* Inputs de Identidad Rápida */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-[#34313A]">
+            <label className="text-xs font-bold text-[#0F172A]">
               Nombre del Balneario / Parador (Cliente):
             </label>
             <input
@@ -266,15 +266,15 @@ export const SettingsView: React.FC = () => {
               value={branchName}
               onChange={(e) => handleBranchNameChange(e.target.value)}
               placeholder="Ej: Balneario San Sebastián, Honu Beach, etc."
-              className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs font-black text-[#34313A] focus:outline-none focus:border-emerald-400 bg-emerald-50/20"
+              className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-black text-[#0F172A] focus:outline-none focus:border-[#0284C7] bg-[#F8FAFC]"
             />
-            <span className="text-[10px] text-gray-500 block">
+            <span className="text-[10px] text-[#64748B] block">
               Actualiza en vivo la Carta QR, los mensajes de WhatsApp, el POS y KDS.
             </span>
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-[#34313A]">
+            <label className="text-xs font-bold text-[#0F172A]">
               Slogan o Subtítulo del Parador:
             </label>
             <input
@@ -282,9 +282,9 @@ export const SettingsView: React.FC = () => {
               value={slogan}
               onChange={(e) => handleSloganChange(e.target.value)}
               placeholder="Ej: Tu parador frente al mar en Playa Grande"
-              className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs font-bold text-[#34313A] focus:outline-none focus:border-emerald-400"
+              className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
             />
-            <span className="text-[10px] text-gray-500 block">
+            <span className="text-[10px] text-[#64748B] block">
               Aparece en la cabecera de la carta digital de los clientes.
             </span>
           </div>
@@ -297,9 +297,9 @@ export const SettingsView: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <Gem className="w-5 h-5 text-amber-500" />
-              <h2 className="text-base font-black text-[#34313A]">Planes Comerciales de Temporada</h2>
+              <h2 className="text-base font-black text-[#0F172A]">Planes Comerciales de Temporada</h2>
             </div>
-            <p className="text-xs text-[#34313A]/70 mt-0.5">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Valores sugeridos para contratación mensual, temporada (4 meses) y anual.
             </p>
           </div>
@@ -315,7 +315,7 @@ export const SettingsView: React.FC = () => {
                 className={`p-5 rounded-3xl border cursor-pointer transition shadow-sm flex flex-col justify-between ${
                   isSelected
                     ? 'border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/30'
-                    : 'border-[#E2E2E2] bg-white hover:bg-gray-50'
+                    : 'border-[#E2E8F0] bg-white hover:bg-gray-50'
                 }`}
               >
                 <div className="space-y-3">
@@ -331,15 +331,15 @@ export const SettingsView: React.FC = () => {
                   </div>
 
                   <div>
-                    <h3 className="font-black text-sm text-[#34313A]">{p.name}</h3>
-                    <p className="text-xs text-[#34313A]/80 mt-1 leading-relaxed">{p.description}</p>
+                    <h3 className="font-black text-sm text-[#0F172A]">{p.name}</h3>
+                    <p className="text-xs text-[#334155] mt-1 leading-relaxed">{p.description}</p>
                   </div>
 
                   {/* Precios */}
                   <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200 space-y-1 text-xs">
                     <div className="flex justify-between items-center font-bold">
                       <span className="text-gray-600">Por Mes:</span>
-                      <span className="text-[#34313A] font-black">{p.priceMonth}</span>
+                      <span className="text-[#0F172A] font-black">{p.priceMonth}</span>
                     </div>
                     <div className="flex justify-between items-center font-bold">
                       <span className="text-gray-600">Temporada (4m):</span>
@@ -362,7 +362,7 @@ export const SettingsView: React.FC = () => {
                   </ul>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#E2E2E2] flex items-center justify-between text-[11px] font-bold">
+                <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] font-bold">
                   <span className={isSelected ? 'text-emerald-700 font-black' : 'text-gray-500'}>
                     {isSelected ? '✓ Plan Activo en Demo' : 'Seleccionar Modalidad'}
                   </span>
@@ -383,61 +383,61 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {/* General Settings Form */}
-      <div className="bg-white p-6 rounded-3xl border border-[#E2E2E2] shadow-sm space-y-5">
-        <h2 className="text-base font-black text-[#34313A]">Otros Datos Operativos</h2>
+      <div className="bg-white p-6 rounded-3xl border border-[#E2E8F0] shadow-sm space-y-5">
+        <h2 className="text-base font-black text-[#0F172A]">Otros Datos Operativos</h2>
 
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#34313A]">Dirección en Mar del Plata:</label>
+              <label className="text-xs font-bold text-[#0F172A]">Dirección en Mar del Plata:</label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-emerald-400"
+                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#34313A]">Teléfono / WhatsApp del Balneario:</label>
+              <label className="text-xs font-bold text-[#0F172A]">Teléfono / WhatsApp del Balneario:</label>
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-emerald-400"
+                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#34313A]">Horarios de Temporada:</label>
+              <label className="text-xs font-bold text-[#0F172A]">Horarios de Temporada:</label>
               <input
                 type="text"
                 value={schedule}
                 onChange={(e) => setSchedule(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-emerald-400"
+                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-[#34313A]">
+              <label className="text-xs font-bold text-[#0F172A]">
                 Servicio de Mesa / Cubierto por Pax ($):
               </label>
               <input
                 type="number"
                 value={serviceFeeCover}
                 onChange={(e) => setServiceFeeCover(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-emerald-400"
+                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#E2E2E2]">
+          <div className="flex items-center justify-between pt-3 border-t border-[#E2E8F0]">
             {savedSuccess ? (
               <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
                 <Check className="w-4 h-4 text-emerald-600" /> Configuración guardada correctamente
               </span>
             ) : (
-              <span className="text-[11px] text-[#34313A]/60">
+              <span className="text-[11px] text-[#64748B]">
                 Los datos se guardan localmente en el navegador.
               </span>
             )}
@@ -455,12 +455,12 @@ export const SettingsView: React.FC = () => {
       {/* PWA & Local Storage Tools */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* PWA Info */}
-        <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm space-y-3">
+        <div className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-sm space-y-3">
           <div className="flex items-center gap-2">
-            <Smartphone className="w-5 h-5 text-[#34313A]" />
-            <h3 className="font-black text-sm text-[#34313A]">Instalación PWA</h3>
+            <Smartphone className="w-5 h-5 text-[#0F172A]" />
+            <h3 className="font-black text-sm text-[#0F172A]">Instalación PWA</h3>
           </div>
-          <p className="text-xs text-[#34313A]/80 leading-relaxed">
+          <p className="text-xs text-[#334155] leading-relaxed">
             Esta aplicación está configurada con Web App Manifest y Service Worker para funcionar offline y en pantalla completa en celulares y tablets.
           </p>
           <div className="pt-2">
@@ -469,24 +469,24 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Reset Demo Data */}
-        <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm space-y-3">
+        <div className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-sm space-y-3">
           <div className="flex items-center gap-2">
-            <Database className="w-5 h-5 text-[#34313A]" />
-            <h3 className="font-black text-sm text-[#34313A]">Restablecer Datos Demo</h3>
+            <Database className="w-5 h-5 text-[#0F172A]" />
+            <h3 className="font-black text-sm text-[#0F172A]">Restablecer Datos Demo</h3>
           </div>
-          <p className="text-xs text-[#34313A]/80 leading-relaxed">
+          <p className="text-xs text-[#334155] leading-relaxed">
             Si realizaste pruebas y deseás volver al estado inicial de MDP BEACH & RESORT, podés reiniciar los registros.
           </p>
           {resetSuccess ? (
-            <div className="p-2.5 rounded-xl bg-[#FBEEB9] border border-[#e8d799] text-xs font-bold text-[#34313A] text-center">
+            <div className="p-2.5 rounded-xl bg-[#FEF3C7] border border-[#FDE68A] text-xs font-bold text-[#92400E] text-center">
               ✓ Datos restablecidos con éxito
             </div>
           ) : (
             <button
               onClick={handleReset}
-              className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[#E2E2E2] text-[#34313A] bg-[#FBEEB9]/40 font-bold text-xs hover:bg-[#FBEEB9] transition"
+              className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-[#E2E8F0] text-[#0F172A] bg-[#F0F4F8] font-bold text-xs hover:bg-[#E2E8F0] transition"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-[#34313A]" />
+              <RotateCcw className="w-3.5 h-3.5 text-[#0284C7]" />
               <span>Restablecer Datos de Demostración</span>
             </button>
           )}

@@ -84,30 +84,30 @@ export const StaffLoginView: React.FC<{ accessDenied?: boolean; authError?: stri
   const isResetRequestForm = !recoveryMode && isRequestingReset;
 
   return (
-    <div className="min-h-screen sand-textured-bg flex items-center justify-center p-4 text-[#34313A]">
-      <form onSubmit={isRecoveryForm ? handleUpdatePassword : isResetRequestForm ? handleRequestReset : handleSubmit} className="w-full max-w-sm rounded-3xl border border-[#E2E2E2] bg-white p-6 shadow-xl space-y-4">
+    <div className="min-h-screen sand-textured-bg flex items-center justify-center p-4 text-[#0F172A]">
+      <form onSubmit={isRecoveryForm ? handleUpdatePassword : isResetRequestForm ? handleRequestReset : handleSubmit} className="w-full max-w-sm rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl space-y-4">
         <div className="text-center space-y-1">
           <h1 className="text-xl font-black">{isRecoveryForm ? 'Crear contraseña nueva' : isResetRequestForm ? 'Recuperar contraseña' : 'Acceso del personal'}</h1>
           <p className="text-xs text-gray-500">MDP BEACH &amp; RESORT</p>
         </div>
         {!isRecoveryForm && <label className="block space-y-1 text-xs font-bold">
           Email
-          <input type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-[#E2E2E2] px-3 py-2 text-sm font-normal" />
+          <input type="email" autoComplete="username" required value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm font-normal" />
         </label>}
         {!isResetRequestForm && <label className="block space-y-1 text-xs font-bold">
           {isRecoveryForm ? 'Nueva contraseña' : 'Contraseña'}
-          <input type="password" autoComplete={isRecoveryForm ? 'new-password' : 'current-password'} minLength={isRecoveryForm ? 8 : undefined} required value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-[#E2E2E2] px-3 py-2 text-sm font-normal" />
+          <input type="password" autoComplete={isRecoveryForm ? 'new-password' : 'current-password'} minLength={isRecoveryForm ? 8 : undefined} required value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm font-normal" />
         </label>}
         {isRecoveryForm && <label className="block space-y-1 text-xs font-bold">
           Confirmar contraseña
-          <input type="password" autoComplete="new-password" minLength={8} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className="w-full rounded-xl border border-[#E2E2E2] px-3 py-2 text-sm font-normal" />
+          <input type="password" autoComplete="new-password" minLength={8} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className="w-full rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm font-normal" />
         </label>}
         {error && <p role="alert" className="text-xs font-semibold text-rose-700">{error}</p>}
         {message && <p role="status" className="text-xs font-semibold text-emerald-700">{message}</p>}
-        <button type="submit" disabled={isSubmitting || !supabase} className="w-full rounded-xl bg-[#34313A] px-4 py-2.5 text-xs font-black text-white disabled:opacity-50">
+        <button type="submit" disabled={isSubmitting || !supabase} className="w-full rounded-xl bg-[#0284C7] hover:bg-[#0369A1] px-4 py-2.5 text-xs font-black text-white disabled:opacity-50 transition">
           {isSubmitting ? 'Procesando...' : isRecoveryForm ? 'Guardar contraseña nueva' : isResetRequestForm ? 'Enviar enlace de recuperación' : 'Ingresar a Gestión Balnearia'}
         </button>
-        {!isRecoveryForm && <button type="button" onClick={() => { setIsRequestingReset((current) => !current); setError(''); setMessage(''); }} className="w-full text-xs font-bold text-[#34313A]/70 underline">
+        {!isRecoveryForm && <button type="button" onClick={() => { setIsRequestingReset((current) => !current); setError(''); setMessage(''); }} className="w-full text-xs font-bold text-[#0284C7] hover:underline">
           {isResetRequestForm ? 'Volver al inicio de sesión' : 'Olvidé mi contraseña'}
         </button>}
       </form>

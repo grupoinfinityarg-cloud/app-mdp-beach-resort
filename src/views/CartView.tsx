@@ -197,51 +197,51 @@ export const CartView: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FBEEB9] pb-24 text-[#34313A]">
-      <div className="max-w-4xl mx-auto bg-white shadow-2xl min-h-screen flex flex-col justify-between border-x border-[#E2E2E2] md:my-4 md:rounded-3xl">
+    <div className="min-h-screen bg-[#F0F4F8] pb-24 text-[#0F172A]">
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl min-h-screen flex flex-col justify-between border-x border-[#E2E8F0] md:my-4 md:rounded-3xl">
         {/* Top Header */}
-        <div className="relative bg-white border-b border-[#E2E2E2] px-4 py-3.5 flex items-center justify-between">
+        <div className="relative bg-white border-b border-[#E2E8F0] px-4 py-3.5 flex items-center justify-between">
           <button
             onClick={handleAttemptLeave}
-            className="flex items-center gap-1.5 text-xs font-bold text-[#34313A] hover:text-[#F68F57] transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#0F172A] hover:text-[#0284C7] transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a la Carta</span>
           </button>
 
           {isQrAccess ? (
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold">
-            <MapPin className="w-3.5 h-3.5 text-[#34313A]" />
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] text-xs font-bold">
+            <MapPin className="w-3.5 h-3.5 text-[#0369A1]" />
             <span>{locationDisplayName}</span>
             </div>
           ) : (
             <button
               onClick={() => setShowLocationPicker(!showLocationPicker)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] text-xs font-bold hover:bg-[#aee0ff] transition"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] text-xs font-bold hover:bg-[#BAE6FD] transition"
               title="Tocar para cambiar tu sector de entrega"
             >
-              <MapPin className="w-3.5 h-3.5 text-[#34313A]" />
+              <MapPin className="w-3.5 h-3.5 text-[#0369A1]" />
               <span>{locationDisplayName}</span>
-              <ChevronDown className="w-3 h-3 text-[#34313A]" />
+              <ChevronDown className="w-3 h-3 text-[#0369A1]" />
             </button>
           )}
         </div>
 
         {/* Location Picker dropdown modal */}
         {!isQrAccess && showLocationPicker && (
-          <div className="bg-[#FBEEB9]/30 border-b border-[#E2E2E2] p-4 space-y-3">
+          <div className="bg-[#F8FAFC] border-b border-[#E2E8F0] p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-black text-xs text-[#34313A]">
+                <h4 className="font-black text-xs text-[#0F172A]">
                   Seleccioná el sector de entrega de tu pedido:
                 </h4>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-[#64748B]">
                   Podés elegir tu carpa, sombrilla o mesa en el balneario.
                 </p>
               </div>
               <button
                 onClick={() => setShowLocationPicker(false)}
-                className="text-xs font-bold text-gray-500 hover:text-[#34313A]"
+                className="text-xs font-bold text-[#64748B] hover:text-[#0F172A]"
               >
                 Cerrar ✕
               </button>
@@ -261,8 +261,8 @@ export const CartView: React.FC = () => {
                   onClick={() => setSelectedSectorTypeFilter(tab.id)}
                   className={`px-2.5 py-1 rounded-lg font-bold transition whitespace-nowrap ${
                     selectedSectorTypeFilter === tab.id
-                      ? 'bg-[#34313A] text-white'
-                      : 'bg-white text-[#34313A] border border-[#E2E2E2]'
+                      ? 'bg-[#0F2942] text-white'
+                      : 'bg-white text-[#64748B] border border-[#E2E8F0] hover:text-[#0F172A]'
                   }`}
                 >
                   {tab.label}
@@ -281,12 +281,12 @@ export const CartView: React.FC = () => {
                   }}
                   className={`p-2 rounded-xl text-center text-xs font-black transition border ${
                     selectedLocationCode === item.code
-                      ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] ring-2 ring-[#C1E7FF]'
-                      : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-[#FBEEB9]/40'
+                      ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] ring-2 ring-[#0284C7]/30'
+                      : 'bg-white text-[#0F172A] border-[#E2E8F0] hover:bg-[#F0F4F8]'
                   }`}
                 >
                   <div>{item.code}</div>
-                  <div className="text-[9px] font-semibold text-gray-500 truncate">{item.name}</div>
+                  <div className="text-[9px] font-semibold text-[#64748B] truncate">{item.name}</div>
                 </button>
               ))}
             </div>
@@ -298,31 +298,31 @@ export const CartView: React.FC = () => {
           {placedOrderNumber ? (
             /* Success confirmation screen (Step 3 completed) */
             <div className="py-8 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#C1E7FF] text-[#34313A] flex items-center justify-center mx-auto shadow-md border border-[#a9dbfa]">
+              <div className="w-16 h-16 rounded-full bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mx-auto shadow-md border border-[#A7F3D0]">
                 <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
               </div>
 
               <div>
-                <span className="text-xs font-black uppercase tracking-widest text-[#F68F57]">
+                <span className="text-xs font-black uppercase tracking-widest text-[#0284C7]">
                   PASO 3 DEL CIRCUITO DE PEDIDO
                 </span>
-                <h2 className="text-2xl font-black text-[#34313A] mt-1">
+                <h2 className="text-2xl font-black text-[#0F172A] mt-1">
                   ¡Pedido {placedOrderNumber} Enviado!
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-600 max-w-sm mx-auto mt-2 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#64748B] max-w-sm mx-auto mt-2 leading-relaxed">
                   Muchas gracias, <strong>{customerName}</strong>. Tu pedido para{' '}
                   <strong>{locationDisplayName}</strong> fue registrado con estado{' '}
-                  <span className="font-bold text-[#F68F57]">Pendiente de confirmación</span>.
+                  <span className="font-bold text-[#F59E0B]">Pendiente de confirmación</span>.
                 </p>
               </div>
 
               {/* Status explanation card */}
-              <div className="p-4 rounded-2xl bg-[#C1E7FF]/25 border border-[#C1E7FF]/60 text-left text-xs space-y-2.5 max-w-sm mx-auto text-[#34313A]">
-                <div className="flex items-center gap-2 font-black">
-                  <Clock className="w-4 h-4 text-[#34313A]" />
+              <div className="p-4 rounded-2xl bg-[#E0F2FE]/50 border border-[#BAE6FD] text-left text-xs space-y-2.5 max-w-sm mx-auto text-[#0F172A]">
+                <div className="flex items-center gap-2 font-black text-[#0369A1]">
+                  <Clock className="w-4 h-4 text-[#0284C7]" />
                   <span>¿Cómo sigue tu pedido?</span>
                 </div>
-                <p className="text-gray-700 leading-normal text-[11px]">
+                <p className="text-[#334155] leading-normal text-[11px]">
                   1. <strong>Contacto por WhatsApp:</strong> El personal del balneario revisará tu pedido y se comunicará a tu celular (<strong>{customerPhone}</strong>) para confirmar los productos e importe.<br />
                   2. <strong>Envío a Cocina KDS:</strong> Caja registra tu aprobación de la versión actual y recién entonces la envía a preparación.<br />
                   3. <strong>Entrega:</strong> Te lo llevamos directamente a tu sector.
@@ -354,14 +354,14 @@ export const CartView: React.FC = () => {
                       <span>{copiedAlias ? 'Copiado' : 'Copiar Alias'}</span>
                     </button>
                   </div>
-                  <div className="text-xs font-mono font-black text-[#34313A] bg-white p-2 rounded-lg border border-emerald-200">
+                  <div className="text-xs font-mono font-black text-[#0F172A] bg-white p-2 rounded-lg border border-emerald-200">
                     Alias: {bankAlias}
                   </div>
                 </div>
               )}
 
               {selectedPaymentMethod === 'debito/credito' && (
-                <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 max-w-sm mx-auto text-left space-y-2 text-xs text-[#34313A]">
+                <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 max-w-sm mx-auto text-left space-y-2 text-xs text-[#0F172A]">
                   <div className="font-black text-indigo-900 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <CreditCard className="w-4 h-4 text-indigo-600" />
@@ -391,7 +391,7 @@ export const CartView: React.FC = () => {
                     setPlacedOrderNumber(null);
                     setActiveView(isQrAccess ? 'carta' : 'comandas');
                   }}
-                  className="w-full py-3 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs transition shadow-sm border border-[#a9dbfa]"
+                  className="w-full py-3 px-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs transition shadow-sm"
                 >
                   {isQrAccess ? 'Volver a la Carta' : 'Ver Estado en Comandas'}
                 </button>
@@ -400,7 +400,7 @@ export const CartView: React.FC = () => {
                     setPlacedOrderNumber(null);
                     setActiveView('carta');
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl border border-[#E2E2E2] text-xs font-bold text-gray-600 hover:bg-gray-50 transition"
+                  className="w-full py-2.5 px-4 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#64748B] hover:text-[#0F172A] hover:bg-gray-50 transition"
                 >
                   Seguir explorando la carta
                 </button>
@@ -409,18 +409,18 @@ export const CartView: React.FC = () => {
           ) : cart.length === 0 ? (
             /* Empty Cart */
             <div className="py-16 text-center space-y-4">
-              <div className="w-16 h-16 rounded-3xl bg-[#FBEEB9]/40 border border-[#E2E2E2] flex items-center justify-center mx-auto text-[#34313A]/60 shadow-xs">
-                <ShoppingBag className="w-8 h-8 text-[#34313A]" />
+              <div className="w-16 h-16 rounded-3xl bg-[#F0F4F8] border border-[#E2E8F0] flex items-center justify-center mx-auto text-[#64748B] shadow-xs">
+                <ShoppingBag className="w-8 h-8 text-[#0284C7]" />
               </div>
               <div>
-                <h3 className="font-extrabold text-base text-[#34313A]">Tu carrito está vacío</h3>
-                <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                <h3 className="font-extrabold text-base text-[#0F172A]">Tu carrito está vacío</h3>
+                <p className="text-xs text-[#64748B] mt-1 max-w-xs mx-auto">
                   Explorá la carta del balneario y agregá tus platos, tragos o bebidas favoritas.
                 </p>
               </div>
               <button
                 onClick={() => setActiveView('carta')}
-                className="mt-2 px-5 py-2.5 rounded-2xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition"
+                className="mt-2 px-5 py-2.5 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs shadow-xs transition"
               >
                 IR A LA CARTA DIGITAL
               </button>
@@ -429,8 +429,8 @@ export const CartView: React.FC = () => {
             /* Active Cart Items & Order Confirmation */
             <>
               {/* Header with clear cart option */}
-              <div className="flex items-center justify-between pb-1 border-b border-[#E2E2E2]">
-                <h2 className="font-black text-sm text-[#34313A]">
+              <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+                <h2 className="font-black text-sm text-[#0F172A]">
                   Resumen de tu Pedido ({cart.reduce((s, i) => s + i.quantity, 0)} productos)
                 </h2>
                 <button
@@ -448,17 +448,17 @@ export const CartView: React.FC = () => {
                 {cart.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3.5 rounded-2xl border border-[#E2E2E2] bg-white shadow-xs flex flex-col justify-between gap-2.5 hover:shadow-sm transition"
+                    className="p-3.5 rounded-2xl border border-[#E2E8F0] bg-white shadow-xs flex flex-col justify-between gap-2.5 hover:shadow-sm transition"
                   >
                     <div className="flex items-start gap-3">
                       <img
                         src={item.productImage}
                         alt={item.productName}
-                        className="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100 border border-[#E2E2E2]"
+                        className="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100 border border-[#E2E8F0]"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-1">
-                          <h4 className="font-black text-xs text-[#34313A] line-clamp-1">
+                          <h4 className="font-black text-xs text-[#0F172A] line-clamp-1">
                             {item.productName}
                           </h4>
                           <button
@@ -472,7 +472,7 @@ export const CartView: React.FC = () => {
                         </div>
 
                         {item.variant && (
-                          <div className="text-[10px] text-gray-500 font-semibold">
+                          <div className="text-[10px] text-[#64748B] font-semibold">
                             Variante: {item.variant.name}
                           </div>
                         )}
@@ -492,47 +492,47 @@ export const CartView: React.FC = () => {
                             {item.selectedAddons.map((a) => (
                               <span
                                 key={a.id}
-                                className="px-1.5 py-0.2 bg-[#C1E7FF]/30 text-[#34313A] border border-[#a9dbfa] font-bold rounded"
+                                className="px-1.5 py-0.2 bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD] font-bold rounded"
                               >
                                 +{a.name}
                               </span>
                             ))}
                             {item.notes && (
-                              <span className="text-gray-500 italic block w-full">
+                              <span className="text-[#64748B] italic block w-full">
                                 "{item.notes}"
                               </span>
                             )}
                           </div>
                         )}
 
-                        <div className="text-[11px] font-extrabold text-[#34313A] mt-1">
+                        <div className="text-[11px] font-extrabold text-[#0F172A] mt-1">
                           {formatCurrencyARS(item.unitPrice)} c/u
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                      <div className="flex items-center gap-2 bg-[#FBEEB9]/30 rounded-xl p-1 border border-[#E2E2E2]">
+                      <div className="flex items-center gap-2 bg-[#F0F4F8] rounded-xl p-1 border border-[#E2E8F0]">
                         <button
                           type="button"
                           onClick={() => updateCartItemQuantity(item.id, -1)}
-                          className="w-6 h-6 rounded-lg bg-white border border-[#E2E2E2] flex items-center justify-center text-xs font-black text-[#34313A] hover:bg-gray-50 shadow-2xs"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center text-xs font-black text-[#0F172A] hover:bg-gray-50 shadow-2xs"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="text-xs font-black text-[#34313A] w-6 text-center">
+                        <span className="text-xs font-black text-[#0F172A] w-6 text-center">
                           {item.quantity}
                         </span>
                         <button
                           type="button"
                           onClick={() => updateCartItemQuantity(item.id, 1)}
-                          className="w-6 h-6 rounded-lg bg-[#F68F57] text-white flex items-center justify-center text-xs font-black shadow-2xs hover:bg-[#e07f4a]"
+                          className="w-6 h-6 rounded-lg bg-[#0284C7] text-white flex items-center justify-center text-xs font-black shadow-2xs hover:bg-[#0369A1]"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
 
-                      <span className="font-black text-sm text-[#34313A]">
+                      <span className="font-black text-sm text-[#0F172A]">
                         {formatCurrencyARS(item.subtotal)}
                       </span>
                     </div>
@@ -541,10 +541,10 @@ export const CartView: React.FC = () => {
               </div>
 
               {/* Obligatory Customer Details Form (Requirement Section 1) */}
-              <div className="p-4 rounded-2xl bg-[#FBEEB9]/25 border border-[#E2E2E2] space-y-3.5">
-                <div className="flex items-center justify-between pb-1 border-b border-[#E2E2E2]">
-                  <div className="flex items-center gap-1.5 text-xs font-black text-[#34313A]">
-                    <FileText className="w-4 h-4 text-[#F68F57]" />
+              <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-3.5">
+                <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-[#0F172A]">
+                    <FileText className="w-4 h-4 text-[#0284C7]" />
                     <span>Datos Obligatorios del Cliente</span>
                   </div>
                   <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
@@ -554,8 +554,8 @@ export const CartView: React.FC = () => {
 
                 {/* Nombre y Apellido */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
-                    <User className="w-3 h-3 text-[#34313A]" />
+                  <label className="text-[11px] font-bold text-[#0F172A] flex items-center gap-1">
+                    <User className="w-3 h-3 text-[#0284C7]" />
                     <span>Nombre y Apellido *</span>
                   </label>
                   <input
@@ -564,10 +564,10 @@ export const CartView: React.FC = () => {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder="Ej: Laura Domínguez, Martín Rossi"
-                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] ${
+                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7] ${
                       formSubmitted && !isNameValid
                         ? 'border-rose-400 bg-rose-50/40'
-                        : 'border-[#E2E2E2]'
+                        : 'border-[#E2E8F0]'
                     }`}
                   />
                   {formSubmitted && !isNameValid && (
@@ -579,8 +579,8 @@ export const CartView: React.FC = () => {
 
                 {/* Teléfono celular con código de área */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-[#34313A]" />
+                  <label className="text-[11px] font-bold text-[#0F172A] flex items-center gap-1">
+                    <Phone className="w-3 h-3 text-[#0284C7]" />
                     <span>Número de Celular con Código de Área *</span>
                   </label>
                   <input
@@ -589,13 +589,13 @@ export const CartView: React.FC = () => {
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="Ej: 223 555-1234 ó +54 9 11 4444-3333"
-                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs font-mono text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] ${
+                    className={`w-full bg-white px-3 py-2 rounded-xl border text-xs font-mono text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7] ${
                       formSubmitted && !isPhoneValid
                         ? 'border-rose-400 bg-rose-50/40'
-                        : 'border-[#E2E2E2]'
+                        : 'border-[#E2E8F0]'
                     }`}
                   />
-                  <div className="flex items-center justify-between text-[10px] text-gray-500 pt-0.5">
+                  <div className="flex items-center justify-between text-[10px] text-[#64748B] pt-0.5">
                     <span>Válido para celulares de Mar del Plata (+54 9 223...) o todo el país.</span>
                     {customerPhone.trim() && isPhoneValid && (
                       <span className="text-emerald-700 font-bold flex items-center gap-0.5">
@@ -614,30 +614,30 @@ export const CartView: React.FC = () => {
                 {/* Sector de entrega confirmado */}
                 <div className="space-y-1 pt-1">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-bold text-[#34313A] flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-[#34313A]" />
+                    <label className="text-[11px] font-bold text-[#0F172A] flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-[#0284C7]" />
                       <span>Sector de Entrega Confirmado:</span>
                     </label>
                     {!isQrAccess && (
                       <button
                         type="button"
                         onClick={() => setShowLocationPicker(true)}
-                        className="text-[11px] font-bold text-[#34313A] underline hover:text-[#F68F57]"
+                        className="text-[11px] font-bold text-[#0284C7] underline hover:text-[#0369A1]"
                       >
                         Cambiar sector
                       </button>
                     )}
                   </div>
-                  <div className="bg-white p-2.5 rounded-xl border border-[#E2E2E2] flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#34313A]">{locationDisplayName}</span>
-                    <span className="px-2 py-0.5 rounded-md bg-[#C1E7FF] text-[#34313A] font-black text-[10px] uppercase">
+                  <div className="bg-white p-2.5 rounded-xl border border-[#E2E8F0] flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#0F172A]">{locationDisplayName}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#E0F2FE] text-[#0369A1] font-black text-[10px] uppercase">
                       {loc?.type.replace(/_/g, ' ') || 'Playa'}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-2 pt-1">
-                  <label className="text-[11px] font-bold text-[#34313A]">¿Cómo vas a abonar?</label>
+                  <label className="text-[11px] font-bold text-[#0F172A]">¿Cómo vas a abonar?</label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
                       { value: 'efectivo', label: 'Efectivo', Icon: Banknote },
@@ -652,8 +652,8 @@ export const CartView: React.FC = () => {
                         onClick={() => setSelectedPaymentMethod(value)}
                         className={`flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition ${
                           selectedPaymentMethod === value
-                            ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
-                            : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                            ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-xs ring-1 ring-[#0284C7]'
+                            : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-gray-50 hover:text-[#0F172A]'
                         }`}
                       >
                         <Icon className="h-3.5 w-3.5" />
@@ -664,7 +664,7 @@ export const CartView: React.FC = () => {
 
                   {/* Tarjeta Interactiva de Pago con QR con Importe Actualizado */}
                   {selectedPaymentMethod === 'mercadopago_qr' && (
-                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#009ee3]/10 to-[#C1E7FF]/30 border-2 border-[#009ee3]/30 space-y-2.5 animate-in fade-in duration-200">
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#009ee3]/10 to-[#E0F2FE]/50 border-2 border-[#009ee3]/30 space-y-2.5 animate-in fade-in duration-200">
                       <div className="flex items-center justify-between pb-2 border-b border-[#009ee3]/20">
                         <div className="flex items-center gap-1.5 text-xs font-black text-[#009ee3]">
                           <QrCode className="w-4 h-4" />
@@ -716,7 +716,7 @@ export const CartView: React.FC = () => {
                         <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-emerald-200">
                           <div>
                             <span className="text-[10px] text-gray-500 uppercase font-mono block">Alias Bancario:</span>
-                            <span className="font-mono font-black text-sm text-[#34313A]">{bankAlias}</span>
+                            <span className="font-mono font-black text-sm text-[#0F172A]">{bankAlias}</span>
                           </div>
                           <button
                             type="button"
@@ -744,11 +744,11 @@ export const CartView: React.FC = () => {
                         <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-600 px-1">
                           <div>
                             <span className="text-gray-400 block text-[9px] uppercase font-mono">Titular:</span>
-                            <span className="font-bold text-[#34313A]">{bankTitular}</span>
+                            <span className="font-bold text-[#0F172A]">{bankTitular}</span>
                           </div>
                           <div>
                             <span className="text-gray-400 block text-[9px] uppercase font-mono">CVU / CBU:</span>
-                            <span className="font-mono font-bold text-[#34313A] text-[10px]">{bankCbu}</span>
+                            <span className="font-mono font-bold text-[#0F172A] text-[10px]">{bankCbu}</span>
                           </div>
                         </div>
 
@@ -762,7 +762,7 @@ export const CartView: React.FC = () => {
 
                   {/* Tarjeta Interactiva de Tarjetas Aceptadas & Promociones Bancarias */}
                   {selectedPaymentMethod === 'debito/credito' && (
-                    <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-sky-50/50 to-white border-2 border-indigo-200 space-y-3.5 animate-in fade-in duration-200 text-[#34313A]">
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-sky-50/50 to-white border-2 border-indigo-200 space-y-3.5 animate-in fade-in duration-200 text-[#0F172A]">
                       {/* Encabezado */}
                       <div className="flex items-center justify-between pb-2 border-b border-indigo-100 flex-wrap gap-1.5">
                         <div className="flex items-center gap-1.5 text-xs font-black text-indigo-950">
@@ -896,7 +896,7 @@ export const CartView: React.FC = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                           {/* Banco Provincia */}
                           <div className="p-2.5 rounded-xl bg-white border border-emerald-200 flex flex-col justify-between shadow-2xs">
-                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                            <div className="flex items-center justify-between pb-1 border-gray-100">
                               <span className="font-mono font-black text-[10px] text-emerald-800">
                                 BANCO PROVINCIA
                               </span>
@@ -911,7 +911,7 @@ export const CartView: React.FC = () => {
 
                           {/* Galicia */}
                           <div className="p-2.5 rounded-xl bg-white border border-sky-200 flex flex-col justify-between shadow-2xs">
-                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                            <div className="flex items-center justify-between pb-1 border-gray-100">
                               <span className="font-mono font-black text-[10px] text-sky-800">
                                 BANCO GALICIA
                               </span>
@@ -926,7 +926,7 @@ export const CartView: React.FC = () => {
 
                           {/* Santander */}
                           <div className="p-2.5 rounded-xl bg-white border border-rose-200 flex flex-col justify-between shadow-2xs">
-                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                            <div className="flex items-center justify-between pb-1 border-gray-100">
                               <span className="font-mono font-black text-[10px] text-rose-800">
                                 BANCO SANTANDER
                               </span>
@@ -941,7 +941,7 @@ export const CartView: React.FC = () => {
 
                           {/* Naranja X */}
                           <div className="p-2.5 rounded-xl bg-white border border-amber-200 flex flex-col justify-between shadow-2xs">
-                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                            <div className="flex items-center justify-between pb-1 border-gray-100">
                               <span className="font-mono font-black text-[10px] text-amber-800">
                                 TARJETA NARANJA X
                               </span>
@@ -977,7 +977,7 @@ export const CartView: React.FC = () => {
 
                 {/* Notas adicionales */}
                 <div className="space-y-1 pt-1">
-                  <label className="text-[11px] font-semibold text-gray-600">
+                  <label className="text-[11px] font-semibold text-[#64748B]">
                     Aclaraciones para la entrega (opcional)
                   </label>
                   <input
@@ -985,24 +985,24 @@ export const CartView: React.FC = () => {
                     value={deliveryNotes}
                     onChange={(e) => setDeliveryNotes(e.target.value)}
                     placeholder="Ej: Sombrilla azul con toallas rojas, dejar en mesita..."
-                    className="w-full bg-white px-3 py-2 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF]"
+                    className="w-full bg-white px-3 py-2 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
                   />
                 </div>
               </div>
 
               {/* Price Breakdown */}
-              <div className="p-4 rounded-2xl bg-white border border-[#E2E2E2] space-y-2 text-xs">
-                <div className="flex justify-between text-gray-600">
+              <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] space-y-2 text-xs">
+                <div className="flex justify-between text-[#64748B]">
                   <span>Subtotal productos</span>
-                  <span className="font-semibold text-[#34313A]">{formatCurrencyARS(subtotal)}</span>
+                  <span className="font-semibold text-[#0F172A]">{formatCurrencyARS(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-[#64748B]">
                   <span>Servicio de playa / IVA</span>
-                  <span className="font-semibold text-[#34313A]">Incluido</span>
+                  <span className="font-semibold text-[#0F172A]">Incluido</span>
                 </div>
-                <div className="pt-2 border-t border-[#E2E2E2] flex justify-between items-baseline text-sm">
-                  <span className="font-extrabold text-[#34313A]">Total del Pedido</span>
-                  <span className="font-black text-lg text-[#34313A]">
+                <div className="pt-2 border-t border-[#E2E8F0] flex justify-between items-baseline text-sm">
+                  <span className="font-extrabold text-[#0F172A]">Total del Pedido</span>
+                  <span className="font-black text-lg text-[#0F172A]">
                     {formatCurrencyARS(total)}
                   </span>
                 </div>
@@ -1013,24 +1013,24 @@ export const CartView: React.FC = () => {
 
         {/* Bottom CTA when cart has items */}
         {cart.length > 0 && !placedOrderNumber && (
-          <div className="sticky bottom-0 z-20 bg-white border-t border-[#E2E2E2] p-4 shadow-lg">
+          <div className="sticky bottom-0 z-20 bg-white border-t border-[#E2E8F0] p-4 shadow-lg">
             <button
               onClick={handlePlaceOrder}
               disabled={isSubmittingOrder}
-              className="w-full flex items-center justify-between py-3.5 px-5 rounded-2xl bg-[#F68F57] hover:bg-[#e07f4a] text-white font-extrabold text-sm shadow-lg shadow-[#F68F57]/25 transition active:scale-[0.99]"
+              className="w-full flex items-center justify-between py-3.5 px-5 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-sm shadow-lg shadow-[#0284C7]/25 transition active:scale-[0.99]"
             >
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
                 <span>{isSubmittingOrder ? 'ENVIANDO PEDIDO…' : 'CONFIRMAR Y ENVIAR PEDIDO'}</span>
               </div>
-              <span className="bg-[#34313A]/25 px-3 py-1 rounded-xl text-white text-xs font-black">
+              <span className="bg-[#0F2942]/30 px-3 py-1 rounded-xl text-white text-xs font-black">
                 {formatCurrencyARS(total)}
               </span>
             </button>
 
             {orderError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{orderError}</p>}
 
-            <p className="text-[10px] text-gray-500 text-center mt-2">
+            <p className="text-[10px] text-[#64748B] text-center mt-2">
               Se creará el pedido para <strong>{locationDisplayName}</strong> y el personal te contactará por WhatsApp para confirmar.
             </p>
           </div>
@@ -1039,17 +1039,17 @@ export const CartView: React.FC = () => {
 
       {/* Confirmation Modal: Vaciar Carrito (Requirement Section 4-B) */}
       {showClearCartModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E8F0]">
             <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
 
             <div className="text-center space-y-1.5">
-              <h3 className="font-black text-base text-[#34313A]">
+              <h3 className="font-black text-base text-[#0F172A]">
                 ¿Estás seguro de que querés eliminar todos los productos del carrito?
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#64748B]">
                 Se quitarán todos los productos seleccionados y el total volverá a $0. Los pedidos que ya enviaste al balneario permanecerán guardados.
               </p>
             </div>
@@ -1058,7 +1058,7 @@ export const CartView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowClearCartModal(false)}
-                className="flex-1 py-2.5 px-4 rounded-xl border border-[#E2E2E2] text-xs font-bold text-[#34313A] hover:bg-gray-100 transition"
+                className="flex-1 py-2.5 px-4 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#0F172A] hover:bg-gray-100 transition"
               >
                 Cancelar
               </button>
@@ -1076,17 +1076,17 @@ export const CartView: React.FC = () => {
 
       {/* Protection Modal: Warn on leaving with active cart (Requirement Section 4-D) */}
       {showLeaveWarningModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
-            <div className="w-12 h-12 rounded-2xl bg-[#FBEEB9] text-[#34313A] flex items-center justify-center mx-auto border border-[#e8d799]">
-              <AlertTriangle className="w-6 h-6 text-[#34313A]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/70 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E8F0]">
+            <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] text-[#92400E] flex items-center justify-center mx-auto border border-[#FDE68A]">
+              <AlertTriangle className="w-6 h-6 text-[#D97706]" />
             </div>
 
             <div className="text-center space-y-1.5">
-              <h3 className="font-black text-base text-[#34313A]">
+              <h3 className="font-black text-base text-[#0F172A]">
                 ¿Deseás salir de tu pedido?
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-[#64748B]">
                 Tenés <strong>{cart.reduce((s, i) => s + i.quantity, 0)} productos</strong> en el carrito que aún no fueron enviados al balneario.
               </p>
             </div>
@@ -1095,7 +1095,7 @@ export const CartView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowLeaveWarningModal(false)}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#aee0ff] border border-[#a9dbfa] transition"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0284C7] text-white font-black text-xs hover:bg-[#0369A1] transition shadow-xs"
               >
                 Seguir en el carrito
               </button>
@@ -1105,7 +1105,7 @@ export const CartView: React.FC = () => {
                   setShowLeaveWarningModal(false);
                   setActiveView('carta');
                 }}
-                className="w-full py-2 px-4 rounded-xl border border-[#E2E2E2] text-[#34313A]/70 font-bold text-xs hover:bg-gray-100 transition"
+                className="w-full py-2 px-4 rounded-xl border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] font-bold text-xs hover:bg-gray-100 transition"
               >
                 Salir de todas formas
               </button>

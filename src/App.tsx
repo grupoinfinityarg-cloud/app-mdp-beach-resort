@@ -25,10 +25,10 @@ const SettingsView = lazy(() => import('./views/SettingsView').then(m => ({ defa
 
 // Indicador de carga discreto para transiciones de módulos administrativos
 const ViewLoadingFallback: React.FC = () => (
-  <div className="flex-1 flex items-center justify-center min-h-[350px] p-8 text-[#34313A]">
+  <div className="flex-1 flex items-center justify-center min-h-[350px] p-8 text-[#0F172A]">
     <div className="flex flex-col items-center gap-3">
-      <div className="w-8 h-8 rounded-full border-2 border-[#C1E7FF] border-t-[#F68F57] animate-spin" />
-      <span className="text-xs font-bold text-[#34313A]/70">Cargando módulo...</span>
+      <div className="w-8 h-8 rounded-full border-2 border-[#E0F2FE] border-t-[#0284C7] animate-spin" />
+      <span className="text-xs font-bold text-[#64748B]">Cargando módulo...</span>
     </div>
   </div>
 );
@@ -204,7 +204,7 @@ const AppContent: React.FC = () => {
 
   if (isSupabaseConfigured && isStaffLoginRequested) {
     if (isPasswordRecovery) return <StaffLoginView recoveryMode />;
-    if (!staffSessionReady) return <div className="min-h-screen sand-textured-bg flex items-center justify-center text-xs font-bold text-[#34313A]/70">Verificando acceso...</div>;
+    if (!staffSessionReady) return <div className="min-h-screen sand-textured-bg flex items-center justify-center text-xs font-bold text-[#64748B]">Verificando acceso...</div>;
     if (!hasBusinessAccess) return <StaffLoginView accessDenied={accessDenied} authError={authCheckError} />;
   }
 
@@ -213,13 +213,13 @@ const AppContent: React.FC = () => {
   const isImmersiveView = activeView === 'cocina' || isCustomerView;
 
   return (
-    <div className="min-h-screen sand-textured-bg text-[#34313A] flex flex-col font-sans selection:bg-[#C1E7FF] selection:text-[#34313A]">
+    <div className="min-h-screen sand-textured-bg text-[#0F172A] flex flex-col font-sans selection:bg-[#E0F2FE] selection:text-[#0369A1]">
       {/* Barra de Demostración Comercial y Selector de Roles */}
       <DemoRoleSwitcherBar />
 
       {/* Offline PWA Banner */}
       {!isOnline && !isQrAccess && (
-        <div className="bg-[#F68F57] text-white text-xs font-bold py-1.5 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md">
+        <div className="bg-[#F59E0B] text-white text-xs font-bold py-1.5 px-4 text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md">
           <WifiOff className="w-3.5 h-3.5" />
           <span>Modo Sin Conexión — La aplicación continúa funcionando con datos locales en caché.</span>
         </div>

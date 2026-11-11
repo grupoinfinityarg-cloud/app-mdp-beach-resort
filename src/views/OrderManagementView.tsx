@@ -208,34 +208,34 @@ export const OrderManagementView: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#34313A]">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#0F172A]">
       {/* Toast Feedback de WhatsApp */}
       {whatsAppToast && (
-        <div className="fixed top-5 right-5 z-50 bg-[#34313A] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold border border-white/20">
+        <div className="fixed top-5 right-5 z-50 bg-[#0F2942] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold border border-white/20">
           <MessageCircle className="w-4 h-4 text-emerald-400" />
           <span>{whatsAppToast}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="bg-white p-5 rounded-3xl border border-[#E2E2E2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#34313A] tracking-tight">
+            <h1 className="text-xl font-black text-[#0F172A] tracking-tight">
               Flujo de Pedidos & Comandas
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E0F2FE] text-[#0369A1] border border-sky-200">
               CIRCUITO DE 10 PASOS
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[#64748B] mt-1">
             El pedido recibido requiere contacto y confirmación del personal vía WhatsApp antes de enviarse a cocina KDS.
           </p>
         </div>
 
         {/* 10-step explainer card trigger */}
-        <div className="p-3 rounded-2xl bg-[#C1E7FF]/25 border border-[#C1E7FF]/60 text-xs text-[#34313A] flex items-center gap-2">
-          <Layers className="w-4 h-4 text-[#34313A] shrink-0" />
+        <div className="p-3 rounded-2xl bg-[#E0F2FE]/40 border border-sky-200 text-xs text-[#0369A1] flex items-center gap-2">
+          <Layers className="w-4 h-4 text-[#0284C7] shrink-0" />
           <span className="text-[11px] font-semibold">
             Flujo: <strong>Pedido Cliente</strong> → <strong>Contacto WhatsApp</strong> → <strong>Edición / Confirmación</strong> → <strong>Cocina KDS</strong>.
           </span>
@@ -259,14 +259,14 @@ export const OrderManagementView: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition flex items-center gap-2 ${
                 isSelected
-                  ? 'bg-[#C1E7FF] text-[#34313A] shadow-xs font-black border border-[#a9dbfa]'
-                  : 'bg-white text-[#34313A] hover:bg-gray-50 border border-[#E2E2E2]'
+                  ? 'bg-[#0284C7] text-white shadow-xs font-black border border-[#0284C7]'
+                  : 'bg-white text-[#64748B] hover:bg-gray-50 border border-[#E2E8F0]'
               }`}
             >
               <span>{tab.label}</span>
               <span
                 className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  isSelected ? 'bg-[#34313A] text-white' : 'bg-gray-100 text-[#34313A]'
+                  isSelected ? 'bg-[#0F2942] text-white' : 'bg-gray-100 text-[#0F172A]'
                 }`}
               >
                 {tab.count}
@@ -296,28 +296,28 @@ export const OrderManagementView: React.FC = () => {
               key={ord.id}
               className={`bg-white rounded-3xl p-5 border shadow-xs flex flex-col justify-between transition hover:shadow-md ${
                 isPending
-                  ? 'border-[#F68F57] ring-2 ring-[#F68F57]/20'
+                  ? 'border-[#F59E0B] ring-2 ring-[#F59E0B]/20'
                   : isReady
-                  ? 'border-[#C1E7FF] ring-2 ring-[#C1E7FF]/30'
-                  : 'border-[#E2E2E2]'
+                  ? 'border-[#10B981] ring-2 ring-[#10B981]/20'
+                  : 'border-[#E2E8F0]'
               }`}
             >
               <div className="space-y-4">
                 {/* Top: Order #, Status, Location */}
-                <div className="flex items-start justify-between gap-2 pb-3 border-b border-[#E2E2E2]">
+                <div className="flex items-start justify-between gap-2 pb-3 border-b border-[#E2E8F0]">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-black text-base text-[#34313A]">{ord.orderNumber}</span>
+                      <span className="font-black text-base text-[#0F172A]">{ord.orderNumber}</span>
                       <span className="text-[10px] text-gray-400 font-mono">
                         hace {elapsedMin}m
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-xs font-black text-[#34313A] mt-1">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-[#0F172A] mt-1">
                       {ord.locationType === 'carpa' ? (
-                        <Umbrella className="w-3.5 h-3.5 text-[#34313A]" />
+                        <Umbrella className="w-3.5 h-3.5 text-[#0F172A]" />
                       ) : (
-                        <Utensils className="w-3.5 h-3.5 text-[#34313A]" />
+                        <Utensils className="w-3.5 h-3.5 text-[#0F172A]" />
                       )}
                       <span>{ord.locationName}</span>
                       <span className="px-1.5 py-0.2 rounded bg-gray-100 text-[10px] font-mono text-gray-600">
@@ -329,7 +329,7 @@ export const OrderManagementView: React.FC = () => {
                       <div>Cliente: <strong>{ord.customerName || 'Cliente'}</strong></div>
                       {ord.customerPhone ? (
                         <div className="text-gray-500 font-mono text-[10px] flex items-center gap-1 mt-0.5">
-                          <Phone className="w-3 h-3 text-[#34313A]" />
+                          <Phone className="w-3 h-3 text-[#0F172A]" />
                           <span>{phoneValidation.cleanForWhatsApp || ord.customerPhone}</span>
                         </div>
                       ) : (
@@ -341,27 +341,27 @@ export const OrderManagementView: React.FC = () => {
                   {/* Status Badge */}
                   <div>
                     {isPending && (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#FBEEB9] text-[#34313A] border border-[#e8d799]">
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]">
                         Paso 3: Espera Aprobación
                       </span>
                     )}
                     {isConfirmed && (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]">
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#E0F2FE] text-[#0369A1] border border-sky-200">
                         Paso 6: En Cola Cocina
                       </span>
                     )}
                     {isPreparing && (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#F68F57] text-white">
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#0284C7] text-white">
                         Paso 8: En Cocina KDS
                       </span>
                     )}
                     {isReady && (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] animate-pulse">
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-[#D1FAE5] text-emerald-800 border border-emerald-300 animate-pulse">
                         Paso 8: Listo para Llevar
                       </span>
                     )}
                     {ord.status === 'entregado' && (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-gray-100 text-[#34313A] border border-[#E2E2E2]">
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-gray-100 text-[#0F172A] border border-[#E2E8F0]">
                         Paso 9: Entregado
                       </span>
                     )}
@@ -380,7 +380,7 @@ export const OrderManagementView: React.FC = () => {
                     {isPending && (
                       <button
                         onClick={() => handleOpenEditOrder(ord)}
-                        className="text-[10px] font-bold text-[#F68F57] lowercase hover:underline flex items-center gap-1"
+                        className="text-[10px] font-bold text-[#0284C7] lowercase hover:underline flex items-center gap-1"
                       >
                         <Edit className="w-3 h-3" />
                         <span>Editar Comanda</span>
@@ -391,13 +391,13 @@ export const OrderManagementView: React.FC = () => {
                   {ord.items.map((item) => (
                     <div
                       key={item.id}
-                      className="p-2 rounded-xl bg-gray-50/70 border border-[#E2E2E2]/60 text-xs space-y-1"
+                      className="p-2 rounded-xl bg-gray-50/70 border border-[#E2E8F0]/60 text-xs space-y-1"
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <span className="font-bold text-[#34313A]">
-                          <strong className="text-[#F68F57]">{item.quantity}x</strong> {item.productName}
+                        <span className="font-bold text-[#0F172A]">
+                          <strong className="text-[#0284C7]">{item.quantity}x</strong> {item.productName}
                         </span>
-                        <span className="font-extrabold text-[#34313A] shrink-0">
+                        <span className="font-extrabold text-[#0F172A] shrink-0">
                           {formatCurrencyARS(item.subtotal)}
                         </span>
                       </div>
@@ -417,7 +417,7 @@ export const OrderManagementView: React.FC = () => {
                           {item.selectedAddons.map((a) => (
                             <span
                               key={a.id}
-                              className="px-1.5 py-0.2 bg-[#C1E7FF]/30 text-[#34313A] border border-[#a9dbfa] font-bold rounded"
+                              className="px-1.5 py-0.2 bg-[#E0F2FE] text-[#0369A1] border border-sky-200 font-bold rounded"
                             >
                               +{a.name}
                             </span>
@@ -433,7 +433,7 @@ export const OrderManagementView: React.FC = () => {
                   ))}
 
                   {ord.notes && (
-                    <div className="text-[11px] text-[#34313A] bg-[#FBEEB9]/30 p-2 rounded-xl font-medium border border-[#E2E2E2]">
+                    <div className="text-[11px] text-[#92400E] bg-[#FFFBEB] p-2 rounded-xl font-medium border border-[#FDE68A]">
                       <strong>Nota de entrega:</strong> {ord.notes}
                     </div>
                   )}
@@ -455,7 +455,7 @@ export const OrderManagementView: React.FC = () => {
 
                   {/* Audit Trail preview */}
                   {ord.editAuditLog && ord.editAuditLog.length > 1 && (
-                    <div className="text-[10px] text-gray-500 bg-gray-50 p-2 rounded-xl border border-[#E2E2E2] flex items-center gap-1.5">
+                    <div className="text-[10px] text-gray-500 bg-gray-50 p-2 rounded-xl border border-[#E2E8F0] flex items-center gap-1.5">
                       <History className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                       <span className="truncate">
                         Último cambio por <strong>{ord.editAuditLog[ord.editAuditLog.length - 1].employee}</strong>:{' '}
@@ -469,12 +469,12 @@ export const OrderManagementView: React.FC = () => {
                 <div className="flex items-center justify-between text-xs pt-1">
                   <span className="text-gray-500 font-medium">Total de la Comanda</span>
                   <div className="text-right">
-                    <span className="text-base font-black text-[#34313A]">
+                    <span className="text-base font-black text-[#0F172A]">
                       {formatCurrencyARS(ord.total)}
                     </span>
                     <span
                       className={`block text-[10px] font-bold ${
-                        isPaid ? 'text-[#34313A]' : 'text-[#F68F57]'
+                        isPaid ? 'text-[#0F172A]' : 'text-[#F59E0B]'
                       }`}
                     >
                       {isPaid ? `Cobrado (${ord.paymentMethod})` : 'Pendiente de cobro'}
@@ -484,11 +484,11 @@ export const OrderManagementView: React.FC = () => {
               </div>
 
               {/* Action Buttons depending on 10-step state */}
-              <div className="pt-4 mt-3 border-t border-[#E2E2E2] space-y-2">
+              <div className="pt-4 mt-3 border-t border-[#E2E8F0] space-y-2">
                 {isPending && (
                   <div className="space-y-2">
                     {ord.orderSource === 'qr' && (
-                      <div className="rounded-xl border border-[#a9dbfa] bg-[#C1E7FF]/25 px-3 py-2 text-[11px] text-[#34313A]">
+                      <div className="rounded-xl border border-sky-200 bg-[#E0F2FE]/40 px-3 py-2 text-[11px] text-[#0369A1]">
                         <div className="font-black">Pedido QR · versión {ord.currentVersion ?? 1}</div>
                         <div className="mt-0.5">
                           {ord.customerApprovalStatus === 'approved' && ord.customerApprovedVersion === ord.currentVersion
@@ -547,7 +547,7 @@ export const OrderManagementView: React.FC = () => {
 
                       <button
                         onClick={() => handleCopyWhatsAppMessage(ord)}
-                        className="px-2.5 py-2 rounded-xl border border-[#E2E2E2] hover:bg-gray-100 text-[#34313A] transition"
+                        className="px-2.5 py-2 rounded-xl border border-[#E2E8F0] hover:bg-[#F0F4F8] text-[#0F172A] transition"
                         title="Copiar mensaje preparado al portapapeles"
                       >
                         {copiedOrderId === ord.id ? (
@@ -562,9 +562,9 @@ export const OrderManagementView: React.FC = () => {
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => handleOpenEditOrder(ord)}
-                        className="py-2 px-3 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-[#FBEEB9]/40 transition flex items-center justify-center gap-1"
+                        className="py-2 px-3 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8] transition flex items-center justify-center gap-1"
                       >
-                        <Edit className="w-3.5 h-3.5 text-[#34313A]" />
+                        <Edit className="w-3.5 h-3.5 text-[#0F172A]" />
                         <span>Editar Pedido</span>
                       </button>
 
@@ -572,19 +572,19 @@ export const OrderManagementView: React.FC = () => {
                         <button
                           onClick={() => void recordQrCustomerApproval(ord)}
                           disabled={!ord.whatsappContactedAt || ord.customerApprovalStatus === 'edit_requested'}
-                          className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-50 disabled:cursor-not-allowed text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
+                          className="py-2 px-3 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs shadow-xs border border-[#0284C7] transition flex items-center justify-center gap-1"
                           title="Caja confirma que el cliente respondió y aprobó por WhatsApp"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#34313A]" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                           <span>Registrar aprobación</span>
                         </button>
                       ) : (
                         <button
                           onClick={() => ord.orderSource === 'qr' ? void sendQrOrderToKitchen(ord) : confirmAndSendToKitchen(ord.id)}
                           disabled={ord.orderSource === 'qr' && ord.customerApprovedVersion !== ord.currentVersion}
-                          className="py-2 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-50 disabled:cursor-not-allowed text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition flex items-center justify-center gap-1"
+                          className="py-2 px-3 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs shadow-xs border border-[#0284C7] transition flex items-center justify-center gap-1"
                         >
-                          <ChefHat className="w-3.5 h-3.5 text-[#34313A]" />
+                          <ChefHat className="w-3.5 h-3.5 text-white" />
                           <span>A Cocina KDS</span>
                         </button>
                       )}
@@ -603,14 +603,14 @@ export const OrderManagementView: React.FC = () => {
                   <div className="space-y-1.5">
                     <button
                       onClick={() => updateOrderStatus(ord.id, 'en_preparacion')}
-                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#a9dbfa] border border-[#a9dbfa] transition"
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#0284C7] text-white font-black text-xs hover:bg-[#0369A1] border border-[#0284C7] transition"
                     >
                       <ChefHat className="w-4 h-4" />
                       <span>Iniciar Preparación en Cocina</span>
                     </button>
                     <button
                       onClick={() => handleOpenEditOrder(ord)}
-                      className="w-full text-center text-[11px] font-bold text-[#34313A]/70 hover:underline"
+                      className="w-full text-center text-[11px] font-bold text-[#64748B] hover:underline"
                     >
                       Editar comanda en cocina
                     </button>
@@ -620,7 +620,7 @@ export const OrderManagementView: React.FC = () => {
                 {isPreparing && (
                   <button
                     onClick={() => updateOrderStatus(ord.id, 'listo_para_entrega')}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#FBEEB9] text-[#34313A] font-black text-xs hover:bg-[#fae498] border border-[#e8d799] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#10B981] text-white font-black text-xs hover:bg-[#059669] border border-[#10B981] transition"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Marcar Listo para Despacho</span>
@@ -630,7 +630,7 @@ export const OrderManagementView: React.FC = () => {
                 {isReady && (
                   <button
                     onClick={() => updateOrderStatus(ord.id, 'entregado')}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#34313A] text-white font-extrabold text-xs hover:bg-[#484450] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#0F2942] text-white font-extrabold text-xs hover:bg-[#1E3A5F] transition"
                   >
                     <span>PASO 9: ENTREGAR EN {ord.locationCode}</span>
                   </button>
@@ -643,9 +643,9 @@ export const OrderManagementView: React.FC = () => {
                       setSelectedLocationCode(ord.locationCode);
                       setActiveView('pos');
                     }}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#C1E7FF]/30 hover:bg-[#C1E7FF] text-[#34313A] font-black text-xs border border-[#a9dbfa] transition"
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#E0F2FE] hover:bg-sky-200 text-[#0369A1] font-black text-xs border border-sky-300 transition"
                   >
-                    <CreditCard className="w-3.5 h-3.5 text-[#34313A]" />
+                    <CreditCard className="w-3.5 h-3.5 text-[#0369A1]" />
                     <span>PASO 10: IR AL POS PARA COBRAR</span>
                   </button>
                 )}
@@ -655,9 +655,9 @@ export const OrderManagementView: React.FC = () => {
         })}
 
         {filteredOrders.length === 0 && (
-          <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-3xl border border-[#E2E2E2]">
+          <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-3xl border border-[#E2E8F0]">
             <ClipboardList className="w-12 h-12 mx-auto text-gray-300 mb-2" />
-            <p className="text-sm font-bold text-[#34313A]">No hay pedidos en esta pestaña</p>
+            <p className="text-sm font-bold text-[#0F172A]">No hay pedidos en esta pestaña</p>
             <p className="text-xs text-gray-400 mt-0.5">
               Los nuevos pedidos desde la playa aparecerán aquí automáticamente.
             </p>
@@ -667,11 +667,11 @@ export const OrderManagementView: React.FC = () => {
 
       {/* Edit Order Modal (Requirement Section 2-6) */}
       {editingOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/70 p-4">
-          <div className="w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-[#E2E2E2]">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/70 p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-[#E2E8F0]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
               <div>
-                <h3 className="font-black text-base text-[#34313A]">
+                <h3 className="font-black text-base text-[#0F172A]">
                   Editar Pedido {editingOrder.orderNumber}
                 </h3>
                 <p className="text-xs text-gray-500">
@@ -680,7 +680,7 @@ export const OrderManagementView: React.FC = () => {
               </div>
               <button
                 onClick={() => setEditingOrder(null)}
-                className="p-1 rounded-lg text-gray-400 hover:text-[#34313A]"
+                className="p-1 rounded-lg text-gray-400 hover:text-[#0F172A]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -688,42 +688,42 @@ export const OrderManagementView: React.FC = () => {
 
             {/* Items list inside modal */}
             <div className="space-y-2">
-              <label className="text-xs font-black text-[#34313A]">Productos en la Comanda:</label>
+              <label className="text-xs font-black text-[#0F172A]">Productos en la Comanda:</label>
               <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                 {editItems.map((item, index) => (
                   <div
                     key={item.id}
-                    className="p-2.5 rounded-xl border border-[#E2E2E2] bg-gray-50/70 flex items-center justify-between gap-2"
+                    className="p-2.5 rounded-xl border border-[#E2E8F0] bg-gray-50/70 flex items-center justify-between gap-2"
                   >
                     <div className="min-w-0">
-                      <div className="text-xs font-bold text-[#34313A] truncate">{item.productName}</div>
+                      <div className="text-xs font-bold text-[#0F172A] truncate">{item.productName}</div>
                       <div className="text-[10px] text-gray-500">
                         {formatCurrencyARS(item.unitPrice)} c/u
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <div className="flex items-center border border-[#E2E2E2] rounded-lg bg-white">
+                      <div className="flex items-center border border-[#E2E8F0] rounded-lg bg-white">
                         <button
                           type="button"
                           onClick={() => handleUpdateEditItemQuantity(index, -1)}
-                          className="w-6 h-6 flex items-center justify-center text-[#34313A] hover:bg-gray-100"
+                          className="w-6 h-6 flex items-center justify-center text-[#0F172A] hover:bg-gray-100"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-2 text-xs font-bold text-[#34313A]">
+                        <span className="px-2 text-xs font-bold text-[#0F172A]">
                           {item.quantity}
                         </span>
                         <button
                           type="button"
                           onClick={() => handleUpdateEditItemQuantity(index, 1)}
-                          className="w-6 h-6 flex items-center justify-center text-[#34313A] hover:bg-gray-100"
+                          className="w-6 h-6 flex items-center justify-center text-[#0F172A] hover:bg-gray-100"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
 
-                      <span className="font-black text-xs text-[#34313A] min-w-[70px] text-right">
+                      <span className="font-black text-xs text-[#0F172A] min-w-[70px] text-right">
                         {formatCurrencyARS(item.subtotal)}
                       </span>
 
@@ -742,13 +742,13 @@ export const OrderManagementView: React.FC = () => {
             </div>
 
             {/* Add product dropdown */}
-            <div className="p-3 rounded-2xl bg-[#FBEEB9]/25 border border-[#E2E2E2] space-y-2">
-              <label className="text-xs font-bold text-[#34313A]">Agregar plato o bebida adicional:</label>
+            <div className="p-3 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] space-y-2">
+              <label className="text-xs font-bold text-[#92400E]">Agregar plato o bebida adicional:</label>
               <div className="flex gap-2">
                 <select
                   value={selectedProductToAdd}
                   onChange={(e) => setSelectedProductToAdd(e.target.value)}
-                  className="flex-1 bg-white p-2 rounded-xl border border-[#E2E2E2] text-xs font-semibold text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
+                  className="flex-1 bg-white p-2 rounded-xl border border-[#E2E8F0] text-xs font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
                 >
                   <option value="">Seleccionar del catálogo...</option>
                   {products
@@ -763,7 +763,7 @@ export const OrderManagementView: React.FC = () => {
                   type="button"
                   onClick={handleAddProductToEditOrder}
                   disabled={!selectedProductToAdd}
-                  className="px-3.5 py-2 rounded-xl bg-[#C1E7FF] text-[#34313A] font-bold text-xs disabled:opacity-40 border border-[#a9dbfa]"
+                  className="px-3.5 py-2 rounded-xl bg-[#0284C7] text-white font-bold text-xs disabled:opacity-40 border border-[#0284C7] hover:bg-[#0369A1]"
                 >
                   Agregar
                 </button>
@@ -773,44 +773,44 @@ export const OrderManagementView: React.FC = () => {
             {/* Reason and employee details */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="space-y-1">
-                <label className="font-bold text-[#34313A]">Empleado Responsable:</label>
+                <label className="font-bold text-[#0F172A]">Empleado Responsable:</label>
                 <input
                   type="text"
                   value={editEmployeeName}
                   onChange={(e) => setEditEmployeeName(e.target.value)}
                   placeholder="Ej: Mozo Playa / Lucas"
-                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs font-bold text-[#34313A]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#0F172A]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-[#34313A]">Motivo / Modificación Acordada:</label>
+                <label className="font-bold text-[#0F172A]">Motivo / Modificación Acordada:</label>
                 <input
                   type="text"
                   value={editChangeReason}
                   onChange={(e) => setEditChangeReason(e.target.value)}
                   placeholder="Ej: Cambio solicitado por WhatsApp"
-                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A]"
                 />
               </div>
 
               <div className="sm:col-span-2 space-y-1">
-                <label className="font-bold text-[#34313A]">Notas para Cocina y Entrega:</label>
+                <label className="font-bold text-[#0F172A]">Notas para Cocina y Entrega:</label>
                 <input
                   type="text"
                   value={editNotes}
                   onChange={(e) => setEditNotes(e.target.value)}
                   placeholder="Aclaraciones actualizadas..."
-                  className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A]"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A]"
                 />
               </div>
             </div>
 
             {/* Recalculated total and actions */}
-            <div className="pt-3 border-t border-[#E2E2E2] flex items-center justify-between">
+            <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
               <div>
                 <span className="text-[11px] text-gray-500 block">Nuevo Total Recalculado:</span>
-                <span className="text-lg font-black text-[#34313A]">
+                <span className="text-lg font-black text-[#0F172A]">
                   {formatCurrencyARS(editItems.reduce((acc, it) => acc + it.subtotal, 0))}
                 </span>
               </div>
@@ -826,7 +826,7 @@ export const OrderManagementView: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSaveOrderEdits}
-                  className="px-4 py-2 rounded-xl text-xs font-black bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] border border-[#a9dbfa] shadow-sm"
+                  className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#0369A1] text-white border border-[#0284C7] shadow-sm"
                 >
                   Guardar Cambios
                 </button>
@@ -962,12 +962,12 @@ export const OrderManagementView: React.FC = () => {
               onChange={(e) => setCancellationReason(e.target.value)}
               placeholder="Ej: Cliente canceló por WhatsApp, falta de insumo, etc."
               rows={3}
-              className="w-full p-3 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-rose-500"
+              className="w-full p-3 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-rose-500"
             />
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setCancellationOrderId(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#34313A]/70 hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#64748B] hover:bg-gray-100"
               >
                 Volver
               </button>

@@ -391,24 +391,24 @@ export const PosView: React.FC = () => {
   const cashChange = Math.max(0, cashReceived - paymentAmount);
 
   return (
-    <div className="min-h-screen bg-[#FBEEB9] flex flex-col text-[#34313A]">
+    <div className="min-h-screen bg-[#F0F4F8] flex flex-col text-[#0F172A]">
       {/* Top POS Control Bar */}
-      <div className="bg-white border-b border-[#E2E2E2] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+      <div className="bg-white border-b border-[#E2E8F0] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-xs">
         {/* Location chip selector */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowLocationModal(true)}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-[#C1E7FF] border border-[#a9dbfa] text-left hover:bg-[#a9dbfa] transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-[#E0F2FE] border border-sky-300 text-left hover:bg-sky-100 transition"
           >
-            <div className="w-8 h-8 rounded-xl bg-[#34313A] text-white flex items-center justify-center font-bold text-xs">
-              {activeLocation?.type === 'carpa' ? <Umbrella className="w-4 h-4 text-[#FBEEB9]" /> : <Utensils className="w-4 h-4 text-[#C1E7FF]" />}
+            <div className="w-8 h-8 rounded-xl bg-[#0F2942] text-white flex items-center justify-center font-bold text-xs">
+              {activeLocation?.type === 'carpa' ? <Umbrella className="w-4 h-4 text-[#F59E0B]" /> : <Utensils className="w-4 h-4 text-[#38BDF8]" />}
             </div>
             <div>
-              <div className="flex items-center gap-1.5 font-black text-xs text-[#34313A] leading-tight">
+              <div className="flex items-center gap-1.5 font-black text-xs text-[#0369A1] leading-tight">
                 <span>{activeLocation?.name}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#34313A]" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#0369A1]" />
               </div>
-              <div className="text-[10px] text-[#34313A]/80 font-semibold">
+              <div className="text-[10px] text-[#0369A1]/80 font-semibold">
                 {activeLocation?.currentGuestName || 'Sin asignar'} • {activeLocation?.capacity} pax
               </div>
             </div>
@@ -418,10 +418,10 @@ export const PosView: React.FC = () => {
           {existingOrderForLocation && (
             <button
               onClick={() => handleLoadComanda(existingOrderForLocation)}
-              className="px-2.5 py-1.5 rounded-xl bg-[#F68F57]/15 text-[#34313A] border border-[#F68F57] text-xs font-bold flex items-center gap-1 hover:bg-[#F68F57]/25 transition"
+              className="px-2.5 py-1.5 rounded-xl bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] text-xs font-bold flex items-center gap-1 hover:bg-amber-100 transition"
               title="Cargar orden existente abierta en esta ubicación"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-[#34313A]" />
+              <RefreshCw className="w-3.5 h-3.5 text-[#92400E]" />
               <span>Cargar {existingOrderForLocation.orderNumber} ({formatCurrencyARS(existingOrderForLocation.total)})</span>
             </button>
           )}
@@ -430,14 +430,14 @@ export const PosView: React.FC = () => {
         {/* Turno & Cashier info */}
         <div className="hidden lg:flex items-center gap-4 text-xs font-semibold text-gray-600">
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#C1E7FF] border border-[#a9dbfa]" />
+            <span className="w-2 h-2 rounded-full bg-[#0284C7] border border-sky-400" />
             <span>Turno Mediodía / Playa</span>
           </div>
           <span>•</span>
           <span>{config.branchName}</span>
           <span>•</span>
-          <div className="flex items-center gap-1.5 font-bold text-[#34313A]">
-            <span className="w-6 h-6 rounded-full bg-[#34313A] text-white flex items-center justify-center text-[10px]">
+          <div className="flex items-center gap-1.5 font-bold text-[#0F172A]">
+            <span className="w-6 h-6 rounded-full bg-[#0F2942] text-white flex items-center justify-center text-[10px]">
               LG
             </span>
             <span>Lucas G. (Mozo #4)</span>
@@ -448,23 +448,23 @@ export const PosView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowPendingComandasModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8]"
           >
-            <Receipt className="w-3.5 h-3.5 text-[#34313A]" />
+            <Receipt className="w-3.5 h-3.5 text-[#0F172A]" />
             <span>Buscar Comanda{pendingPaymentOrders.length > 0 ? ` (${pendingPaymentOrders.length})` : ''}</span>
           </button>
 
           <button
             onClick={() => setShowDiscountModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8]"
           >
-            <Percent className="w-3.5 h-3.5 text-[#F68F57]" />
+            <Percent className="w-3.5 h-3.5 text-[#F59E0B]" />
             <span>{discountPercent > 0 ? `Desc: ${discountPercent}%` : 'Descuento'}</span>
           </button>
 
-          <div className="px-3 py-1.5 rounded-xl bg-[#34313A] text-white font-bold text-xs flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[#FBEEB9]" />
-            <span className="text-[#FBEEB9]">DIAMANTE</span>
+          <div className="px-3 py-1.5 rounded-xl bg-[#0F2942] text-white font-bold text-xs flex items-center gap-1.5 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
+            <span className="text-[#FDE68A]">DIAMANTE</span>
           </div>
         </div>
       </div>
@@ -473,7 +473,7 @@ export const PosView: React.FC = () => {
         <div
           role="status"
           aria-live="polite"
-          className="mx-3 mt-2 flex items-start gap-2 rounded-xl border border-[#F68F57] bg-[#F68F57]/10 px-3 py-2.5 text-xs text-[#34313A] shadow-sm sm:mx-4"
+          className="mx-3 mt-2 flex items-start gap-2 rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-3 py-2.5 text-xs text-[#92400E] shadow-sm sm:mx-4"
         >
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
           <div className="min-w-0">
@@ -488,7 +488,7 @@ export const PosView: React.FC = () => {
       {/* Main Layout: Left Products & Right Order Cart */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Side: Search, Categories & Products Grid */}
-        <div className="flex-1 flex flex-col p-4 sm:p-5 overflow-y-auto space-y-4 bg-[#FBEEB9]/30">
+        <div className="flex-1 flex flex-col p-4 sm:p-5 overflow-y-auto space-y-4 bg-[#F0F4F8]">
           {/* Search bar with PLU & voice recognition */}
           <div className="relative flex items-center">
             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
@@ -497,14 +497,14 @@ export const PosView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por plato, bebida, voz o PLU (ej: BUR-01, rabas, ipa)..."
-              className="w-full bg-white pl-10 pr-32 py-2.5 rounded-2xl border border-[#E2E2E2] text-xs font-medium text-[#34313A] focus:outline-hidden focus:border-[#C1E7FF] focus:ring-1 focus:ring-[#C1E7FF] shadow-2xs"
+              className="w-full bg-white pl-10 pr-32 py-2.5 rounded-2xl border border-[#E2E8F0] text-xs font-medium text-[#0F172A] focus:outline-hidden focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7] shadow-2xs"
             />
             <div className="absolute right-2 flex items-center gap-1">
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="p-1 rounded-lg text-gray-400 hover:text-[#34313A] hover:bg-gray-100"
+                  className="p-1 rounded-lg text-gray-400 hover:text-[#0F172A] hover:bg-gray-100"
                   title="Limpiar búsqueda"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -517,8 +517,8 @@ export const PosView: React.FC = () => {
                 onClick={handleVoiceSearch}
                 className={`p-1.5 rounded-xl transition ${
                   isListeningVoice
-                    ? 'bg-[#F68F57] text-white animate-pulse shadow-sm'
-                    : 'text-gray-400 hover:text-[#34313A] hover:bg-[#C1E7FF]/40'
+                    ? 'bg-[#F59E0B] text-white animate-pulse shadow-sm'
+                    : 'text-gray-400 hover:text-[#0284C7] hover:bg-[#E0F2FE]'
                 }`}
                 title="Búsqueda por voz (es-AR)"
               >
@@ -533,15 +533,15 @@ export const PosView: React.FC = () => {
           </div>
 
           {isListeningVoice && (
-            <div className="p-2 rounded-xl bg-[#F68F57]/15 border border-[#F68F57]/30 text-xs text-[#34313A] flex items-center justify-between">
+            <div className="p-2 rounded-xl bg-[#FEF3C7] border border-[#FDE68A] text-xs text-[#92400E] flex items-center justify-between">
               <span className="font-bold flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#F68F57] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping" />
                 Escuchando comanda por voz... decí un plato o bebida
               </span>
               <button
                 type="button"
                 onClick={() => setIsListeningVoice(false)}
-                className="text-[10px] font-bold text-[#F68F57] uppercase hover:underline"
+                className="text-[10px] font-bold text-[#92400E] uppercase hover:underline"
               >
                 Detener
               </button>
@@ -549,17 +549,17 @@ export const PosView: React.FC = () => {
           )}
 
           {voiceError && (
-            <div className="text-[11px] font-bold text-[#F68F57] px-2">{voiceError}</div>
+            <div className="text-[11px] font-bold text-rose-600 px-2">{voiceError}</div>
           )}
 
-          {/* Category Filter Pills (Interactive #C1E7FF active) */}
+          {/* Category Filter Pills (Interactive #0284C7 active) */}
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             <button
               onClick={() => setSelectedCategory('todos')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
                 selectedCategory === 'todos'
-                  ? 'bg-[#C1E7FF] text-[#34313A] font-black border border-[#a9dbfa] shadow-xs'
-                  : 'bg-white text-[#34313A] border border-[#E2E2E2] hover:bg-gray-50'
+                  ? 'bg-[#0284C7] text-white font-black border border-[#0284C7] shadow-xs'
+                  : 'bg-white text-[#64748B] border border-[#E2E8F0] hover:bg-gray-50'
               }`}
             >
               <Utensils className="w-3.5 h-3.5" />
@@ -574,8 +574,8 @@ export const PosView: React.FC = () => {
                   onClick={() => setSelectedCategory(c.id)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-[#C1E7FF] text-[#34313A] font-black border border-[#a9dbfa] shadow-xs'
-                      : 'bg-white text-[#34313A] border border-[#E2E2E2] hover:bg-gray-50'
+                      ? 'bg-[#0284C7] text-white font-black border border-[#0284C7] shadow-xs'
+                      : 'bg-white text-[#64748B] border border-[#E2E8F0] hover:bg-gray-50'
                   }`}
                 >
                   <span>{c.emoji}</span>
@@ -590,7 +590,7 @@ export const PosView: React.FC = () => {
             {filteredProducts.map((p) => (
               <div
                 key={p.id}
-                className="bg-white rounded-2xl border border-[#E2E2E2] shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition group"
+                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition group"
               >
                 <div className="relative h-28 sm:h-32 w-full bg-gray-100 overflow-hidden">
                   <img
@@ -599,7 +599,7 @@ export const PosView: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   {p.tag && (
-                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-[#34313A]/90 backdrop-blur-xs text-white text-[9px] font-black uppercase">
+                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-[#0F2942]/90 backdrop-blur-xs text-white text-[9px] font-black uppercase">
                       {p.tag}
                     </div>
                   )}
@@ -607,7 +607,7 @@ export const PosView: React.FC = () => {
 
                 <div className="p-3 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-extrabold text-xs text-[#34313A] line-clamp-1">
+                    <h4 className="font-extrabold text-xs text-[#0F172A] line-clamp-1">
                       {p.name}
                     </h4>
                     <p className="text-[10px] text-gray-500 line-clamp-2 mt-0.5">
@@ -615,14 +615,14 @@ export const PosView: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between pt-2 border-t border-[#E2E2E2]/60">
-                    <span className="font-black text-xs sm:text-sm text-[#34313A]">
+                  <div className="mt-3 flex items-center justify-between pt-2 border-t border-[#E2E8F0]">
+                    <span className="font-black text-xs sm:text-sm text-[#0284C7]">
                       {formatCurrencyARS(p.price)}
                     </span>
                     <button
                       onClick={() => handleAddProduct(p)}
                       disabled={Boolean(loadedPendingOrder)}
-                      className="w-8 h-8 rounded-xl bg-[#F68F57] hover:bg-[#e07f4a] text-white flex items-center justify-center shadow-xs active:scale-95 transition"
+                      className="w-8 h-8 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white flex items-center justify-center shadow-xs active:scale-95 transition"
                       title="Agregar al pedido"
                     >
                       <Plus className="w-4 h-4 stroke-[3]" />
@@ -635,14 +635,14 @@ export const PosView: React.FC = () => {
         </div>
 
         {/* Right Side: Order Cart & Billing Panel */}
-        <div className="w-full lg:w-96 bg-white border-t lg:border-t-0 lg:border-l border-[#E2E2E2] flex flex-col justify-between p-4 sm:p-5 shadow-lg">
+        <div className="w-full lg:w-96 bg-white border-t lg:border-t-0 lg:border-l border-[#E2E8F0] flex flex-col justify-between p-4 sm:p-5 shadow-lg">
           {/* Top Panel: Location Code, Ticket, Comensales */}
           <div className="space-y-4">
-            <div className="flex items-start justify-between pb-3 border-b border-[#E2E2E2]">
+            <div className="flex items-start justify-between pb-3 border-b border-[#E2E8F0]">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-black text-lg text-[#34313A]">{activeLocation?.name}</h3>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] uppercase">
+                  <h3 className="font-black text-lg text-[#0F172A]">{activeLocation?.name}</h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#E0F2FE] text-[#0369A1] border border-sky-200 uppercase">
                     {activeLocation?.code}
                   </span>
                 </div>
@@ -690,24 +690,24 @@ export const PosView: React.FC = () => {
 
             {/* Aviso de Pago, Tarjeta y Modalidad de Cobro para el Cajero/Mozo */}
             {(loadedPendingOrder || existingOrderForLocation) && (
-              <div className="space-y-1.5 pb-2 border-b border-[#E2E2E2]">
+              <div className="space-y-1.5 pb-2 border-b border-[#E2E8F0]">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-gray-500 font-medium">Cliente:</span>
-                  <span className="font-bold text-[#34313A]">
+                  <span className="font-bold text-[#0F172A]">
                     {(loadedPendingOrder || existingOrderForLocation)?.customerName || 'Cliente'}
                     {(loadedPendingOrder || existingOrderForLocation)?.customerPhone && ` • ${(loadedPendingOrder || existingOrderForLocation)?.customerPhone}`}
                   </span>
                 </div>
 
                 {(loadedPendingOrder || existingOrderForLocation)?.notes && (
-                  <div className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-sky-50/60 to-white border-2 border-indigo-200 text-xs text-[#34313A] space-y-1 shadow-2xs">
+                  <div className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-50/90 via-sky-50/60 to-white border-2 border-indigo-200 text-xs text-[#0F172A] space-y-1 shadow-2xs">
                     <div className="flex items-center justify-between gap-1 flex-wrap">
                       <span className="font-black text-[10px] uppercase text-indigo-900 flex items-center gap-1">
                         <CreditCard className="w-3.5 h-3.5 text-indigo-600" />
                         <span>Instrucción de Cobro:</span>
                       </span>
                       {(loadedPendingOrder || existingOrderForLocation)?.notes?.toLowerCase().includes('posnet') && (
-                        <span className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider animate-pulse shadow-2xs">
+                        <span className="px-2 py-0.5 rounded-full bg-[#F59E0B] text-white text-[9px] font-black uppercase tracking-wider animate-pulse shadow-2xs">
                           💳 Llevar POS a Carpa
                         </span>
                       )}
@@ -730,18 +730,18 @@ export const PosView: React.FC = () => {
               {posItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-2.5 rounded-xl bg-gray-50/80 border border-[#E2E2E2] space-y-1.5"
+                  className="p-2.5 rounded-xl bg-gray-50/80 border border-[#E2E8F0] space-y-1.5"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="font-black text-xs text-[#F68F57]">
+                      <span className="font-black text-xs text-[#0284C7]">
                         {item.quantity}x
                       </span>
-                      <span className="font-bold text-xs text-[#34313A] leading-tight">
+                      <span className="font-bold text-xs text-[#0F172A] leading-tight">
                         {item.productName}
                       </span>
                     </div>
-                    <span className="font-black text-xs text-[#34313A]">
+                    <span className="font-black text-xs text-[#0F172A]">
                       {formatCurrencyARS(item.subtotal)}
                     </span>
                   </div>
@@ -753,22 +753,22 @@ export const PosView: React.FC = () => {
                     </span>
 
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center border border-[#E2E2E2] rounded-lg bg-white p-0.5">
+                      <div className="flex items-center border border-[#E2E8F0] rounded-lg bg-white p-0.5">
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100 cursor-pointer"
+                          className="w-5 h-5 rounded flex items-center justify-center text-[#0F172A] hover:bg-gray-100 cursor-pointer"
                           title="Restar 1 unidad"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-2 text-xs font-bold text-[#34313A]">
+                        <span className="px-2 text-xs font-bold text-[#0F172A]">
                           {item.quantity}
                         </span>
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100 cursor-pointer"
+                          className="w-5 h-5 rounded flex items-center justify-center text-[#0F172A] hover:bg-gray-100 cursor-pointer"
                           title="Sumar 1 unidad"
                         >
                           <Plus className="w-3 h-3" />
@@ -798,15 +798,15 @@ export const PosView: React.FC = () => {
           </div>
 
           {/* Bottom Totals & Payment Actions */}
-          <div className="pt-4 border-t border-[#E2E2E2] space-y-3">
+          <div className="pt-4 border-t border-[#E2E8F0] space-y-3">
             {/* Subtotals & Fees */}
             <div className="space-y-1 text-xs text-gray-600">
               <div className="flex justify-between">
                 <span>Subtotal ({posItems.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                <span className="font-semibold text-[#34313A]">{formatCurrencyARS(totals.subtotal)}</span>
+                <span className="font-semibold text-[#0F172A]">{formatCurrencyARS(totals.subtotal)}</span>
               </div>
               {totals.discountAmount > 0 && (
-                <div className="flex justify-between text-[#F68F57] font-bold">
+                <div className="flex justify-between text-[#F59E0B] font-bold">
                   <span>Descuento ({discountPercent}%)</span>
                   <span>-{formatCurrencyARS(totals.discountAmount)}</span>
                 </div>
@@ -814,14 +814,14 @@ export const PosView: React.FC = () => {
             </div>
 
             {/* Total Highlight */}
-            <div className="pt-2 border-t border-[#E2E2E2] flex items-baseline justify-between">
+            <div className="pt-2 border-t border-[#E2E8F0] flex items-baseline justify-between">
               <div>
                 <span className="text-xs font-black text-gray-500 uppercase tracking-wider block">
                   TOTAL A COBRAR
                 </span>
                 <span className="text-[10px] text-gray-400">IVA Incluido • Factura B</span>
               </div>
-              <span className="text-2xl font-black text-[#34313A]">
+              <span className="text-2xl font-black text-[#0F172A]">
                 {formatCurrencyARS(paymentAmount)}
               </span>
             </div>
@@ -833,8 +833,8 @@ export const PosView: React.FC = () => {
                 onClick={() => setSelectedPaymentMethod('efectivo')}
                 className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-xs font-bold transition ${
                   selectedPaymentMethod === 'efectivo'
-                    ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
-                    : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-xs'
+                    : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-gray-50'
                 }`}
               >
                 <DollarSign className="w-3.5 h-3.5" />
@@ -846,8 +846,8 @@ export const PosView: React.FC = () => {
                 onClick={() => setSelectedPaymentMethod('mercadopago_qr')}
                 className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-xs font-bold transition ${
                   selectedPaymentMethod === 'mercadopago_qr'
-                    ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
-                    : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-xs'
+                    : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-gray-50'
                 }`}
               >
                 <QrCode className="w-3.5 h-3.5" />
@@ -859,8 +859,8 @@ export const PosView: React.FC = () => {
                 onClick={() => setSelectedPaymentMethod('transferencia')}
                 className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-xs font-bold transition ${
                   selectedPaymentMethod === 'transferencia'
-                    ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
-                    : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-xs'
+                    : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-gray-50'
                 }`}
               >
                 <Landmark className="w-3.5 h-3.5" />
@@ -872,8 +872,8 @@ export const PosView: React.FC = () => {
                 onClick={() => setSelectedPaymentMethod('tarjeta_credito')}
                 className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-xs font-bold transition ${
                   selectedPaymentMethod === 'tarjeta_credito'
-                    ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] shadow-xs'
-                    : 'bg-white text-[#34313A] border-[#E2E2E2] hover:bg-gray-50'
+                    ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-xs'
+                    : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-gray-50'
                 }`}
               >
                 <CreditCard className="w-3.5 h-3.5" />
@@ -886,9 +886,9 @@ export const PosView: React.FC = () => {
               <button
                 onClick={handleSendToKitchen}
                 disabled={posItems.length === 0}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#34313A] hover:bg-[#484450] disabled:opacity-40 text-white font-extrabold text-xs transition"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#0F2942] hover:bg-[#1E3A5F] disabled:opacity-40 text-white font-extrabold text-xs transition"
               >
-                <Send className="w-4 h-4 text-[#FBEEB9]" />
+                <Send className="w-4 h-4 text-[#F59E0B]" />
                 <span>MANDAR A COCINA / COMANDA</span>
               </button>
 
@@ -896,7 +896,7 @@ export const PosView: React.FC = () => {
                 <button
                   onClick={handleOpenPayment}
                   disabled={posItems.length === 0}
-                  className="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] disabled:opacity-40 text-[#34313A] font-black text-xs shadow-xs border border-[#a9dbfa] transition"
+                  className="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] disabled:opacity-40 text-white font-black text-xs shadow-xs border border-[#0284C7] transition"
                 >
                   <Receipt className="w-4 h-4" />
                   <span>COBRAR ORDEN</span>
@@ -909,7 +909,7 @@ export const PosView: React.FC = () => {
                     }
                   }}
                   disabled={posItems.length === 0}
-                  className="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[#E2E2E2] text-[#34313A] font-bold text-xs hover:bg-gray-50 disabled:opacity-40 transition"
+                  className="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8] disabled:opacity-40 transition"
                 >
                   <Receipt className="w-4 h-4 text-gray-500" />
                   <span>PRE-CUENTA</span>
@@ -922,11 +922,11 @@ export const PosView: React.FC = () => {
 
       {/* Location Selector Modal */}
       {showLocationModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
-          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-[#E2E2E2]">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
-              <h3 className="font-black text-base text-[#34313A]">Seleccionar Ubicación POS</h3>
-              <button onClick={() => setShowLocationModal(false)} className="text-gray-400 hover:text-[#34313A]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/60 p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[80vh] flex flex-col border border-[#E2E8F0]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+              <h3 className="font-black text-base text-[#0F172A]">Seleccionar Ubicación POS</h3>
+              <button onClick={() => setShowLocationModal(false)} className="text-gray-400 hover:text-[#0F172A]">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -940,8 +940,8 @@ export const PosView: React.FC = () => {
                   }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl text-left border transition ${
                     selectedLocationCode === l.code
-                      ? 'border-[#C1E7FF] bg-[#C1E7FF]/25 text-[#34313A] font-bold'
-                      : 'border-[#E2E2E2] hover:bg-gray-50 text-[#34313A]'
+                      ? 'border-sky-400 bg-[#E0F2FE]/50 text-[#0369A1] font-bold'
+                      : 'border-[#E2E8F0] hover:bg-gray-50 text-[#0F172A]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -989,17 +989,17 @@ export const PosView: React.FC = () => {
 
       {/* Pending Payment Orders Modal */}
       {showPendingComandasModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
-          <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col border border-[#E2E2E2]">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/60 p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl space-y-4 max-h-[85vh] flex flex-col border border-[#E2E8F0]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
               <div>
-                <h3 className="font-black text-base text-[#34313A]">Cuentas pendientes de pago</h3>
+                <h3 className="font-black text-base text-[#0F172A]">Cuentas pendientes de pago</h3>
                 <p className="text-xs text-gray-500 mt-1">Elegí una cuenta para cargarla en el POS.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowPendingComandasModal(false)}
-                className="text-gray-400 hover:text-[#34313A]"
+                className="text-gray-400 hover:text-[#0F172A]"
                 aria-label="Cerrar cuentas pendientes"
               >
                 <X className="w-5 h-5" />
@@ -1011,14 +1011,14 @@ export const PosView: React.FC = () => {
                   key={order.id}
                   type="button"
                   onClick={() => handleLoadComanda(order)}
-                  className="w-full flex items-center justify-between gap-3 p-3 rounded-xl text-left border border-[#E2E2E2] hover:bg-[#FBEEB9]/30 transition"
+                  className="w-full flex items-center justify-between gap-3 p-3 rounded-xl text-left border border-[#E2E8F0] hover:bg-[#F0F4F8] transition"
                 >
                   <div className="min-w-0">
-                    <div className="font-black text-sm text-[#34313A]">Orden {order.orderNumber}</div>
+                    <div className="font-black text-sm text-[#0F172A]">Orden {order.orderNumber}</div>
                     <div className="text-xs text-gray-500 truncate">{order.locationName} · {order.items.reduce((count, item) => count + item.quantity, 0)} productos</div>
                   </div>
                   <div className="shrink-0 text-right">
-                    <div className="font-black text-sm text-[#34313A]">{formatCurrencyARS(order.total)}</div>
+                    <div className="font-black text-sm text-[#0F172A]">{formatCurrencyARS(order.total)}</div>
                     <div className="text-[10px] font-bold text-rose-700">PAGO PENDIENTE</div>
                   </div>
                 </button>
@@ -1033,9 +1033,9 @@ export const PosView: React.FC = () => {
 
       {/* Discount Modal */}
       {showDiscountModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
-          <div className="w-full max-w-xs bg-white rounded-3xl p-6 shadow-2xl space-y-4 text-center border border-[#E2E2E2]">
-            <h3 className="font-black text-base text-[#34313A]">Aplicar Descuento / Promo</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/60 p-4">
+          <div className="w-full max-w-xs bg-white rounded-3xl p-6 shadow-2xl space-y-4 text-center border border-[#E2E8F0]">
+            <h3 className="font-black text-base text-[#0F172A]">Aplicar Descuento / Promo</h3>
             <p className="text-xs text-gray-500">Seleccioná el porcentaje autorizado para esta mesa:</p>
             <div className="grid grid-cols-3 gap-2">
               {[0, 5, 10, 15, 20, 30].map((pct) => (
@@ -1047,8 +1047,8 @@ export const PosView: React.FC = () => {
                   }}
                   className={`py-2 rounded-xl text-xs font-bold border transition ${
                     discountPercent === pct
-                      ? 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa] font-black'
-                      : 'border-[#E2E2E2] text-[#34313A] hover:bg-gray-50'
+                      ? 'bg-[#0284C7] text-white border-[#0284C7] font-black'
+                      : 'border-[#E2E8F0] text-[#0F172A] hover:bg-gray-50'
                   }`}
                 >
                   {pct === 0 ? 'Sin desc.' : `${pct}%`}
@@ -1061,32 +1061,32 @@ export const PosView: React.FC = () => {
 
       {/* Payment Confirmation & Cash Drawer Modal */}
       {showPaymentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/65 backdrop-blur-xs p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E2E2]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E2E2E2]">
-              <h3 className="font-black text-base text-[#34313A]">Confirmar Cobro de Venta</h3>
-              <button onClick={() => setShowPaymentModal(false)} className="text-gray-400 hover:text-[#34313A]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/65 backdrop-blur-xs p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E8F0]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
+              <h3 className="font-black text-base text-[#0F172A]">Confirmar Cobro de Venta</h3>
+              <button onClick={() => setShowPaymentModal(false)} className="text-gray-400 hover:text-[#0F172A]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="text-center p-3 rounded-2xl bg-[#FBEEB9]/50 border border-[#FBEEB9]">
-              <div className="text-xs text-[#34313A] font-bold uppercase">Total a Cobrar</div>
-              <div className="text-2xl font-black text-[#34313A] mt-0.5">
+            <div className="text-center p-3 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A]">
+              <div className="text-xs text-[#92400E] font-bold uppercase">Total a Cobrar</div>
+              <div className="text-2xl font-black text-[#0F172A] mt-0.5">
                 {formatCurrencyARS(paymentAmount)}
               </div>
             </div>
 
             {selectedPaymentMethod === 'efectivo' && (
               <div className="space-y-3">
-                <label className="text-xs font-bold text-[#34313A] block">
+                <label className="text-xs font-bold text-[#0F172A] block">
                   Monto Recibido en Efectivo:
                 </label>
                 <input
                   type="number"
                   value={cashReceived || ''}
                   onChange={(e) => setCashReceived(Number(e.target.value))}
-                  className="w-full p-3 rounded-xl border border-[#E2E2E2] text-lg font-black text-[#34313A] text-center focus:border-[#C1E7FF] focus:outline-hidden"
+                  className="w-full p-3 rounded-xl border border-[#E2E8F0] text-lg font-black text-[#0F172A] text-center focus:border-[#0284C7] focus:outline-hidden"
                 />
 
                 {/* Quick bills buttons */}
@@ -1096,16 +1096,16 @@ export const PosView: React.FC = () => {
                       key={bill}
                       type="button"
                       onClick={() => setCashReceived(bill)}
-                      className="px-2.5 py-1 rounded-lg border border-[#E2E2E2] text-xs font-bold text-[#34313A] hover:bg-gray-50"
+                      className="px-2.5 py-1 rounded-lg border border-[#E2E8F0] text-xs font-bold text-[#0F172A] hover:bg-gray-50"
                     >
                       +{formatCurrencyARS(bill)}
                     </button>
                   ))}
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FBEEB9]/20 border border-[#E2E2E2] flex items-center justify-between text-xs">
+                <div className="p-3 rounded-xl bg-[#F0F4F8] border border-[#E2E8F0] flex items-center justify-between text-xs">
                   <span className="font-bold text-gray-600">Vuelto a entregar:</span>
-                  <span className="font-black text-base text-[#34313A]">
+                  <span className="font-black text-base text-[#0F172A]">
                     {formatCurrencyARS(cashChange)}
                   </span>
                 </div>
@@ -1141,7 +1141,7 @@ export const PosView: React.FC = () => {
 
             <button
               onClick={handleConfirmPayment}
-              className="w-full py-3.5 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs uppercase tracking-wider shadow-sm border border-[#a9dbfa] transition"
+              className="w-full py-3.5 px-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs uppercase tracking-wider shadow-sm border border-[#0284C7] transition"
             >
               ✓ Confirmar Pago y Cerrar Venta
             </button>
@@ -1151,36 +1151,36 @@ export const PosView: React.FC = () => {
 
       {/* Payment Success Receipt Toast/Modal */}
       {paymentSuccessOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#34313A]/60 p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl text-center space-y-4 border border-[#E2E2E2]">
-            <div className="w-14 h-14 rounded-full bg-[#C1E7FF] text-[#34313A] flex items-center justify-center mx-auto border border-[#a9dbfa]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/60 p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl text-center space-y-4 border border-[#E2E8F0]">
+            <div className="w-14 h-14 rounded-full bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center mx-auto border border-sky-300">
               <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="font-black text-xl text-[#34313A]">¡Venta Registrada!</h3>
+              <h3 className="font-black text-xl text-[#0F172A]">¡Venta Registrada!</h3>
               <p className="text-xs text-gray-500 mt-1">
                 Comprobante interno {paymentSuccessOrder.ticketNumber || paymentSuccessOrder.orderNumber}
               </p>
             </div>
-            <div className="p-3 bg-[#FBEEB9]/20 border border-[#E2E2E2] rounded-2xl text-xs space-y-1 text-left">
+            <div className="p-3 bg-[#F0F4F8] border border-[#E2E8F0] rounded-2xl text-xs space-y-1 text-left">
               <div className="flex justify-between">
                 <span className="text-gray-500">Ubicación:</span>
-                <span className="font-bold text-[#34313A]">{paymentSuccessOrder.locationName}</span>
+                <span className="font-bold text-[#0F172A]">{paymentSuccessOrder.locationName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Medio de Pago:</span>
-                <span className="font-bold uppercase text-[#34313A]">{paymentSuccessOrder.paymentMethod}</span>
+                <span className="font-bold uppercase text-[#0F172A]">{paymentSuccessOrder.paymentMethod}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Total Cobrado:</span>
-                <span className="font-black text-[#34313A]">
+                <span className="font-black text-[#0F172A]">
                   {formatCurrencyARS(paymentSuccessOrder.total)}
                 </span>
               </div>
             </div>
             <button
               onClick={() => setPaymentSuccessOrder(null)}
-              className="w-full py-2.5 rounded-xl bg-[#C1E7FF] text-[#34313A] font-black text-xs hover:bg-[#a9dbfa] border border-[#a9dbfa]"
+              className="w-full py-2.5 rounded-xl bg-[#0284C7] text-white font-black text-xs hover:bg-[#0369A1] border border-[#0284C7]"
             >
               Aceptar y Nueva Venta
             </button>

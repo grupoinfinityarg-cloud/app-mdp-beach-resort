@@ -57,7 +57,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
   });
 
   return (
-    <header className="sticky top-0 z-[60] bg-[#34313A] text-white border-b border-[#47434e] shadow-md">
+    <header className="sticky top-0 z-[60] bg-[#0F2942] text-white border-b border-[#1E3A5F] shadow-md">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-3">
         {/* Left: Mobile hamburger + Personalized greetings */}
         <div className="flex items-center gap-3 min-w-0">
@@ -84,11 +84,11 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
               <span className="text-sm sm:text-base font-black text-white tracking-tight truncate">
                 {businessDisplayName || config.branchName}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#F68F57] text-white shrink-0">
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#0284C7] text-white shrink-0">
                 {config.activePlan || 'DEMO'}
               </span>
             </div>
-            <p className="text-[11px] text-[#C1E7FF] font-medium truncate leading-tight mt-0.5">
+            <p className="text-[11px] text-[#E0F2FE] font-medium truncate leading-tight mt-0.5">
               {config.slogan || 'Todo listo para un gran día en la playa'}
             </p>
           </div>
@@ -98,9 +98,9 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
         <div className="hidden lg:flex items-center gap-3 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-2xl text-xs">
           {/* Clock */}
           <div className="flex items-center gap-1.5 text-gray-200 font-semibold">
-            <Clock className="w-3.5 h-3.5 text-[#FBEEB9]" />
+            <Clock className="w-3.5 h-3.5 text-[#F59E0B]" />
             <span className="capitalize">{formattedDate}</span>
-            <span className="text-[#C1E7FF] font-black">•</span>
+            <span className="text-[#38BDF8] font-black">•</span>
             <span className="font-mono text-white font-black">{formattedTime} hs</span>
           </div>
 
@@ -108,7 +108,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
 
           {/* User role */}
           <div className="flex items-center gap-1.5 text-xs">
-            <UserCheck className="w-3.5 h-3.5 text-[#C1E7FF]" />
+            <UserCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
             <span className="text-gray-300 font-medium">Operador:</span>
             <span className="text-white font-bold">{cashRegister.cashierName}</span>
           </div>
@@ -128,7 +128,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             >
               <Bell className="w-4 h-4" />
               {totalNotifications > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#F68F57] text-white font-black text-[10px] flex items-center justify-center animate-pulse">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#F59E0B] text-white font-black text-[10px] flex items-center justify-center animate-pulse">
                   {totalNotifications}
                 </span>
               )}
@@ -140,16 +140,16 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                 id="header-notifications-panel"
                 role="dialog"
                 aria-label="Avisos y Notificaciones"
-                className="fixed left-3 right-3 top-[4.5rem] z-[70] mx-auto flex max-h-[calc(100dvh-5.5rem)] w-auto max-w-sm flex-col space-y-3 overflow-hidden rounded-3xl border border-[#E2E2E2] bg-white p-4 text-[#34313A] shadow-2xl sm:left-auto sm:right-4 sm:mx-0 sm:w-80"
+                className="fixed left-3 right-3 top-[4.5rem] z-[70] mx-auto flex max-h-[calc(100dvh-5.5rem)] w-auto max-w-sm flex-col space-y-3 overflow-hidden rounded-3xl border border-[#E2E8F0] bg-white p-4 text-[#0F172A] shadow-2xl sm:left-auto sm:right-4 sm:mx-0 sm:w-80"
               >
-                <div className="flex items-center justify-between pb-2 border-b border-[#E2E2E2]">
+                <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
                   <div className="flex items-center gap-1.5">
-                    <Bell className="w-4 h-4 text-[#F68F57]" />
-                    <h4 className="font-black text-xs text-[#34313A]">Avisos & Notificaciones</h4>
+                    <Bell className="w-4 h-4 text-[#F59E0B]" />
+                    <h4 className="font-black text-xs text-[#0F172A]">Avisos & Notificaciones</h4>
                   </div>
                   <button
                     onClick={() => setShowNotifications(false)}
-                    className="p-1 rounded-lg text-gray-400 hover:text-[#34313A]"
+                    className="p-1 rounded-lg text-gray-400 hover:text-[#0F172A]"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -162,7 +162,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                         <BellRing className="w-3.5 h-3.5" />
                         <span>Llamado de mozo · {request.locationCode}</span>
                       </div>
-                      <p className="text-[11px] text-[#34313A]/80 mt-1">
+                      <p className="text-[11px] text-[#64748B] mt-1">
                         {request.locationName}{request.requestCount > 1 ? ` · ${request.requestCount} llamados` : ''}
                       </p>
                       <div className="mt-2 flex items-center justify-between gap-2">
@@ -172,7 +172,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                             setActiveView('pos');
                             setShowNotifications(false);
                           }}
-                          className="text-[11px] font-bold underline text-[#34313A]"
+                          className="text-[11px] font-bold underline text-[#0284C7] hover:text-[#0369A1]"
                         >
                           Ver ubicación en POS →
                         </button>
@@ -187,12 +187,12 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                   ))}
 
                   {pendingOrders.length > 0 && (
-                    <div className="p-2.5 rounded-2xl bg-[#F68F57]/15 border border-[#F68F57]/30 text-xs">
-                      <div className="font-black text-[#F68F57] flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5" />
+                    <div className="p-2.5 rounded-2xl bg-[#FEF3C7] border border-[#FDE68A] text-xs">
+                      <div className="font-black text-[#B45309] flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 text-[#F59E0B]" />
                         <span>{pendingOrders.length} pedido(s) por confirmar</span>
                       </div>
-                      <p className="text-[11px] text-[#34313A]/80 mt-1">
+                      <p className="text-[11px] text-[#92400E] mt-1">
                         Hay clientes esperando aprobación de pedido desde carpas o sombrillas.
                       </p>
                       <button
@@ -200,7 +200,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                           setActiveView('comandas');
                           setShowNotifications(false);
                         }}
-                        className="mt-2 text-[11px] font-bold underline text-[#34313A]"
+                        className="mt-2 text-[11px] font-bold underline text-[#0284C7] hover:text-[#0369A1]"
                       >
                         Ver pedidos pendientes →
                       </button>
@@ -208,12 +208,12 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                   )}
 
                   {readyOrders.length > 0 && (
-                    <div className="p-2.5 rounded-2xl bg-[#C1E7FF]/40 border border-[#C1E7FF] text-xs">
-                      <div className="font-black text-[#34313A] flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                    <div className="p-2.5 rounded-2xl bg-[#E0F2FE] border border-sky-200 text-xs">
+                      <div className="font-black text-[#0369A1] flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         <span>{readyOrders.length} orden(es) listas en cocina</span>
                       </div>
-                      <p className="text-[11px] text-[#34313A]/80 mt-1">
+                      <p className="text-[11px] text-[#0369A1]/80 mt-1">
                         Los platos están listos en la barra para despacho hacia la playa.
                       </p>
                       <button
@@ -221,7 +221,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
                           setActiveView('cocina');
                           setShowNotifications(false);
                         }}
-                        className="mt-2 text-[11px] font-bold underline text-[#34313A]"
+                        className="mt-2 text-[11px] font-bold underline text-[#0284C7] hover:text-[#0369A1]"
                       >
                         Ver KDS de Cocina →
                       </button>
@@ -243,7 +243,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             onClick={() => setActiveView('carta')}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'carta'
-                ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
+                ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
             }`}
             title="Ver carta digital para clientes móviles"
@@ -256,7 +256,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             onClick={() => setActiveView('personalizar')}
             className={`relative hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'personalizar'
-                ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
+                ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
             }`}
             title="Personalizar producto y ver carrito"
@@ -264,7 +264,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span className="hidden md:inline">Carrito</span>
             {totalCartCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-[#F68F57] text-white font-black text-[10px] flex items-center justify-center shadow-xs">
+              <span className="w-4 h-4 rounded-full bg-[#F59E0B] text-white font-black text-[10px] flex items-center justify-center shadow-xs">
                 {totalCartCount}
               </span>
             )}
@@ -274,7 +274,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             onClick={() => setActiveView('pos')}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'pos'
-                ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
+                ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
             }`}
             title="Punto de venta y cobro directo"
@@ -287,7 +287,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             onClick={() => setActiveView('panel')}
             className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeView === 'panel'
-                ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm ring-1 ring-[#C1E7FF]'
+                ? 'bg-[#0284C7] text-white shadow-sm ring-1 ring-[#0284C7]'
                 : 'text-gray-300 hover:text-white hover:bg-white/10'
             }`}
             title="Panel de administración y control"

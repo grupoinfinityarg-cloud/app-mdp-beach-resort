@@ -4,6 +4,9 @@ import { QRCodeModal } from '../components/QRCodeModal';
 import { LocationItem } from '../types';
 import {
   Umbrella,
+  Tent,
+  Utensils,
+  Beer,
   QrCode,
   Search,
 } from 'lucide-react';
@@ -144,13 +147,23 @@ export const BeachSpotsView: React.FC = () => {
                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
                       isOccupied ? 'bg-rose-100 text-rose-700' : isReserved ? 'bg-sky-100 text-sky-700' : isCleaning ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
                     }`}>
-                      <Umbrella className="w-4 h-4" />
+                      {spot.type === 'carpa' ? (
+                        <Tent className="w-4 h-4" />
+                      ) : spot.type === 'sombrilla' ? (
+                        <Umbrella className="w-4 h-4" />
+                      ) : spot.type === 'mostrador' ? (
+                        <Beer className="w-4 h-4" />
+                      ) : (
+                        <Utensils className="w-4 h-4" />
+                      )}
                     </div>
                     <div>
                       <span className="text-sm font-black text-[#34313A] block leading-tight">
                         {spot.code}
                       </span>
-                      <span className="text-[10px] text-[#34313A]/60 block">{spot.sectorName}</span>
+                      <span className="text-[10px] text-[#34313A]/60 block font-medium">
+                        {spot.type === 'carpa' ? 'Carpa' : spot.type === 'sombrilla' ? 'Sombrilla' : 'Ubicación'} · {spot.sectorName}
+                      </span>
                     </div>
                   </div>
 

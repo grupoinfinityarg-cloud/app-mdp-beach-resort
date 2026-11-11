@@ -13,6 +13,8 @@ import {
   Landmark,
   Utensils,
   Umbrella,
+  Tent,
+  Beer,
   Percent,
   Receipt,
   CheckCircle2,
@@ -751,6 +753,17 @@ export const PosView: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2">
+                    <span className="w-7 h-7 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
+                      {l.type === 'carpa' ? (
+                        <Tent className="w-3.5 h-3.5 text-gray-700" />
+                      ) : l.type === 'sombrilla' ? (
+                        <Umbrella className="w-3.5 h-3.5 text-gray-700" />
+                      ) : l.type === 'mostrador' ? (
+                        <Beer className="w-3.5 h-3.5 text-gray-700" />
+                      ) : (
+                        <Utensils className="w-3.5 h-3.5 text-gray-700" />
+                      )}
+                    </span>
                     <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-gray-100">
                       {l.code}
                     </span>

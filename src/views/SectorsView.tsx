@@ -7,7 +7,52 @@ import {
   Edit2,
   Plus,
   Filter,
+  Tent,
+  Umbrella,
+  Utensils,
+  Beer,
+  Waves,
 } from 'lucide-react';
+
+export const getLocationTypeIcon = (type: LocationType, className = "w-4 h-4") => {
+  switch (type) {
+    case 'carpa':
+      return <Tent className={className} />;
+    case 'sombrilla':
+      return <Umbrella className={className} />;
+    case 'mesa_exterior':
+    case 'mesa_interior':
+      return <Utensils className={className} />;
+    case 'mostrador':
+      return <Beer className={className} />;
+    case 'pileta':
+    case 'solarium':
+      return <Waves className={className} />;
+    default:
+      return <Tent className={className} />;
+  }
+};
+
+export const getLocationTypeLabel = (type: LocationType) => {
+  switch (type) {
+    case 'carpa':
+      return 'Carpa';
+    case 'sombrilla':
+      return 'Sombrilla';
+    case 'mesa_exterior':
+      return 'Mesa Exterior';
+    case 'mesa_interior':
+      return 'Mesa Salón';
+    case 'mostrador':
+      return 'Barra / Mostrador';
+    case 'pileta':
+      return 'Pileta';
+    case 'solarium':
+      return 'Solárium';
+    default:
+      return type;
+  }
+};
 
 export const SectorsView: React.FC = () => {
   const { sectors, locations, updateLocationStatus, addLocation, setActiveView, setSelectedLocationCode } =
@@ -125,10 +170,15 @@ export const SectorsView: React.FC = () => {
               }`}
             >
               <div>
-                <div className={`text-[10px] font-black uppercase tracking-wider ${isSelected ? 'text-[#34313A]' : 'text-[#F68F57]'}`}>
-                  {sec.type}
+                <div className="flex items-center gap-1.5">
+                  <span className={`p-1 rounded-lg ${isSelected ? 'bg-black/10 text-[#34313A]' : 'bg-[#FBEEB9] text-[#F68F57]'}`}>
+                    {getLocationTypeIcon(sec.type, "w-3 h-3")}
+                  </span>
+                  <span className={`text-[10px] font-black uppercase tracking-wider truncate ${isSelected ? 'text-[#34313A]' : 'text-[#F68F57]'}`}>
+                    {getLocationTypeLabel(sec.type)}
+                  </span>
                 </div>
-                <h4 className="font-extrabold text-xs mt-0.5 leading-snug line-clamp-1 text-[#34313A]">
+                <h4 className="font-extrabold text-xs mt-1.5 leading-snug line-clamp-1 text-[#34313A]">
                   {sec.name}
                 </h4>
               </div>
@@ -187,10 +237,18 @@ export const SectorsView: React.FC = () => {
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-black text-[#34313A]">{loc.code}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase ${getStatusColor(loc.status)}`}>
-                      {loc.status}
-                    </span>
+                    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-[#34313A] shrink-0 border border-gray-200">
+                      {getLocationTypeIcon(loc.type, "w-4 h-4 text-[#34313A]")}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-black text-[#34313A]">{loc.code}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase ${getStatusColor(loc.status)}`}>
+                          {loc.status}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-medium block">{getLocationTypeLabel(loc.type)}</span>
+                    </div>
                   </div>
 
                   <button
@@ -331,11 +389,11 @@ export const SectorsView: React.FC = () => {
                 onChange={(e) => setNewType(e.target.value as LocationType)}
                 className="w-full p-2.5 rounded-xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF]"
               >
-                <option value="carpa">Carpa de Playa</option>
-                <option value="sombrilla">Sombrilla de Playa</option>
-                <option value="mesa_exterior">Mesa Exterior / Deck</option>
-                <option value="mesa_interior">Mesa Restaurante Interior</option>
-                <option value="mostrador">Mostrador / Barra</option>
+                <option value="carpa">⛺ Carpa de Playa</option>
+                <option value="sombrilla">🏖️ Sombrilla de Playa</option>
+                <option value="mesa_exterior">🍽️ Mesa Exterior / Deck</option>
+                <option value="mesa_interior">🍽️ Mesa Restaurante Interior</option>
+                <option value="mostrador">🍺 Mostrador / Barra</option>
               </select>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BalnearioProvider, useBalneario } from './context/BalnearioContext';
 import { HeaderTopBar } from './components/HeaderTopBar';
 import { DemoRoleSwitcherBar } from './components/DemoRoleSwitcherBar';
@@ -200,7 +200,9 @@ const AppContent: React.FC = () => {
     };
   }, [isQrAccess]);
 
-  if (isSupabaseConfigured && !isQrAccess) {
+  const isStaffLoginRequested = new URLSearchParams(window.location.search).has('staff') || new URLSearchParams(window.location.search).has('login');
+
+  if (isSupabaseConfigured && isStaffLoginRequested) {
     if (isPasswordRecovery) return <StaffLoginView recoveryMode />;
     if (!staffSessionReady) return <div className="min-h-screen sand-textured-bg flex items-center justify-center text-xs font-bold text-[#34313A]/70">Verificando acceso...</div>;
     if (!hasBusinessAccess) return <StaffLoginView accessDenied={accessDenied} authError={authCheckError} />;

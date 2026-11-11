@@ -85,7 +85,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const mesaParam = params.get('mesa') || params.get('carpa') || params.get('spot');
-    const viewParam = params.get('view');
+    const viewParam = params.get('view') || params.get('role') || params.get('vista');
 
     if (mesaParam) {
       setSelectedLocationCode(mesaParam.toUpperCase());

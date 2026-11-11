@@ -200,7 +200,8 @@ const AppContent: React.FC = () => {
   }
 
   const visibleView = isQrAccess && activeView !== 'personalizar' ? 'carta' : activeView;
-  const isImmersiveView = activeView === 'cocina' || isQrAccess;
+  const isCustomerView = visibleView === 'carta' || visibleView === 'personalizar';
+  const isImmersiveView = activeView === 'cocina' || isQrAccess || isCustomerView;
 
   return (
     <div className="min-h-screen sand-textured-bg text-[#34313A] flex flex-col font-sans selection:bg-[#C1E7FF] selection:text-[#34313A]">
@@ -215,8 +216,10 @@ const AppContent: React.FC = () => {
         </div>
       )}
 
-      {/* Top Experience Switcher Bar */}
-      {!isQrAccess && <HeaderTopBar onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} onSignOut={handleStaffSignOut} />}
+      {/* Top Experience Switcher Bar (solo visible para administración y staff, oculta para el cliente) */}
+      {!isQrAccess && !isCustomerView && (
+        <HeaderTopBar onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} onSignOut={handleStaffSignOut} />
+      )}
 
       {/* Main Container with Sidebar + Content */}
       <div className="flex-1 flex w-full">

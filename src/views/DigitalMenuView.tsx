@@ -26,6 +26,7 @@ import {
   QrCode,
   X,
   Volume2,
+  MessageCircle,
 } from 'lucide-react';
 
 export const DigitalMenuView: React.FC = () => {
@@ -108,6 +109,13 @@ export const DigitalMenuView: React.FC = () => {
   // Cart totals
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalCartAmount = cart.reduce((sum, item) => sum + item.subtotal, 0);
+
+  // Enlace directo al WhatsApp del balneario / parador
+  const whatsAppPhoneTarget = (visibleConfig.whatsappPhone || visibleConfig.phone || '5492236779934').replace(/[^0-9]/g, '');
+  const whatsAppGreeting = encodeURIComponent(
+    `Hola ${visibleConfig.branchName}! Estoy viendo la carta digital en ${activeLocationCode} y tengo una consulta sobre mi pedido.`
+  );
+  const whatsAppContactUrl = `https://wa.me/${whatsAppPhoneTarget}?text=${whatsAppGreeting}`;
 
   // Barcode / QR modal state
   const [showScannerModal, setShowScannerModal] = useState(false);
@@ -736,6 +744,35 @@ export const DigitalMenuView: React.FC = () => {
             </div>
           </aside>
         )}
+
+        {/* Botón Flotante de Contacto WhatsApp con el Balneario */}
+        <aside
+          className={`fixed z-40 transition-all duration-300 pointer-events-auto ${
+            totalCartCount > 0 ? 'bottom-20 left-4 sm:left-6' : 'bottom-5 left-4 sm:left-6'
+          }`}
+        >
+          <a
+            href={whatsAppContactUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2.5 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl transition-all duration-300 active:scale-95 border-2 border-white/40 backdrop-blur-xs hover:shadow-emerald-500/30"
+            title={`Chatear con ${visibleConfig.branchName} por WhatsApp`}
+          >
+            <div className="relative flex items-center justify-center">
+              <MessageCircle className="w-5 h-5 fill-white text-emerald-600" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-300 animate-ping" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-300" />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[9px] font-black uppercase tracking-wider text-emerald-100 leading-none">
+                ¿Dudas con tu pedido?
+              </span>
+              <span className="text-xs font-bold leading-tight flex items-center gap-1">
+                WhatsApp Directo
+              </span>
+            </div>
+          </a>
+        </aside>
       </div>
 
       {/* Product Customizer Modal */}

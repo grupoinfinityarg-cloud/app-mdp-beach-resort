@@ -31,6 +31,7 @@ import {
 } from '../data/seedData';
 import { calculateItemUnitPrice, canTransitionOrderStatus } from '../utils/balnearioLogic';
 import { isSupabaseConfigured, supabase, supabaseBusinessSlug } from '../utils/supabase';
+import { findDemoPreset } from '../data/demoPresets';
 
 export type ActiveView =
   | 'panel'
@@ -171,10 +172,51 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
-  const [config, setConfig] = useState<BalnearioConfig>(() =>
-    loadStored('config', INITIAL_CONFIG)
-  );
-  const [businessDisplayName, setBusinessDisplayName] = useState(INITIAL_CONFIG.branchName);
+  const [config, setConfig] = useState<BalnearioConfig>(() => {
+    const base = loadStored('config', INITIAL_CONFIG);
+    if (typeof window === 'undefined') return base;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const presetKey = params.get('preset') || params.get('demo');
+      const preset = findDemoPreset(presetKey);
+
+      const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      const slogan = params.get('slogan') || preset?.slogan;
+      const logo = params.get('logo') || params.get('logourl') || preset?.logoUrl;
+      const wa = params.get('wa') || params.get('whatsapp') || params.get('telefono') || preset?.whatsappPhone;
+
+      if (negocio || slogan || logo || wa) {
+        return {
+          ...base,
+          name: negocio || base.name,
+          branchName: negocio || base.branchName,
+          slogan: slogan || base.slogan,
+          logoUrl: logo || base.logoUrl,
+          whatsappPhone: wa || base.whatsappPhone,
+          phone: wa || base.phone,
+        };
+      }
+    } catch {
+      // Ignorar en caso de error de parseo
+    }
+    return base;
+  });
+
+  const [businessDisplayName, setBusinessDisplayName] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const presetKey = params.get('preset') || params.get('demo');
+        const preset = findDemoPreset(presetKey);
+        const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+        if (negocio) return negocio;
+      } catch {
+        // Ignorar
+      }
+    }
+    const stored = loadStored<BalnearioConfig | null>('config', null);
+    return stored?.branchName || INITIAL_CONFIG.branchName;
+  });
   const [sectors] = useState<Sector[]>(() =>
     loadStored('sectors', INITIAL_SECTORS)
   );
@@ -215,6 +257,38 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [cart, setCart] = useState<CartItem[]>(() => loadStored('cart', []));
   const [productBeingCustomized, setProductBeingCustomized] = useState<Product | null>(null);
   const [activePosOrder, setActivePosOrder] = useState<Order | null>(null);
+
+  // Detección dinámica de parámetros de URL para Marca Blanca en demos
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const presetKey = params.get('preset') || params.get('demo');
+      const preset = findDemoPreset(presetKey);
+
+      const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      const slogan = params.get('slogan') || preset?.slogan;
+      const logo = params.get('logo') || params.get('logourl') || preset?.logoUrl;
+      const wa = params.get('wa') || params.get('whatsapp') || params.get('telefono') || preset?.whatsappPhone;
+
+      if (negocio || slogan || logo || wa) {
+        setConfig((prev) => ({
+          ...prev,
+          name: negocio || prev.name,
+          branchName: negocio || prev.branchName,
+          slogan: slogan || prev.slogan,
+          logoUrl: logo || prev.logoUrl,
+          whatsappPhone: wa || prev.whatsappPhone,
+          phone: wa || prev.phone,
+        }));
+        if (negocio) {
+          setBusinessDisplayName(negocio);
+        }
+      }
+    } catch {
+      // Ignorar errores
+    }
+  }, []);
 
   // Carga y mantiene sincronizados los pedidos QR visibles para el personal.
   useEffect(() => {

@@ -234,6 +234,7 @@ export interface BalnearioConfig {
   address: string;
   city: string;
   phone: string;
+  whatsappPhone?: string;
   schedule: string;
   activePlan: CommercialPlan;
   demoExpiryNotice: string;

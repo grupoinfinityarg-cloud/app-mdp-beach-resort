@@ -210,8 +210,8 @@ export const DigitalMenuView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FBEEB9] pb-32">
-      {/* Maximum Mobile/Tablet Centered Frame in Blanco (#FFFFFF) */}
-      <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen relative overflow-hidden border-x border-[#E2E2E2]">
+      {/* Maximum Responsive Frame (Mobile full-width, Tablet 2-cols, Notebook 3-cols) */}
+      <div className="max-w-7xl mx-auto bg-white shadow-2xl min-h-screen relative overflow-hidden border-x border-[#E2E2E2] md:my-4 md:rounded-3xl">
         {isQrAccess && (qrMenuLoading || qrMenuError) && (
           <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/95 p-6 text-center">
             <div className="max-w-sm rounded-2xl border border-[#E2E2E2] bg-white p-5 shadow-lg">
@@ -616,7 +616,7 @@ export const DigitalMenuView: React.FC = () => {
             <span>Precios con IVA incluido</span>
           </div>
 
-          <div className="grid grid-cols-1 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
             {filteredProducts.map((product) => (
               <article
                 key={product.id}
@@ -715,7 +715,7 @@ export const DigitalMenuView: React.FC = () => {
         {/* Sticky Floating Bottom Bar: #34313A + #C1E7FF + #F68F57 */}
         {totalCartCount > 0 && (
           <aside className="fixed bottom-0 left-0 right-0 z-30 flex justify-center p-3 pointer-events-none">
-            <div className="max-w-xl w-full bg-[#34313A] text-white rounded-3xl shadow-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3 pointer-events-auto border border-[#484450] animate-in slide-in-from-bottom duration-200">
+            <div className="max-w-3xl w-full bg-[#34313A] text-white rounded-3xl shadow-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3 pointer-events-auto border border-[#484450] animate-in slide-in-from-bottom duration-200">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">
                   <ShoppingBag className="w-5 h-5 text-[#C1E7FF]" />

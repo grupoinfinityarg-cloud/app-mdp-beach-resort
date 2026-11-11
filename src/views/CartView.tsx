@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { formatCurrencyARS, validateArgentinePhone } from '../utils/balnearioLogic';
 import confetti from 'canvas-confetti';
+import QRCode from 'qrcode';
 import { PaymentMethod } from '../types';
 import { supabase, supabaseBusinessSlug } from '../utils/supabase';
 import {
@@ -23,6 +24,8 @@ import {
   QrCode,
   Banknote,
   Landmark,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 export const CartView: React.FC = () => {
@@ -36,6 +39,7 @@ export const CartView: React.FC = () => {
     setSelectedLocationCode,
     setActiveView,
     locations,
+    config,
   } = useBalneario();
   const qrParams = new URLSearchParams(window.location.search);
   const qrLocationCode = qrParams.get('mesa') || qrParams.get('carpa') || qrParams.get('spot');
@@ -72,6 +76,35 @@ export const CartView: React.FC = () => {
 
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
   const total = subtotal;
+
+  // Estados interactivos para pago QR y Transferencia
+  const [copiedAlias, setCopiedAlias] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
+
+  const bankAlias = 'BALNEARIO.PLAYA.MDP';
+  const bankCbu = '0000003100018472910482';
+  const bankTitular = `${config.branchName} SRL`;
+
+  useEffect(() => {
+    if (selectedPaymentMethod === 'mercadopago_qr' && total > 0) {
+      QRCode.toDataURL(
+        `00020101021243650016com.mercadolibre0129https://mpago.la/pos/balneario520400005303032540${total}.005802AR5920${encodeURIComponent(config.branchName).slice(0, 20)}6013Mar del Plata62150511PEDIDO-PLAYA6304`,
+        {
+          width: 220,
+          margin: 1,
+          color: { dark: '#009ee3', light: '#ffffff' },
+        }
+      )
+        .then(setQrDataUrl)
+        .catch(() => {});
+    }
+  }, [selectedPaymentMethod, total, config.branchName]);
+
+  const handleCopyAlias = () => {
+    navigator.clipboard.writeText(bankAlias);
+    setCopiedAlias(true);
+    setTimeout(() => setCopiedAlias(false), 2500);
+  };
 
   const handlePlaceOrder = async () => {
     setFormSubmitted(true);
@@ -154,7 +187,7 @@ export const CartView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FBEEB9] pb-24 text-[#34313A]">
-      <div className="max-w-xl mx-auto bg-white shadow-xl min-h-screen flex flex-col justify-between border-x border-[#E2E2E2]">
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl min-h-screen flex flex-col justify-between border-x border-[#E2E2E2] md:my-4 md:rounded-3xl">
         {/* Top Header */}
         <div className="relative bg-white border-b border-[#E2E2E2] px-4 py-3.5 flex items-center justify-between">
           <button
@@ -284,6 +317,37 @@ export const CartView: React.FC = () => {
                   3. <strong>Entrega:</strong> Te lo llevamos directamente a tu sector.
                 </p>
               </div>
+
+              {/* Si seleccionó QR o Transferencia, mostrar datos de pago en la confirmación */}
+              {selectedPaymentMethod === 'mercadopago_qr' && qrDataUrl && (
+                <div className="p-3.5 rounded-2xl bg-[#009ee3]/10 border border-[#009ee3]/30 max-w-sm mx-auto text-center space-y-2">
+                  <div className="text-xs font-black text-[#009ee3] flex items-center justify-center gap-1.5">
+                    <QrCode className="w-4 h-4" />
+                    <span>Abonar pedido con QR ({placedOrderNumber})</span>
+                  </div>
+                  <img src={qrDataUrl} alt="QR Pago" className="w-28 h-28 mx-auto bg-white p-1 rounded-xl shadow-xs" />
+                  <p className="text-[10px] text-gray-600">Escaneá desde Mercado Pago o MODO cuando quieras abonar.</p>
+                </div>
+              )}
+
+              {selectedPaymentMethod === 'transferencia' && (
+                <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 max-w-sm mx-auto text-left space-y-2">
+                  <div className="text-xs font-black text-emerald-800 flex items-center justify-between">
+                    <span>Datos para Transferir:</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyAlias}
+                      className="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[10px] flex items-center gap-1"
+                    >
+                      {copiedAlias ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedAlias ? 'Copiado' : 'Copiar Alias'}</span>
+                    </button>
+                  </div>
+                  <div className="text-xs font-mono font-black text-[#34313A] bg-white p-2 rounded-lg border border-emerald-200">
+                    Alias: {bankAlias}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-4 flex flex-col gap-2 max-w-xs mx-auto">
                 <button
@@ -561,6 +625,104 @@ export const CartView: React.FC = () => {
                       </button>
                     ))}
                   </div>
+
+                  {/* Tarjeta Interactiva de Pago con QR con Importe Actualizado */}
+                  {selectedPaymentMethod === 'mercadopago_qr' && (
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#009ee3]/10 to-[#C1E7FF]/30 border-2 border-[#009ee3]/30 space-y-2.5 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#009ee3]/20">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-[#009ee3]">
+                          <QrCode className="w-4 h-4" />
+                          <span>QR Dinámico • Mercado Pago & MODO</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#009ee3] text-white">
+                          Interoperable
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center gap-3">
+                        <div className="bg-white p-2 rounded-2xl border border-[#009ee3]/30 shadow-md shrink-0">
+                          {qrDataUrl ? (
+                            <img src={qrDataUrl} alt="QR de Pago" className="w-32 h-32 object-contain" />
+                          ) : (
+                            <div className="w-32 h-32 bg-gray-100 flex items-center justify-center text-xs">Generando QR...</div>
+                          )}
+                        </div>
+                        <div className="flex-1 space-y-1 text-center sm:text-left">
+                          <p className="text-[11px] text-gray-700 leading-snug">
+                            Escaneá desde tu celular con la app de <strong>Mercado Pago</strong>, <strong>MODO</strong> o tu banco.
+                          </p>
+                          <div className="pt-1">
+                            <span className="text-[10px] text-gray-500 uppercase font-mono block">Importe exacto a pagar:</span>
+                            <span className="text-lg font-black text-[#009ee3]">{formatCurrencyARS(total)}</span>
+                          </div>
+                          <span className="text-[9px] text-emerald-700 font-bold block">
+                            ✓ Se actualiza en tiempo real al modificar cantidades
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tarjeta Interactiva de Transferencia con Alias y Botón Copiar */}
+                  {selectedPaymentMethod === 'transferencia' && (
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/40 border-2 border-emerald-300 space-y-2.5 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between pb-2 border-b border-emerald-200">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-emerald-800">
+                          <Landmark className="w-4 h-4 text-emerald-600" />
+                          <span>Datos para Transferencia Bancaria</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white">
+                          Acreditación Inmediata
+                        </span>
+                      </div>
+
+                      <div className="space-y-2 text-xs">
+                        <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-emerald-200">
+                          <div>
+                            <span className="text-[10px] text-gray-500 uppercase font-mono block">Alias Bancario:</span>
+                            <span className="font-mono font-black text-sm text-[#34313A]">{bankAlias}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleCopyAlias}
+                            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-xs ${
+                              copiedAlias
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300'
+                            }`}
+                          >
+                            {copiedAlias ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-white" />
+                                <span>¡Copiado!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span>Copiar Alias</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-600 px-1">
+                          <div>
+                            <span className="text-gray-400 block text-[9px] uppercase font-mono">Titular:</span>
+                            <span className="font-bold text-[#34313A]">{bankTitular}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-400 block text-[9px] uppercase font-mono">CVU / CBU:</span>
+                            <span className="font-mono font-bold text-[#34313A] text-[10px]">{bankCbu}</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-1 border-t border-emerald-200 flex items-center justify-between text-xs">
+                          <span className="font-bold text-gray-600">Importe a transferir:</span>
+                          <span className="text-base font-black text-emerald-800">{formatCurrencyARS(total)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Notas adicionales */}

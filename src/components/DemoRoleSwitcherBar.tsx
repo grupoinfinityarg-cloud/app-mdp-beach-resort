@@ -37,18 +37,18 @@ export const DemoRoleSwitcherBar: React.FC = () => {
   // Determinar rol activo actual según la vista
   const getActiveRole = () => {
     if (activeView === 'carta' || activeView === 'personalizar') return 'cliente';
-    if (activeView === 'pos') return 'mozo';
+    if (activeView === 'pos') return 'cajero';
     if (activeView === 'cocina') return 'cocina';
     return 'dueno';
   };
 
   const currentRole = getActiveRole();
 
-  const handleSelectRole = (role: 'cliente' | 'mozo' | 'cocina' | 'dueno') => {
+  const handleSelectRole = (role: 'cliente' | 'cajero' | 'cocina' | 'dueno') => {
     if (role === 'cliente') {
       setSelectedLocationCode('C-01');
       setActiveView('carta');
-    } else if (role === 'mozo') {
+    } else if (role === 'cajero') {
       setActiveView('pos');
     } else if (role === 'cocina') {
       setActiveView('cocina');
@@ -138,19 +138,19 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               <span>1. Cliente (Carpa)</span>
             </button>
 
-            {/* 2. Mozo / Mostrador */}
+            {/* 2. Cajero / Mostrador */}
             <button
               type="button"
-              onClick={() => handleSelectRole('mozo')}
+              onClick={() => handleSelectRole('cajero')}
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-black transition text-xs ${
-                currentRole === 'mozo'
+                currentRole === 'cajero'
                   ? 'bg-[#C1E7FF] text-[#34313A] shadow-sm'
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
-              title="Punto de venta táctil para mozos y cobro rápido"
+              title="Punto de venta táctil para cajeros y cobro rápido"
             >
               <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-              <span>2. Mozo (POS)</span>
+              <span>2. Cajero (POS)</span>
             </button>
 
             {/* 3. Cocina / KDS */}

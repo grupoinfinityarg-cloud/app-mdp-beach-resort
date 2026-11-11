@@ -18,6 +18,7 @@ import {
   BookOpen,
   Layers,
   Award,
+  FileText,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 
@@ -224,6 +225,19 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               <BookOpen className="w-3.5 h-3.5" />
               <span>Tutorial Demo</span>
             </button>
+
+            {/* Botón de Dossier Comercial PDF */}
+            <a
+              href="/Dossier_Comercial_Balnearios_GrupoInfinity.pdf"
+              download="Dossier_Comercial_Balnearios_GrupoInfinity.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369A1] text-white font-black transition shadow-xs text-xs cursor-pointer"
+              title="Descargar Dossier Comercial Oficial 2026/2027 en PDF"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Dossier PDF</span>
+            </a>
 
             <button
               type="button"

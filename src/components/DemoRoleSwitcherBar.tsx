@@ -51,6 +51,17 @@ export const DemoRoleSwitcherBar: React.FC = () => {
   const currentRole = getActiveRole();
 
   const handleSelectRole = (role: 'cliente' | 'cajero' | 'cocina' | 'dueno') => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('mesa');
+      url.searchParams.delete('carpa');
+      url.searchParams.delete('spot');
+      url.searchParams.delete('view');
+      url.searchParams.delete('role');
+      url.searchParams.delete('vista');
+      window.history.replaceState({}, '', url.toString());
+    } catch {}
+
     if (role === 'cliente') {
       setSelectedLocationCode('C-01');
       setActiveView('carta');

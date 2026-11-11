@@ -81,8 +81,12 @@ const AppContent: React.FC = () => {
     };
   }, []);
 
-  // Handle URL query parameters (e.g. ?mesa=C-01 for QR scan, ?view=carta, ?autostart=1)
+  // Handle URL query parameters once on initial mount (e.g. ?mesa=C-01 for QR scan, ?view=carta, ?autostart=1)
+  const hasProcessedInitialUrlRef = useRef(false);
   useEffect(() => {
+    if (hasProcessedInitialUrlRef.current) return;
+    hasProcessedInitialUrlRef.current = true;
+
     const params = new URLSearchParams(window.location.search);
     const mesaParam = params.get('mesa') || params.get('carpa') || params.get('spot');
     const viewParam = params.get('view') || params.get('role') || params.get('vista');
@@ -93,8 +97,11 @@ const AppContent: React.FC = () => {
     } else if (viewParam) {
       setActiveView(viewParam as any);
     }
+  }, [setActiveView, setSelectedLocationCode]);
 
-    // Acciones de respuesta rápida desde el mensaje de WhatsApp (1 toque)
+  // Acciones de respuesta rápida desde el mensaje de WhatsApp (1 toque)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
     const confirmParam = params.get('confirmar');
     const editParam = params.get('editar');
     const cancelParam = params.get('cancelar');
@@ -121,7 +128,7 @@ const AppContent: React.FC = () => {
         }
       }
     }
-  }, [setActiveView, setSelectedLocationCode, orders, recordQrCustomerApproval, recordQrCustomerEditRequest, cancelOrder]);
+  }, [orders, recordQrCustomerApproval, recordQrCustomerEditRequest, cancelOrder, setActiveView]);
 
   useEffect(() => {
     if (!isSupabaseConfigured || isQrAccess || !supabase) return;
@@ -199,9 +206,9 @@ const AppContent: React.FC = () => {
     if (!hasBusinessAccess) return <StaffLoginView accessDenied={accessDenied} authError={authCheckError} />;
   }
 
-  const visibleView = isQrAccess && activeView !== 'personalizar' ? 'carta' : activeView;
+  const visibleView = activeView;
   const isCustomerView = visibleView === 'carta' || visibleView === 'personalizar';
-  const isImmersiveView = activeView === 'cocina' || isQrAccess || isCustomerView;
+  const isImmersiveView = activeView === 'cocina' || isCustomerView;
 
   return (
     <div className="min-h-screen sand-textured-bg text-[#34313A] flex flex-col font-sans selection:bg-[#C1E7FF] selection:text-[#34313A]">

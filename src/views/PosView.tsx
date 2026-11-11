@@ -40,6 +40,9 @@ export const PosView: React.FC = () => {
     createDirectPosSale,
     closeAndPayOrder,
     confirmAndSendToKitchen,
+    editOrder,
+    cancelOrder,
+    updateLocationStatus,
     config,
   } = useBalneario();
 
@@ -139,7 +142,7 @@ export const PosView: React.FC = () => {
       activeLocation?.capacity || 2
     );
   }, [posItems, discountPercent, config.serviceFeeCover, activeLocation]);
-  const paymentAmount = loadedPendingOrder?.total ?? totals.total;
+  const paymentAmount = totals.total;
 
   // Filtered products using colloquial beach matching & SKU
   const filteredProducts = useMemo(() => {
@@ -150,13 +153,13 @@ export const PosView: React.FC = () => {
     });
   }, [products, selectedCategory, searchQuery]);
 
-  // Add product to POS cart
+  // Add product to POS cart (Permite agregar tanto a ventas nuevas como a comandas abiertas)
   const handleAddProduct = (prod: Product) => {
-    if (loadedPendingOrder) return;
     setPosItems((prev) => {
       const idx = prev.findIndex(
         (i) => i.productId === prod.id && i.removedIngredients.length === 0 && i.selectedAddons.length === 0
       );
+      let updated: CartItem[];
       if (idx >= 0) {
         const next = [...prev];
         const existing = next[idx];
@@ -166,28 +169,42 @@ export const PosView: React.FC = () => {
           quantity: newQty,
           subtotal: existing.unitPrice * newQty,
         };
-        return next;
+        updated = next;
+      } else {
+        const newItem: CartItem = {
+          id: `pos-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          productId: prod.id,
+          productName: prod.name,
+          productImage: prod.image,
+          basePrice: prod.price,
+          unitPrice: prod.price,
+          quantity: 1,
+          removedIngredients: [],
+          selectedAddons: [],
+          subtotal: prod.price,
+        };
+        updated = [...prev, newItem];
       }
-      const newItem: CartItem = {
-        id: `pos-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-        productId: prod.id,
-        productName: prod.name,
-        productImage: prod.image,
-        basePrice: prod.price,
-        unitPrice: prod.price,
-        quantity: 1,
-        removedIngredients: [],
-        selectedAddons: [],
-        subtotal: prod.price,
-      };
-      return [...prev, newItem];
+
+      // Si hay una comanda existente cargada, sincronizamos automáticamente los cambios
+      if (loadedPendingOrder) {
+        editOrder(
+          loadedPendingOrder.id,
+          updated,
+          loadedPendingOrder.notes,
+          'Cajero POS',
+          `Se agregó ${prod.name} desde el POS.`
+        );
+      }
+
+      return updated;
     });
   };
 
+  // Modificar cantidad (Sumar o Sacar unidades libremente)
   const updateQuantity = (itemId: string, delta: number) => {
-    if (loadedPendingOrder) return;
-    setPosItems((prev) =>
-      prev
+    setPosItems((prev) => {
+      const updated = prev
         .map((i) => {
           if (i.id === itemId) {
             const newQty = i.quantity + delta;
@@ -196,13 +213,38 @@ export const PosView: React.FC = () => {
           }
           return i;
         })
-        .filter((i): i is CartItem => i !== null)
-    );
+        .filter((i): i is CartItem => i !== null);
+
+      if (loadedPendingOrder) {
+        editOrder(
+          loadedPendingOrder.id,
+          updated,
+          loadedPendingOrder.notes,
+          'Cajero POS',
+          `Actualización de cantidades en comanda (${updated.length} ítems).`
+        );
+      }
+
+      return updated;
+    });
   };
 
+  // Quitar / Borrar un producto de la comanda
   const removeItem = (itemId: string) => {
-    if (loadedPendingOrder) return;
-    setPosItems((prev) => prev.filter((i) => i.id !== itemId));
+    setPosItems((prev) => {
+      const targetItem = prev.find((i) => i.id === itemId);
+      const updated = prev.filter((i) => i.id !== itemId);
+      if (loadedPendingOrder) {
+        editOrder(
+          loadedPendingOrder.id,
+          updated,
+          loadedPendingOrder.notes,
+          'Cajero POS',
+          `Se quitó ${targetItem?.productName || 'un producto'} de la comanda.`
+        );
+      }
+      return updated;
+    });
   };
 
   // Load comanda from table/carpa
@@ -211,6 +253,58 @@ export const PosView: React.FC = () => {
     setLoadedOrderId(ord.id);
     setPosItems([...ord.items]);
     setShowPendingComandasModal(false);
+  };
+
+  // Seleccionar ubicación y cargar automáticamente su comanda abierta si existe
+  const handleSelectLocation = (code: string) => {
+    setSelectedLocationCode(code);
+    const existing = orders.find(
+      (o) => o.locationCode === code && o.paymentStatus === 'pendiente' && o.status !== 'cancelado'
+    );
+    if (existing) {
+      setLoadedOrderId(existing.id);
+      setPosItems([...existing.items]);
+    } else {
+      setLoadedOrderId(null);
+      setPosItems([]);
+    }
+  };
+
+  // Anular / Borrar comanda completa de la ubicación
+  const handleCancelLoadedOrder = () => {
+    if (!loadedPendingOrder) {
+      setPosItems([]);
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      `¿Estás seguro de anular y borrar la comanda ${loadedPendingOrder.orderNumber} de ${activeLocation?.name || selectedLocationCode}? Esta acción cancelará los cargos y liberará la ubicación.`
+    );
+    if (!confirmDelete) return;
+
+    cancelOrder(loadedPendingOrder.id, 'Comanda cancelada y borrada desde el POS por el cajero.');
+
+    // Verificar si quedan otras órdenes pendientes en esta ubicación
+    const hasOtherPending = orders.some(
+      (o) =>
+        o.id !== loadedPendingOrder.id &&
+        o.locationCode === loadedPendingOrder.locationCode &&
+        o.paymentStatus === 'pendiente' &&
+        o.status !== 'cancelado'
+    );
+    if (!hasOtherPending && activeLocation) {
+      updateLocationStatus(activeLocation.id, 'disponible');
+    }
+
+    setLoadedOrderId(null);
+    setPosItems([]);
+    alert(`🗑️ Comanda ${loadedPendingOrder.orderNumber} anulada y borrada con éxito.`);
+  };
+
+  // Desvincular comanda para abrir una nueva venta en esta ubicación
+  const handleNewOrder = () => {
+    setLoadedOrderId(null);
+    setPosItems([]);
   };
 
   // Open Checkout Modal
@@ -223,16 +317,26 @@ export const PosView: React.FC = () => {
   // Confirm Sale & Close
   const handleConfirmPayment = async () => {
     if (loadedPendingOrder) {
+      // Guardar el estado final de los ítems
+      editOrder(
+        loadedPendingOrder.id,
+        posItems,
+        loadedPendingOrder.notes,
+        'Cajero POS',
+        'Comanda actualizada al registrar el cobro.'
+      );
       const paidAt = new Date().toISOString();
       const success = await closeAndPayOrder(
         loadedPendingOrder.id,
         selectedPaymentMethod,
-        0,
+        totals.discountAmount,
         'Lucas G. (Mozo #4)'
       );
       if (!success) return;
       setPaymentSuccessOrder({
         ...loadedPendingOrder,
+        items: posItems,
+        total: totals.total,
         paymentStatus: 'cobrado',
         paymentMethod: selectedPaymentMethod,
         paidAt,
@@ -259,17 +363,29 @@ export const PosView: React.FC = () => {
   // Send POS items to kitchen
   const handleSendToKitchen = () => {
     if (posItems.length === 0) return;
-    createDirectPosSale(
-      selectedLocationCode,
-      posItems,
-      selectedPaymentMethod,
-      activeLocation?.currentGuestName || 'Pedido Mostrador',
-      totals.discountAmount,
-      totals.serviceFee,
-      true
-    );
-    setPosItems([]);
-    alert(`Comanda enviada exitosamente a la KDS de Cocina para ${selectedLocationCode}`);
+    if (loadedPendingOrder) {
+      editOrder(
+        loadedPendingOrder.id,
+        posItems,
+        loadedPendingOrder.notes,
+        'Cajero POS',
+        'Comanda actualizada y enviada a cocina.'
+      );
+      confirmAndSendToKitchen(loadedPendingOrder.id);
+      alert(`✅ Comanda ${loadedPendingOrder.orderNumber} actualizada y enviada a Cocina KDS para ${selectedLocationCode}.`);
+    } else {
+      createDirectPosSale(
+        selectedLocationCode,
+        posItems,
+        selectedPaymentMethod,
+        activeLocation?.currentGuestName || 'Pedido Mostrador',
+        totals.discountAmount,
+        totals.serviceFee,
+        true
+      );
+      setPosItems([]);
+      alert(`✅ Comanda enviada exitosamente a la KDS de Cocina para ${selectedLocationCode}.`);
+    }
   };
 
   const cashChange = Math.max(0, cashReceived - paymentAmount);
@@ -527,24 +643,49 @@ export const PosView: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <h3 className="font-black text-lg text-[#34313A]">{activeLocation?.name}</h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa] uppercase">
-                    ACTIVA
+                    {activeLocation?.code}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500 font-medium mt-0.5">
-                  {activeLocation?.capacity} comensales • Ticket #{Math.floor(1000 + Math.random() * 9000)}
+                  {activeLocation?.capacity} comensales • {loadedPendingOrder ? `Comanda ${loadedPendingOrder.orderNumber}` : `Ticket #${Math.floor(1000 + Math.random() * 9000)}`}
                 </div>
               </div>
 
-              {posItems.length > 0 && (
-                <button
-                  onClick={() => setPosItems([])}
-                  disabled={Boolean(loadedPendingOrder)}
-                  className="p-1.5 text-gray-400 hover:text-rose-600 transition"
-                  title="Vaciar comanda"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
+              {/* Botones de acción en la cabecera de la comanda */}
+              <div className="flex items-center gap-1.5">
+                {loadedPendingOrder ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleCancelLoadedOrder}
+                      className="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                      title="Anular y borrar esta comanda de la ubicación"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Borrar Comanda</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNewOrder}
+                      className="px-2 py-1 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 text-[10px] font-bold transition cursor-pointer"
+                      title="Abrir una nueva venta en blanco sin tocar la comanda existente"
+                    >
+                      + Nueva
+                    </button>
+                  </>
+                ) : (
+                  posItems.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setPosItems([])}
+                      className="p-1.5 text-gray-400 hover:text-rose-600 transition"
+                      title="Vaciar comanda actual"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )
+                )}
+              </div>
             </div>
 
             {/* List of items */}
@@ -574,23 +715,37 @@ export const PosView: React.FC = () => {
                       {formatCurrencyARS(item.unitPrice)} c/u
                     </span>
 
-                    <div className="flex items-center border border-[#E2E2E2] rounded-lg bg-white p-0.5">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center border border-[#E2E2E2] rounded-lg bg-white p-0.5">
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100 cursor-pointer"
+                          title="Restar 1 unidad"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="px-2 text-xs font-bold text-[#34313A]">
+                          {item.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, 1)}
+                          className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100 cursor-pointer"
+                          title="Sumar 1 unidad"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      {/* Botón para quitar el producto individual */}
                       <button
-                        onClick={() => updateQuantity(item.id, -1)}
-                        disabled={Boolean(loadedPendingOrder)}
-                        className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100"
+                        type="button"
+                        onClick={() => removeItem(item.id)}
+                        className="w-6 h-6 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition cursor-pointer"
+                        title="Quitar este producto de la comanda"
                       >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="px-2 text-xs font-bold text-[#34313A]">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, 1)}
-                        disabled={Boolean(loadedPendingOrder)}
-                        className="w-5 h-5 rounded flex items-center justify-center text-[#34313A] hover:bg-gray-100"
-                      >
-                        <Plus className="w-3 h-3" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -743,7 +898,7 @@ export const PosView: React.FC = () => {
                 <button
                   key={l.id}
                   onClick={() => {
-                    setSelectedLocationCode(l.code);
+                    handleSelectLocation(l.code);
                     setShowLocationModal(false);
                   }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl text-left border transition ${

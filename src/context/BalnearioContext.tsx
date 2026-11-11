@@ -550,6 +550,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       total,
       status: 'pendiente_confirmacion', // PASO 3
       paymentStatus: 'pendiente',
+      orderSource: 'qr',
+      currentVersion: 1,
+      customerApprovalStatus: 'pending',
       notes,
       createdAt: new Date().toISOString(),
       editAuditLog: [

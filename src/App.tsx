@@ -34,9 +34,17 @@ const ViewLoadingFallback: React.FC = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { activeView, setActiveView, setSelectedLocationCode } = useBalneario();
+  const {
+    activeView,
+    setActiveView,
+    setSelectedLocationCode,
+    orders,
+    recordQrCustomerApproval,
+    recordQrCustomerEditRequest,
+    cancelOrder,
+  } = useBalneario();
   const qrParams = new URLSearchParams(window.location.search);
-  const isQrAccess = ['mesa', 'carpa', 'spot'].some((param) => qrParams.has(param));
+  const isQrAccess = ['mesa', 'carpa', 'spot', 'confirmar', 'editar', 'cancelar'].some((param) => qrParams.has(param));
   const [staffSessionReady, setStaffSessionReady] = useState(!isSupabaseConfigured || isQrAccess);
   const [hasBusinessAccess, setHasBusinessAccess] = useState(false);
   const [accessDenied, setAccessDenied] = useState(false);
@@ -85,7 +93,35 @@ const AppContent: React.FC = () => {
     } else if (viewParam) {
       setActiveView(viewParam as any);
     }
-  }, [setActiveView, setSelectedLocationCode]);
+
+    // Acciones de respuesta rápida desde el mensaje de WhatsApp (1 toque)
+    const confirmParam = params.get('confirmar');
+    const editParam = params.get('editar');
+    const cancelParam = params.get('cancelar');
+
+    if (confirmParam || editParam || cancelParam) {
+      const targetQuery = (confirmParam || editParam || cancelParam || '').trim();
+      const targetOrder = orders.find(
+        (o) => o.orderNumber.replace(/[^0-9]/g, '') === targetQuery || o.id === targetQuery
+      );
+      if (targetOrder) {
+        if (confirmParam && targetOrder.customerApprovalStatus !== 'approved') {
+          void recordQrCustomerApproval(targetOrder);
+          import('canvas-confetti').then((m) => m.default({ particleCount: 70, spread: 60 })).catch(() => {});
+          window.alert(`👍 ¡Pedido ${targetOrder.orderNumber} confirmado correctamente! Ya ingresó a cocina.`);
+          setActiveView('carta');
+        } else if (editParam) {
+          void recordQrCustomerEditRequest(targetOrder);
+          window.alert(`✏️ Solicitud de cambio recibida para el pedido ${targetOrder.orderNumber}. Enseguida el personal te contactará.`);
+          setActiveView('carta');
+        } else if (cancelParam) {
+          cancelOrder(targetOrder.id, 'Cancelado por el cliente desde WhatsApp.');
+          window.alert(`🚫 El pedido ${targetOrder.orderNumber} fue cancelado.`);
+          setActiveView('carta');
+        }
+      }
+    }
+  }, [setActiveView, setSelectedLocationCode, orders, recordQrCustomerApproval, recordQrCustomerEditRequest, cancelOrder]);
 
   useEffect(() => {
     if (!isSupabaseConfigured || isQrAccess || !supabase) return;

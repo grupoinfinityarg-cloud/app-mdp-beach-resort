@@ -276,9 +276,9 @@ test('formatWhatsAppOrderMessage generates the expected friendly verification te
   assert.ok(message.includes('2x Hamburguesa Doble [sin Cebolla]'));
   assert.ok(message.includes('Total: *$20.000 ARS*.'));
   assert.ok(message.includes('Respondé con una opción:'));
-  assert.ok(message.includes('👍 *CONFIRMAR* si está correcto.'));
-  assert.ok(message.includes('✏️ *EDITAR* y contanos qué querés cambiar.'));
-  assert.ok(message.includes('🚫 *CANCELAR* si ya no lo necesitás.'));
+  assert.ok(message.includes('👍 *CONFIRMAR*:'));
+  assert.ok(message.includes('✏️ *EDITAR*:'));
+  assert.ok(message.includes('🚫 *CANCELAR*:'));
   assert.ok(message.includes('¡Gracias!'));
 });
 

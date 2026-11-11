@@ -32,6 +32,7 @@ import {
   X,
   FileText,
   Smartphone,
+  ExternalLink,
 } from 'lucide-react';
 import { supabase, supabaseBusinessSlug } from '../utils/supabase';
 
@@ -508,43 +509,39 @@ export const OrderManagementView: React.FC = () => {
                         const cleanPhone = phoneVal.cleanForWhatsApp || '5492235551234';
                         const message = formatWhatsAppOrderMessage(ord, businessDisplayName);
                         const waLink = buildWhatsAppLink(cleanPhone, message);
-                        if (ord.orderSource === 'qr') {
-                          return (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => void handleSendQrApprovalButtons(ord)}
-                                disabled={sendingWhatsAppOrderId !== null}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-sm transition active:scale-98 disabled:opacity-60"
-                                title="Enviar al cliente una plantilla de WhatsApp con botones de respuesta (👍 CONFIRMAR, ✏️ EDITAR, 🚫 CANCELAR)"
-                              >
-                                <MessageCircle className="w-4 h-4 fill-white" />
-                                <span>{sendingWhatsAppOrderId === ord.id ? 'Enviando…' : ord.whatsappContactedAt ? 'Reenviar botones' : 'Enviar botones por WhatsApp'}</span>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setSimulatedWhatsAppOrder(ord)}
-                                className="px-2.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition flex items-center gap-1 text-xs font-bold"
-                                title="Simular cómo ve el cliente los botones en su celular"
-                              >
-                                <Smartphone className="w-4 h-4 text-emerald-700" />
-                                <span className="hidden sm:inline">Simular</span>
-                              </button>
-                            </>
-                          );
-                        }
                         return (
-                          <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => recordWhatsAppContact(ord.id)}
-                            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-sm transition active:scale-98"
-                            title="Abrir WhatsApp con mensaje preparado para el cliente"
-                          >
-                            <MessageCircle className="w-4 h-4 fill-white" />
-                            <span>Contactar por WhatsApp</span>
-                          </a>
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => void handleSendQrApprovalButtons(ord)}
+                              disabled={sendingWhatsAppOrderId !== null}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-sm transition active:scale-98 disabled:opacity-60"
+                              title="Enviar al cliente una plantilla de WhatsApp con botones de respuesta (👍 CONFIRMAR, ✏️ EDITAR, 🚫 CANCELAR)"
+                            >
+                              <MessageCircle className="w-4 h-4 fill-white" />
+                              <span>{sendingWhatsAppOrderId === ord.id ? 'Enviando…' : ord.whatsappContactedAt ? 'Reenviar botones' : 'Enviar botones WhatsApp'}</span>
+                            </button>
+                            <a
+                              href={waLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => recordWhatsAppContact(ord.id)}
+                              className="px-2.5 py-2 rounded-xl border border-emerald-300 bg-white hover:bg-emerald-50 text-emerald-800 transition flex items-center gap-1 text-xs font-bold"
+                              title="Abrir mensaje preparado en WhatsApp Web o Celular"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5 text-emerald-700" />
+                              <span className="hidden sm:inline">Abrir</span>
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => setSimulatedWhatsAppOrder(ord)}
+                              className="px-2.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition flex items-center gap-1 text-xs font-bold"
+                              title="Simular cómo ve el cliente los 3 botones interactivos en su celular"
+                            >
+                              <Smartphone className="w-4 h-4 text-emerald-700" />
+                              <span className="hidden sm:inline">Simular</span>
+                            </button>
+                          </>
                         );
                       })()}
 

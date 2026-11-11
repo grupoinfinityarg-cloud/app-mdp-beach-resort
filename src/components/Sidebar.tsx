@@ -36,6 +36,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpenMobile, onCloseMobile })
     resetAllDemoData,
     setSelectedLocationCode,
     locations,
+    config,
+    businessDisplayName,
   } = useBalneario();
 
   const pendingOrdersCount = orders.filter((o) => o.status === 'pendiente_confirmacion').length;
@@ -103,23 +105,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpenMobile, onCloseMobile })
       >
         {/* Top: Logo & Brand with exact tagline */}
         <div className="p-4 border-b border-[#E2E2E2] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#34313A] flex items-center justify-center text-white shadow-sm relative overflow-hidden shrink-0">
-              <Sun className="w-5 h-5 text-[#FBEEB9] absolute -top-1 -right-1" />
-              <Waves className="w-5 h-5 text-[#C1E7FF]" />
-            </div>
+          <div className="flex items-center gap-3 min-w-0">
+            {config.logoUrl ? (
+              <img
+                src={config.logoUrl}
+                alt={businessDisplayName}
+                className="w-10 h-10 rounded-2xl object-cover border border-gray-200 shadow-sm shrink-0"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-2xl bg-[#34313A] flex items-center justify-center text-white shadow-sm relative overflow-hidden shrink-0">
+                <Sun className="w-5 h-5 text-[#FBEEB9] absolute -top-1 -right-1" />
+                <Waves className="w-5 h-5 text-[#C1E7FF]" />
+              </div>
+            )}
             <div className="min-w-0">
               <div className="text-sm font-black tracking-tight text-[#34313A] leading-tight truncate">
-                GESTIÓN BALNEARIA
+                {businessDisplayName || config.branchName}
               </div>
               <div className="text-[11px] font-semibold text-[#F68F57] leading-tight mt-0.5 truncate">
-                Tu balneario, mejor gestionado
+                {config.slogan || 'Tu balneario, mejor gestionado'}
               </div>
             </div>
           </div>
           <button
             onClick={onCloseMobile}
-            className="md:hidden p-1.5 rounded-lg text-gray-400 hover:text-[#34313A] hover:bg-gray-100"
+            className="md:hidden p-1.5 rounded-lg text-gray-400 hover:text-[#34313A] hover:bg-gray-100 shrink-0"
           >
             <X className="w-5 h-5" />
           </button>

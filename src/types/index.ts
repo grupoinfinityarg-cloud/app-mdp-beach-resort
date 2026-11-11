@@ -229,6 +229,8 @@ export type CommercialPlan = 'DEMO' | 'ORO' | 'PLATINO' | 'DIAMANTE';
 export interface BalnearioConfig {
   name: string;
   branchName: string;
+  slogan?: string;
+  logoUrl?: string;
   address: string;
   city: string;
   phone: string;

@@ -13,6 +13,7 @@ import {
 export const INITIAL_CONFIG: BalnearioConfig = {
   name: 'GESTIÓN BALNEARIA',
   branchName: 'MDP BEACH & RESORT',
+  slogan: 'Tu parador exclusivo frente al mar en Playa Grande',
   address: 'Paseo Victoria Ocampo 1240, Playa Grande',
   city: 'Mar del Plata, Argentina',
   phone: '+54 9 223 540-8890',

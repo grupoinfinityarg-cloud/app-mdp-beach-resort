@@ -569,17 +569,17 @@ export const DashboardView: React.FC = () => {
                     onClick={() => setActiveView('carpas')}
                     className={`p-2 rounded-xl text-center border text-[10px] font-bold transition hover:scale-105 active:scale-95 ${
                       isOccupied
-                        ? 'bg-[#F68F57] text-white border-[#F68F57]'
+                        ? 'bg-rose-500 text-white border-rose-500'
                         : isReserved
-                        ? 'bg-[#FBEEB9] text-[#34313A] border border-[#e8d799]'
+                        ? 'bg-sky-500 text-white border-sky-500'
                         : isCleaning
-                        ? 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]'
-                        : 'bg-white text-[#34313A] border border-[#E2E2E2]'
+                        ? 'bg-amber-400 text-amber-950 border-amber-400'
+                        : 'bg-emerald-500 text-white border-emerald-500'
                     }`}
                     title={`${loc.name}: ${loc.status}`}
                   >
                     <div className="font-black">{loc.code}</div>
-                    <div className="text-[8px] font-medium opacity-80 truncate">
+                    <div className="text-[8px] font-medium opacity-90 truncate">
                       {loc.status}
                     </div>
                   </button>
@@ -589,16 +589,16 @@ export const DashboardView: React.FC = () => {
 
             <div className="pt-2 flex items-center justify-between text-[10px] text-[#34313A]/70">
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-white border border-[#E2E2E2]" /> Libre
+                <span className="w-2 h-2 rounded-full bg-emerald-500" /> Libre
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#F68F57]" /> Ocupada
+                <span className="w-2 h-2 rounded-full bg-rose-500" /> Ocupada
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#FBEEB9] border border-[#e8d799]" /> Reservada
+                <span className="w-2 h-2 rounded-full bg-sky-500" /> Reservada
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#C1E7FF]" /> Limpieza
+                <span className="w-2 h-2 rounded-full bg-amber-400" /> Limpieza
               </span>
             </div>
           </div>

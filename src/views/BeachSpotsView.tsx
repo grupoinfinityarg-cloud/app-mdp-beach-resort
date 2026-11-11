@@ -87,16 +87,34 @@ export const BeachSpotsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Search Input */}
-      <div className="relative max-w-md">
-        <Search className="w-4 h-4 text-[#34313A]/50 absolute left-3.5 top-3" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar por código o nombre de cliente..."
-          className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-[#C1E7FF] shadow-sm"
-        />
+      {/* Search Input & Legend */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="relative max-w-md w-full">
+          <Search className="w-4 h-4 text-[#34313A]/50 absolute left-3.5 top-3" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por código o nombre de cliente..."
+            className="w-full bg-white pl-10 pr-4 py-2 rounded-2xl border border-[#E2E2E2] text-xs text-[#34313A] focus:outline-none focus:border-emerald-400 shadow-sm"
+          />
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium text-[#34313A] bg-white px-3.5 py-2 rounded-2xl border border-[#E2E2E2]">
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-600" /> Disponible
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Ocupada
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 border border-sky-600" /> Reservada
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-amber-500" /> Limpieza
+          </span>
+        </div>
       </div>
 
       {/* Beach Grid */}
@@ -104,6 +122,7 @@ export const BeachSpotsView: React.FC = () => {
         {beachSpots.map((spot) => {
           const isOccupied = spot.status === 'ocupada';
           const isReserved = spot.status === 'reservada';
+          const isCleaning = spot.status === 'limpieza';
           const isAvailable = spot.status === 'disponible';
 
           return (
@@ -111,16 +130,20 @@ export const BeachSpotsView: React.FC = () => {
               key={spot.id}
               className={`p-4 rounded-3xl border shadow-sm bg-white transition hover:shadow-md flex flex-col justify-between space-y-3 ${
                 isOccupied
-                  ? 'border-[#F68F57] ring-2 ring-[#F68F57]/20'
+                  ? 'border-rose-400 ring-2 ring-rose-400/20'
                   : isReserved
-                  ? 'border-[#FBEEB9] ring-2 ring-[#FBEEB9]'
-                  : 'border-[#E2E2E2]'
+                  ? 'border-sky-400 ring-2 ring-sky-400/20'
+                  : isCleaning
+                  ? 'border-amber-400 ring-2 ring-amber-400/20'
+                  : 'border-emerald-300 ring-2 ring-emerald-300/15'
               }`}
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-[#FBEEB9] text-[#34313A] flex items-center justify-center font-bold text-xs">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
+                      isOccupied ? 'bg-rose-100 text-rose-700' : isReserved ? 'bg-sky-100 text-sky-700' : isCleaning ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                    }`}>
                       <Umbrella className="w-4 h-4" />
                     </div>
                     <div>
@@ -134,10 +157,12 @@ export const BeachSpotsView: React.FC = () => {
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                       isOccupied
-                        ? 'bg-[#F68F57] text-white'
+                        ? 'bg-rose-500 text-white'
                         : isReserved
-                        ? 'bg-[#FBEEB9] text-[#34313A] border border-[#e8d799]'
-                        : 'bg-[#C1E7FF] text-[#34313A] border border-[#a9dbfa]'
+                        ? 'bg-sky-100 text-sky-900 border border-sky-300'
+                        : isCleaning
+                        ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                        : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                     }`}
                   >
                     {spot.status}

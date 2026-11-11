@@ -306,16 +306,25 @@ export const DigitalMenuView: React.FC = () => {
         {/* Parador Info Header */}
         <div className="p-4 sm:p-5 border-b border-[#E2E2E2] bg-white">
           <div className="flex items-start justify-between gap-3">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#F68F57]">
-                GASTRONOMÍA & PARADOR DE PLAYA
-              </span>
-              <h1 className="text-xl sm:text-2xl font-black text-[#34313A] tracking-tight leading-tight mt-0.5">
-                {visibleConfig.branchName.toUpperCase()}
-              </h1>
-              <p className="text-xs text-gray-500 font-medium">
-                Sector Playa Grande • Mar del Plata
-              </p>
+            <div className="flex items-center gap-3">
+              {visibleConfig.logoUrl && (
+                <img
+                  src={visibleConfig.logoUrl}
+                  alt={visibleConfig.branchName}
+                  className="w-14 h-14 rounded-2xl object-cover border border-gray-200 shadow-sm shrink-0"
+                />
+              )}
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#F68F57]">
+                  GASTRONOMÍA & PARADOR DE PLAYA
+                </span>
+                <h1 className="text-xl sm:text-2xl font-black text-[#34313A] tracking-tight leading-tight mt-0.5">
+                  {visibleConfig.branchName.toUpperCase()}
+                </h1>
+                <p className="text-xs text-gray-500 font-medium">
+                  {visibleConfig.slogan || 'Sector Playa Grande • Mar del Plata'}
+                </p>
+              </div>
             </div>
 
             {/* Rating badge in #FBEEB9 with border #E2E2E2 */}

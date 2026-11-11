@@ -25,7 +25,7 @@ interface HeaderTopBarProps {
 export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSidebar, onSignOut }) => {
   const {
     activeView, setActiveView, setSelectedLocationCode, cart, orders, cashRegister,
-    guestAssistanceRequests, resolveGuestAssistanceRequest,
+    guestAssistanceRequests, resolveGuestAssistanceRequest, config, businessDisplayName,
   } = useBalneario();
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [showNotifications, setShowNotifications] = useState(false);
@@ -71,17 +71,25 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({ onToggleMobileSideba
             </button>
           )}
 
+          {config.logoUrl && (
+            <img
+              src={config.logoUrl}
+              alt={businessDisplayName}
+              className="w-8 h-8 rounded-xl object-cover border border-white/20 shrink-0"
+            />
+          )}
+
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-sm sm:text-base font-black text-white tracking-tight">
-                ¡Hola, equipo!
+              <span className="text-sm sm:text-base font-black text-white tracking-tight truncate">
+                {businessDisplayName || config.branchName}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#F68F57] text-white">
-                DEMO LOCAL
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#F68F57] text-white shrink-0">
+                {config.activePlan || 'DEMO'}
               </span>
             </div>
             <p className="text-[11px] text-[#C1E7FF] font-medium truncate leading-tight mt-0.5">
-              Todo listo para un gran día en la playa
+              {config.slogan || 'Todo listo para un gran día en la playa'}
             </p>
           </div>
         </div>

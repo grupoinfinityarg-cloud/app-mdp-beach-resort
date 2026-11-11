@@ -765,10 +765,12 @@ export const PosView: React.FC = () => {
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       l.status === 'ocupada'
-                        ? 'bg-[#F68F57]/20 text-[#F68F57]'
-                        : l.status === 'disponible'
-                        ? 'bg-[#C1E7FF]/40 text-[#34313A]'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-rose-100 text-rose-700'
+                        : l.status === 'reservada'
+                        ? 'bg-sky-100 text-sky-700'
+                        : l.status === 'limpieza'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-emerald-100 text-emerald-700'
                     }`}
                   >
                     {l.status}

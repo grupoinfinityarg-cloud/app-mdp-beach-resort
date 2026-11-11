@@ -14,6 +14,7 @@ import {
   X,
   Check,
   Copy,
+  MessageCircle,
 } from 'lucide-react';
 import QRCode from 'qrcode';
 
@@ -184,12 +185,23 @@ export const DemoRoleSwitcherBar: React.FC = () => {
             </button>
           </div>
 
-          {/* Acciones de Demo: Probar con Celular QR & Reiniciar */}
+          {/* Acciones de Demo: Probar con Celular QR & Contratar & Reiniciar */}
           <div className="flex items-center gap-1 sm:gap-2">
+            <a
+              href="https://wa.me/5492236779934?text=Hola!%20Vi%20la%20demo%20de%20Gesti%C3%B3n%20Balnearia%20y%20me%20gustar%C3%ADa%20recibir%20informaci%C3%B3n%20para%20implementarlo%20en%20mi%20balneario."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition shadow-xs"
+              title="Contactar al asesor comercial por WhatsApp (+54 9 223 677-9934)"
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-white" />
+              <span>Contratar</span>
+            </a>
+
             <button
               type="button"
               onClick={handleOpenQrModal}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black transition shadow-xs"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-black transition shadow-xs text-xs"
               title="Abrir código QR para probar con tu propio celular"
             >
               <QrCode className="w-3.5 h-3.5" />

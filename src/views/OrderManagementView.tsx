@@ -519,7 +519,7 @@ export const OrderManagementView: React.FC = () => {
                               title="Enviar al cliente una plantilla de WhatsApp con botones de respuesta (👍 CONFIRMAR, ✏️ EDITAR, 🚫 CANCELAR)"
                             >
                               <MessageCircle className="w-4 h-4 fill-white" />
-                              <span>{sendingWhatsAppOrderId === ord.id ? 'Enviando…' : ord.whatsappContactedAt ? 'Reenviar botones' : 'Enviar botones WhatsApp'}</span>
+                              <span>{sendingWhatsAppOrderId === ord.id ? 'Enviando…' : ord.whatsappContactedAt ? 'Reenviar confirmación' : 'Enviar confirmación'}</span>
                             </button>
                             <a
                               href={waLink}

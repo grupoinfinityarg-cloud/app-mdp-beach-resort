@@ -370,7 +370,13 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   ]);
 
   const updateConfig = (patch: Partial<BalnearioConfig>) => {
-    setConfig((prev) => ({ ...prev, ...patch }));
+    setConfig((prev) => {
+      const next = { ...prev, ...patch };
+      if (patch.branchName) {
+        setBusinessDisplayName(patch.branchName);
+      }
+      return next;
+    });
   };
 
   const switchPlan = (plan: CommercialPlan) => {

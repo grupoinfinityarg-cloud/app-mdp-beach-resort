@@ -68,15 +68,15 @@ export const SectorsView: React.FC = () => {
   const getStatusColor = (status: LocationStatus) => {
     switch (status) {
       case 'disponible':
-        return 'bg-[#C1E7FF] text-[#34313A] border-[#a9dbfa]';
+        return 'bg-emerald-100 text-emerald-900 border-emerald-300';
       case 'ocupada':
-        return 'bg-[#F68F57] text-white border-[#F68F57]';
+        return 'bg-rose-500 text-white border-rose-500';
       case 'reservada':
-        return 'bg-[#FBEEB9] text-[#34313A] border-[#e8d799]';
+        return 'bg-sky-100 text-sky-900 border-sky-300';
       case 'limpieza':
-        return 'bg-gray-100 text-[#34313A] border-[#E2E2E2]';
+        return 'bg-amber-100 text-amber-900 border-amber-300';
       case 'mantenimiento':
-        return 'bg-rose-100 text-rose-900 border-rose-200';
+        return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
@@ -162,16 +162,16 @@ export const SectorsView: React.FC = () => {
         {/* Legend */}
         <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium text-[#34313A]">
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#C1E7FF] border border-[#a9dbfa]" /> Disponible
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-600" /> Disponible
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#F68F57]" /> Ocupada
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Ocupada
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FBEEB9] border border-[#e8d799]" /> Reservada
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 border border-sky-600" /> Reservada
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-gray-300" /> Limpieza
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-amber-500" /> Limpieza
           </span>
         </div>
       </div>

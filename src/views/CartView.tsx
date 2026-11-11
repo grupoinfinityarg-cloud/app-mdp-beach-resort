@@ -26,6 +26,8 @@ import {
   Landmark,
   Copy,
   Check,
+  Sparkles,
+  Info,
 } from 'lucide-react';
 
 export const CartView: React.FC = () => {
@@ -346,6 +348,18 @@ export const CartView: React.FC = () => {
                   <div className="text-xs font-mono font-black text-[#34313A] bg-white p-2 rounded-lg border border-emerald-200">
                     Alias: {bankAlias}
                   </div>
+                </div>
+              )}
+
+              {selectedPaymentMethod === 'debito/credito' && (
+                <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 max-w-sm mx-auto text-left space-y-1.5 text-xs text-[#34313A]">
+                  <div className="font-black text-indigo-900 flex items-center gap-1.5">
+                    <CreditCard className="w-4 h-4 text-indigo-600" />
+                    <span>Pago con Tarjeta en tu Ubicación</span>
+                  </div>
+                  <p className="text-[11px] text-gray-700 leading-normal">
+                    El camarero o mozo se acercará con la <strong>terminal inalámbrica (POS / Clover)</strong> a tu sector para procesar el cobro con tu tarjeta de débito o crédito.
+                  </p>
                 </div>
               )}
 
@@ -720,6 +734,127 @@ export const CartView: React.FC = () => {
                           <span className="font-bold text-gray-600">Importe a transferir:</span>
                           <span className="text-base font-black text-emerald-800">{formatCurrencyARS(total)}</span>
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tarjeta Interactiva de Tarjetas Aceptadas & Promociones Bancarias */}
+                  {selectedPaymentMethod === 'debito/credito' && (
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 via-sky-50/50 to-white border-2 border-indigo-200 space-y-3 animate-in fade-in duration-200 text-[#34313A]">
+                      {/* Encabezado */}
+                      <div className="flex items-center justify-between pb-2 border-b border-indigo-100 flex-wrap gap-1.5">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-indigo-950">
+                          <CreditCard className="w-4 h-4 text-indigo-600" />
+                          <span>Tarjetas Aceptadas & Promociones</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white">
+                          Cobro en tu Carpa
+                        </span>
+                      </div>
+
+                      {/* Tarjetas habilitadas: Débito y Crédito */}
+                      <div className="space-y-1.5">
+                        <div className="text-[10px] font-mono uppercase tracking-wider font-bold text-gray-500">
+                          Tarjetas operativas (Débito y Crédito):
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { name: 'Visa Débito', type: 'Débito' },
+                            { name: 'Visa Crédito', type: 'Crédito' },
+                            { name: 'Mastercard Débito', type: 'Débito' },
+                            { name: 'Mastercard', type: 'Crédito' },
+                            { name: 'American Express', type: 'Crédito' },
+                            { name: 'Tarjeta Naranja X', type: 'Crédito / Z' },
+                            { name: 'Cabal Débito / Crédito', type: 'Ambas' },
+                            { name: 'Maestro', type: 'Débito' },
+                          ].map((t) => (
+                            <span
+                              key={t.name}
+                              className="px-2 py-1 rounded-lg bg-white border border-indigo-200/90 text-[10px] font-bold text-indigo-950 shadow-2xs flex items-center gap-1"
+                            >
+                              <CreditCard className="w-3 h-3 text-indigo-500" />
+                              <span>{t.name}</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Promociones Bancarias de Temporada */}
+                      <div className="space-y-1.5 pt-1.5 border-t border-indigo-100">
+                        <div className="text-[10px] font-mono uppercase tracking-wider font-bold text-indigo-900 flex items-center gap-1">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Promociones Bancarias Vigentes de Temporada:</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                          {/* Banco Provincia */}
+                          <div className="p-2.5 rounded-xl bg-white border border-emerald-200 flex flex-col justify-between shadow-2xs">
+                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                              <span className="font-mono font-black text-[10px] text-emerald-800">
+                                BANCO PROVINCIA
+                              </span>
+                              <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">
+                                Cuenta DNI / Visa
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-gray-700 mt-1 leading-snug">
+                              <strong>30% de reintegro</strong> en paradores y gastronomía (Débito y Cuenta DNI).
+                            </p>
+                          </div>
+
+                          {/* Galicia */}
+                          <div className="p-2.5 rounded-xl bg-white border border-sky-200 flex flex-col justify-between shadow-2xs">
+                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                              <span className="font-mono font-black text-[10px] text-sky-800">
+                                BANCO GALICIA
+                              </span>
+                              <span className="px-1.5 py-0.2 rounded bg-sky-100 text-sky-800 text-[9px] font-bold">
+                                3 Cuotas Sin Interés
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-gray-700 mt-1 leading-snug">
+                              <strong>3 cuotas fijas sin interés</strong> + hasta 20% de ahorro con Galicia Éminent.
+                            </p>
+                          </div>
+
+                          {/* Santander */}
+                          <div className="p-2.5 rounded-xl bg-white border border-rose-200 flex flex-col justify-between shadow-2xs">
+                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                              <span className="font-mono font-black text-[10px] text-rose-800">
+                                BANCO SANTANDER
+                              </span>
+                              <span className="px-1.5 py-0.2 rounded bg-rose-100 text-rose-800 text-[9px] font-bold">
+                                20% a 25% Ahorro
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-gray-700 mt-1 leading-snug">
+                              <strong>20% de ahorro</strong> con Visa Débito/Crédito y 3 cuotas sin interés en gastronomía.
+                            </p>
+                          </div>
+
+                          {/* Naranja X */}
+                          <div className="p-2.5 rounded-xl bg-white border border-amber-200 flex flex-col justify-between shadow-2xs">
+                            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+                              <span className="font-mono font-black text-[10px] text-amber-800">
+                                TARJETA NARANJA X
+                              </span>
+                              <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-bold">
+                                Plan Z
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-gray-700 mt-1 leading-snug">
+                              <strong>Plan Z: 3 cuotas cero interés</strong> en todos los consumos del parador.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Leyenda operativa */}
+                      <div className="p-2 rounded-xl bg-indigo-100/70 border border-indigo-200 text-[11px] text-indigo-950 flex items-center gap-2">
+                        <Info className="w-4 h-4 text-indigo-600 shrink-0" />
+                        <span>
+                          El mozo llevará la <strong>terminal inalámbrica (POS / Clover)</strong> directamente a tu sector ({activeLocationCode}) para que abones sin moverte.
+                        </span>
                       </div>
                     </div>
                   )}

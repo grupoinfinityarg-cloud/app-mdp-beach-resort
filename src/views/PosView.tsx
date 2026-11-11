@@ -1075,6 +1075,33 @@ export const PosView: React.FC = () => {
               </div>
             )}
 
+            {selectedPaymentMethod === 'tarjeta_credito' && (
+              <div className="space-y-2 p-3 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs">
+                <div className="font-bold text-indigo-950 flex items-center gap-1.5 text-[11px]">
+                  <CreditCard className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Promociones Bancarias de Temporada:</span>
+                </div>
+                <div className="space-y-1 text-[10px] text-gray-700">
+                  <div className="flex justify-between bg-white px-2 py-1 rounded border border-indigo-100">
+                    <span className="font-bold text-emerald-800">BAPRO Cuenta DNI:</span>
+                    <span>30% a 40% Reintegro</span>
+                  </div>
+                  <div className="flex justify-between bg-white px-2 py-1 rounded border border-indigo-100">
+                    <span className="font-bold text-sky-800">Galicia:</span>
+                    <span>Hasta 3 cuotas s/interés + 20%</span>
+                  </div>
+                  <div className="flex justify-between bg-white px-2 py-1 rounded border border-indigo-100">
+                    <span className="font-bold text-rose-800">Santander:</span>
+                    <span>20% a 25% Ahorro + 3 cuotas</span>
+                  </div>
+                  <div className="flex justify-between bg-white px-2 py-1 rounded border border-indigo-100">
+                    <span className="font-bold text-amber-800">Naranja X:</span>
+                    <span>Plan Z (3 cuotas s/interés)</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
               onClick={handleConfirmPayment}
               className="w-full py-3.5 px-4 rounded-xl bg-[#C1E7FF] hover:bg-[#a9dbfa] text-[#34313A] font-black text-xs uppercase tracking-wider shadow-sm border border-[#a9dbfa] transition"

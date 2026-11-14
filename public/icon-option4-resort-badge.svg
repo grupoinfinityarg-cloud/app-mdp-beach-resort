@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="goldGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="navyGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16385C" />
+      <stop offset="100%" stop-color="#0F2942" />
+    </linearGradient>
+    <filter id="shadow4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Canvas with Clean White/Ivory Surface -->
+  <rect width="512" height="512" rx="120" fill="#0F2942"/>
+  
+  <!-- Outer Gold Ring Shield -->
+  <circle cx="256" cy="256" r="220" fill="url(#navyGrad4)" stroke="url(#goldGrad4)" stroke-width="12" filter="url(#shadow4)"/>
+  <circle cx="256" cy="256" r="202" fill="none" stroke="#38BDF8" stroke-width="3" stroke-dasharray="6 8" opacity="0.6"/>
+
+  <!-- Top Ribbon Star Cluster -->
+  <circle cx="226" cy="115" r="5" fill="#FDE68A"/>
+  <polygon points="256,102 260,112 270,113 262,120 264,130 256,124 248,130 250,120 242,113 252,112" fill="url(#goldGrad4)"/>
+  <circle cx="286" cy="115" r="5" fill="#FDE68A"/>
+
+  <!-- Center Luxury Beach Umbrella in High Contrast White & Gold -->
+  <g filter="url(#shadow4)">
+    <!-- White canopy dome -->
+    <path d="M146 250 C146 170 195 135 256 135 C317 135 366 170 366 250 Z" fill="#FFFFFF"/>
+    <!-- Navy Stripes -->
+    <path d="M146 250 C155 195 185 155 220 142 C195 170 175 210 170 250 Z" fill="#0284C7"/>
+    <path d="M366 250 C357 195 327 155 292 142 C317 170 337 210 342 250 Z" fill="#0284C7"/>
+    <!-- Gold center slice -->
+    <path d="M256 135 C268 160 276 200 276 250 L256 250 Z" fill="url(#goldGrad4)"/>
+
+    <!-- Gold Pole -->
+    <line x1="256" y1="250" x2="256" y2="350" stroke="url(#goldGrad4)" stroke-width="12" stroke-linecap="round"/>
+  </g>
+
+  <!-- Twin Nautical Ocean Swells at the Base -->
+  <path d="M110 345 C150 325 180 355 220 335 C260 315 290 345 330 325 C370 305 390 330 402 335" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M130 375 C170 355 200 385 240 365 C280 345 310 375 350 355 C370 345 385 355 390 360" fill="none" stroke="#BAE6FD" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Lower Curved Typography Badge: MDP BEACH -->
+  <rect x="156" y="395" width="200" height="42" rx="21" fill="url(#goldGrad4)" filter="url(#shadow4)"/>
+  <text x="256" y="423" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="900" fill="#0F2942" text-anchor="middle" letter-spacing="3">MDP BEACH</text>
+</svg>

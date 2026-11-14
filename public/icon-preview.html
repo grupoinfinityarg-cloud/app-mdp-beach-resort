@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muestrario de Íconos & Link Preview - MDP Beach & Resort</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #F0F4F8;
+      color: #0F172A;
+      padding: 32px 16px;
+      line-height: 1.5;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 36px; }
+    h1 { font-size: 26px; font-weight: 900; color: #0F2942; margin-bottom: 8px; }
+    p.subtitle { font-size: 14px; color: #64748B; max-width: 600px; margin: 0 auto; }
+    
+    .grid-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      border: 2px solid #E2E8F0;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      border-color: #0284C7;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px -6px rgba(2, 132, 199, 0.15);
+    }
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+    .tag-1 { background: #E0F2FE; color: #0369A1; }
+    .tag-2 { background: #FEF3C7; color: #92400E; }
+    .tag-3 { background: #EDE9FE; color: #6D28D9; }
+    .tag-4 { background: #DCFCE7; color: #166534; }
+
+    .icon-box {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 18px;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(15, 41, 66, 0.25);
+    }
+    .icon-box img, .icon-box svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .card-title { font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 6px; }
+    .card-desc { font-size: 12px; color: #64748B; margin-bottom: 16px; min-height: 48px; }
+
+    /* WhatsApp Simulation Preview */
+    .wa-preview-section {
+      background: #EFEAE2;
+      border-radius: 28px;
+      padding: 28px;
+      margin-top: 40px;
+      border: 1px solid #D1D7DB;
+      background-image: radial-gradient(#00000008 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+    .wa-header {
+      font-size: 13px;
+      font-weight: 800;
+      color: #128C7E;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .wa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .wa-bubble {
+      background: #FFFFFF;
+      border-radius: 12px 12px 12px 4px;
+      padding: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .wa-card {
+      background: #F0F2F5;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid #E4E6EB;
+    }
+    .wa-thumb {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      background: #0F2942;
+    }
+    .wa-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .wa-meta {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .wa-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #111B21;
+      line-height: 1.3;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .wa-desc {
+      font-size: 10px;
+      color: #667781;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .wa-domain {
+      font-size: 9px;
+      color: #8696A0;
+      margin-top: 3px;
+      text-transform: lowercase;
+    }
+    .comparison-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #54656F;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎨 Propuestas de Ícono & Vista Previa para WhatsApp</h1>
+      <p class="subtitle">
+        Diseñadas con la identidad <strong>Ocean & Warm Sand</strong> (Azul Atlántico, Marina Profundo y Arena Cálida). Seleccioná tu favorita para aplicarla como ícono oficial de la app y tarjeta de enlace.
+      </p>
+    </header>
+
+    <div class="grid-options">
+      <!-- Opción 1 -->
+      <div class="card">
+        <div>
+          <span class="tag tag-1">Opción 1 · Recomendada</span>
+          <div class="icon-box">
+            <img src="/icon-option1-sombrilla.svg" alt="Opción 1">
+          </div>
+          <h3 class="card-title">Sombrilla & Sol Costero</h3>
+          <p class="card-desc">
+            Diseño minimalista moderno: sombrilla atlántica con gajos celestes y ámbar, sol radiante y oleaje suave. Máxima nitidez en WhatsApp.
+          </p>
+        </div>
+      </div>
+
+      <!-- Opción 2 -->
+      <div class="card">
+        <div>
+          <span class="tag tag-2">Opción 2 · Tradición Costera</span>
+          <div class="icon-box">
+            <img src="/icon-option2-carpa.svg" alt="Opción 2">
+          </div>
+          <h3 class="card-title">Carpa Tradicional MDP</h3>
+          <p class="card-desc">
+            La clásica carpa de lona blanca y azul con estructura de madera sobre el mar. Conexión inmediata con los balnearios de Mar del Plata.
+          </p>
+        </div>
+      </div>
+
+      <!-- Opción 3 -->
+      <div class="card">
+        <div>
+          <span class="tag tag-3">Opción 3 · SaaS & Digital</span>
+          <div class="icon-box">
+            <img src="/icon-option3-tech-qr.svg" alt="Opción 3">
+          </div>
+          <h3 class="card-title">Smart QR & Balneario</h3>
+          <p class="card-desc">
+            Enfoque tecnológico: isotipo de sombrilla integrado en matriz QR con ondas de servicio y comanda gastronómica en tiempo real.
+          </p>
+        </div>
+      </div>
+
+      <!-- Opción 4 -->
+      <div class="card">
+        <div>
+          <span class="tag tag-4">Opción 4 · Resort VIP</span>
+          <div class="icon-box">
+            <img src="/icon-option4-resort-badge.svg" alt="Opción 4">
+          </div>
+          <h3 class="card-title">Badge Club Náutico</h3>
+          <p class="card-desc">
+            Sello circular de alta gama con aro dorado, fondo navy profundo, sombrilla náutica y distintivo MDP BEACH. Estilo parador exclusivo.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulación real de cómo se ve en WhatsApp -->
+    <div class="wa-preview-section">
+      <div class="wa-header">📱 Simulación: Cómo se ve el enlace compartido en WhatsApp</div>
+
+      <div class="wa-grid">
+        <!-- Vista Actual (La fea que no te gustó) -->
+        <div>
+          <div class="comparison-title" style="color: #DC2626;">❌ Ícono Actual (Por defecto / Desajustado)</div>
+          <div class="wa-bubble">
+            <div class="wa-card">
+              <div class="wa-thumb" style="background: #0f4c3a; display: flex; align-items: flex-end;">
+                <div style="width: 100%; height: 100%; background: #064e3b; border-top-right-radius: 60px;"></div>
+              </div>
+              <div class="wa-meta">
+                <div class="wa-title">Gestión Balnearia - Sistema Integral para Balnearios</div>
+                <div class="wa-desc">Aplicación comercial PWA para balnearios y paradores gastronómicos de...</div>
+                <div class="wa-domain">mdp-beach.grupoinfinity.site</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vista Con Opción 1 -->
+        <div>
+          <div class="comparison-title" style="color: #0284C7;">✨ Con Opción 1 (Sombrilla & Sol)</div>
+          <div class="wa-bubble">
+            <div class="wa-card">
+              <div class="wa-thumb">
+                <img src="/icon-option1-sombrilla.svg" alt="Preview 1">
+              </div>
+              <div class="wa-meta">
+                <div class="wa-title">Gestión Balnearia - MDP Beach & Resort</div>
+                <div class="wa-desc">Sistema integral: carpas, sombrillas, comandas KDS y pedidos con QR...</div>
+                <div class="wa-domain">mdp-beach.grupoinfinity.site</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vista Con Opción 2 -->
+        <div>
+          <div class="comparison-title" style="color: #D97706;">✨ Con Opción 2 (Carpa Clásica)</div>
+          <div class="wa-bubble">
+            <div class="wa-card">
+              <div class="wa-thumb">
+                <img src="/icon-option2-carpa.svg" alt="Preview 2">
+              </div>
+              <div class="wa-meta">
+                <div class="wa-title">Gestión Balnearia - MDP Beach & Resort</div>
+                <div class="wa-desc">Sistema integral: carpas, sombrillas, comandas KDS y pedidos con QR...</div>
+                <div class="wa-domain">mdp-beach.grupoinfinity.site</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vista Con Opción 4 -->
+        <div>
+          <div class="comparison-title" style="color: #0F2942;">✨ Con Opción 4 (Badge Resort VIP)</div>
+          <div class="wa-bubble">
+            <div class="wa-card">
+              <div class="wa-thumb">
+                <img src="/icon-option4-resort-badge.svg" alt="Preview 4">
+              </div>
+              <div class="wa-meta">
+                <div class="wa-title">Gestión Balnearia - MDP Beach & Resort</div>
+                <div class="wa-desc">Sistema integral: carpas, sombrillas, comandas KDS y pedidos con QR...</div>
+                <div class="wa-domain">mdp-beach.grupoinfinity.site</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#0F2942" />
+      <stop offset="100%" stop-color="#081827" />
+    </linearGradient>
+    <linearGradient id="sunGlow2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <linearGradient id="tentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base Canvas -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad2)"/>
+  <rect x="6" y="6" width="500" height="500" rx="114" fill="none" stroke="#FDE68A" stroke-width="3" stroke-opacity="0.35"/>
+
+  <!-- Morning Sunrise at Sea -->
+  <circle cx="256" cy="180" r="85" fill="url(#sunGlow2)" opacity="0.9" filter="url(#shadow2)"/>
+
+  <!-- Classic Mar del Plata Beach Tent (Carpa Balnearia) -->
+  <g filter="url(#shadow2)">
+    <!-- Tent triangular roof (White canvas with sharp navy structure) -->
+    <polygon points="256,120 120,240 392,240" fill="url(#tentGrad)"/>
+    
+    <!-- Tent canopy stripes / shadow facets -->
+    <polygon points="256,120 180,240 256,240" fill="#0284C7" opacity="0.35"/>
+    <polygon points="256,120 320,240 392,240" fill="#0369A1" opacity="0.45"/>
+
+    <!-- Front triangular opening / awning -->
+    <polygon points="256,150 170,240 342,240" fill="#0F2942"/>
+    <polygon points="256,170 200,240 312,240" fill="#F59E0B" opacity="0.85"/>
+
+    <!-- Wooden Vertical Support Poles -->
+    <line x1="120" y1="240" x2="120" y2="370" stroke="#D97706" stroke-width="12" stroke-linecap="round"/>
+    <line x1="256" y1="240" x2="256" y2="370" stroke="#F59E0B" stroke-width="12" stroke-linecap="round"/>
+    <line x1="392" y1="240" x2="392" y2="370" stroke="#D97706" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Horizontal wood deck beam -->
+    <line x1="100" y1="365" x2="412" y2="365" stroke="#92400E" stroke-width="14" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cresting Ocean Waves below the Carpa -->
+  <path d="M50 405 C110 380 160 430 220 405 C280 380 330 430 390 405 C430 390 460 410 470 415" fill="none" stroke="#38BDF8" stroke-width="16" stroke-linecap="round"/>
+  <path d="M80 445 C140 425 190 460 250 440 C310 420 360 460 420 440 C450 430 480 445 490 450" fill="none" stroke="#BAE6FD" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+</svg>

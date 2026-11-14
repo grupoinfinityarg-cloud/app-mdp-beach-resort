@@ -99,3 +99,69 @@
 html, body {
   overscroll-behavior-y: contain;
 }
+
+/* Gentle beacon pulse animations for status lights */
+@keyframes beacon-gentle-available {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.92);
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes beacon-gentle-occupied {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.92);
+    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes beacon-gentle-reserved {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.45);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.92);
+    box-shadow: 0 0 0 5px rgba(2, 132, 199, 0);
+  }
+}
+
+@keyframes beacon-gentle-cleaning {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.92);
+    box-shadow: 0 0 0 5px rgba(245, 158, 11, 0);
+  }
+}
+
+.beacon-pulse-available {
+  animation: beacon-gentle-available 2.2s infinite ease-in-out;
+}
+.beacon-pulse-occupied {
+  animation: beacon-gentle-occupied 2.2s infinite ease-in-out 0.4s;
+}
+.beacon-pulse-reserved {
+  animation: beacon-gentle-reserved 2.2s infinite ease-in-out 0.8s;
+}
+.beacon-pulse-cleaning {
+  animation: beacon-gentle-cleaning 2.2s infinite ease-in-out 1.2s;
+}

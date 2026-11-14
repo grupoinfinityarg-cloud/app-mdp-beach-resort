@@ -83,37 +83,61 @@ export const INITIAL_SECTORS: Sector[] = [
 ];
 
 export const INITIAL_LOCATIONS: LocationItem[] = [
-  // Carpas VIP
+  // Carpas VIP (Frente al mar y segunda línea)
   { id: 'loc-c01', code: 'C-01', name: 'Carpa VIP 01', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'ocupada', currentGuestName: 'Familia Rossi', qrPayload: 'C-01', notes: 'Frente al mar' },
   { id: 'loc-c02', code: 'C-02', name: 'Carpa VIP 02', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'disponible', qrPayload: 'C-02', notes: 'Lista para ocupar' },
   { id: 'loc-c03', code: 'C-03', name: 'Carpa VIP 03', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'ocupada', currentGuestName: 'Esteban Morales', qrPayload: 'C-03' },
   { id: 'loc-c04', code: 'C-04', name: 'Carpa VIP 04', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'reservada', currentGuestName: 'Dra. Gabriela Paz', qrPayload: 'C-04' },
   { id: 'loc-c05', code: 'C-05', name: 'Carpa VIP 05', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'disponible', qrPayload: 'C-05' },
   { id: 'loc-c06', code: 'C-06', name: 'Carpa VIP 06', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'limpieza', qrPayload: 'C-06', notes: 'Cambio de lonas' },
+  { id: 'loc-c07', code: 'C-07', name: 'Carpa 07', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'disponible', qrPayload: 'C-07' },
+  { id: 'loc-c08', code: 'C-08', name: 'Carpa 08', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'ocupada', currentGuestName: 'Martín Zavaleta', qrPayload: 'C-08' },
+  { id: 'loc-c09', code: 'C-09', name: 'Carpa 09', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'disponible', qrPayload: 'C-09' },
+  { id: 'loc-c10', code: 'C-10', name: 'Carpa 10', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'reservada', currentGuestName: 'Familia Gómez', qrPayload: 'C-10' },
+  { id: 'loc-c11', code: 'C-11', name: 'Carpa 11', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'ocupada', currentGuestName: 'Dr. Alejandro Peña', qrPayload: 'C-11' },
+  { id: 'loc-c12', code: 'C-12', name: 'Carpa 12', type: 'carpa', sectorId: 'sec-carpas-vip', sectorName: 'Sector Carpas VIP', capacity: 6, status: 'disponible', qrPayload: 'C-12' },
 
   // Sombrillas
   { id: 'loc-s01', code: 'S-01', name: 'Sombrilla 01', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'ocupada', currentGuestName: 'Lucas Benítez', qrPayload: 'S-01' },
   { id: 'loc-s02', code: 'S-02', name: 'Sombrilla 02', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-02' },
   { id: 'loc-s03', code: 'S-03', name: 'Sombrilla 03', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'ocupada', currentGuestName: 'Martina Gil', qrPayload: 'S-03' },
   { id: 'loc-s04', code: 'S-04', name: 'Sombrilla 04', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-04' },
-  { id: 'loc-s12', code: 'S-12', name: 'Sombrilla 12', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-12' },
-  { id: 'loc-s15', code: 'S-15', name: 'Sombrilla 15', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'reservada', currentGuestName: 'Carlos Menéndez', qrPayload: 'S-15' },
+  { id: 'loc-s05', code: 'S-05', name: 'Sombrilla 05', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-05' },
+  { id: 'loc-s06', code: 'S-06', name: 'Sombrilla 06', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'ocupada', currentGuestName: 'Santiago Ruiz', qrPayload: 'S-06' },
+  { id: 'loc-s07', code: 'S-07', name: 'Sombrilla 07', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'reservada', currentGuestName: 'Carolina Varela', qrPayload: 'S-07' },
+  { id: 'loc-s08', code: 'S-08', name: 'Sombrilla 08', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-08' },
+
+  // Pileta & Solárium
+  { id: 'loc-p01', code: 'P-01', name: 'Reposera Pileta 01', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'ocupada', currentGuestName: 'Florencia Vidal', qrPayload: 'P-01' },
+  { id: 'loc-p02', code: 'P-02', name: 'Reposera Pileta 02', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'disponible', qrPayload: 'P-02' },
+  { id: 'loc-p03', code: 'P-03', name: 'Reposera Pileta 03', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'disponible', qrPayload: 'P-03' },
+  { id: 'loc-p04', code: 'P-04', name: 'Reposera Pileta 04', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'limpieza', qrPayload: 'P-04' },
+  { id: 'loc-sol01', code: 'SOL-01', name: 'Gazebo Solárium 01', type: 'solarium', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'reservada', currentGuestName: 'Huésped VIP', qrPayload: 'SOL-01' },
 
   // Deck exterior
   { id: 'loc-d01', code: 'D-01', name: 'Deck Frente al Mar 01', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'ocupada', currentGuestName: 'Mesa 4 comensales', qrPayload: 'D-01' },
   { id: 'loc-d02', code: 'D-02', name: 'Deck Frente al Mar 02', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'disponible', qrPayload: 'D-02' },
   { id: 'loc-d03', code: 'D-03', name: 'Deck Frente al Mar 03', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 6, status: 'ocupada', currentGuestName: 'Almuerzo Playa', qrPayload: 'D-03' },
   { id: 'loc-d04', code: 'D-04', name: 'Deck Frente al Mar 04', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 2, status: 'disponible', qrPayload: 'D-04' },
+  { id: 'loc-d05', code: 'D-05', name: 'Deck Pérgola 05', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'disponible', qrPayload: 'D-05' },
+  { id: 'loc-d06', code: 'D-06', name: 'Deck Pérgola 06', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'ocupada', currentGuestName: 'Mesa Sunset', qrPayload: 'D-06' },
+  { id: 'loc-d07', code: 'D-07', name: 'Deck Pérgola 07', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'reservada', currentGuestName: 'Reserva 14:30', qrPayload: 'D-07' },
+  { id: 'loc-d08', code: 'D-08', name: 'Deck Pérgola 08', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 6, status: 'disponible', qrPayload: 'D-08' },
 
   // Salón interior
-  { id: 'loc-m01', code: 'M-01', name: 'Mesa Salón 01', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'disponible', qrPayload: 'M-01' },
+  { id: 'loc-m01', code: 'M-01', name: 'Mesa Salón 01 (Ventanal)', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'disponible', qrPayload: 'M-01' },
+  { id: 'loc-m02', code: 'M-02', name: 'Mesa Salón 02 (Ventanal)', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'ocupada', currentGuestName: 'Mesa Ventana', qrPayload: 'M-02' },
+  { id: 'loc-m03', code: 'M-03', name: 'Mesa Salón 03', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'disponible', qrPayload: 'M-03' },
   { id: 'loc-m04', code: 'M-04', name: 'Mesa Salón 04', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'ocupada', currentGuestName: 'Mesa Central', qrPayload: 'M-04' },
+  { id: 'loc-m05', code: 'M-05', name: 'Mesa Salón 05', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 6, status: 'disponible', qrPayload: 'M-05' },
+  { id: 'loc-m06', code: 'M-06', name: 'Mesa Salón 06', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'limpieza', qrPayload: 'M-06' },
+  { id: 'loc-m07', code: 'M-07', name: 'Mesa Salón 07', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'reservada', currentGuestName: 'Cena 21:00 hs', qrPayload: 'M-07' },
   { id: 'loc-m08', code: 'M-08', name: 'Mesa Salón 08', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 6, status: 'ocupada', currentGuestName: '3 Comensales', qrPayload: 'M-08' },
-  { id: 'loc-m12', code: 'M-12', name: 'Mesa Salón 12', type: 'mesa_interior', sectorId: 'sec-salon', sectorName: 'Salón Restaurante Interior', capacity: 4, status: 'disponible', qrPayload: 'M-12' },
 
   // Mostrador / Barra
   { id: 'loc-b01', code: 'B-01', name: 'Barra Mostrador 01', type: 'mostrador', sectorId: 'sec-barra', sectorName: 'Barra de Tragos & Playa', capacity: 1, status: 'disponible', qrPayload: 'B-01', notes: 'Take Away Playa' },
-  { id: 'loc-b02', code: 'B-02', name: 'Barra Mostrador 02', type: 'mostrador', sectorId: 'sec-barra', sectorName: 'Barra de Tragos & Playa', capacity: 1, status: 'disponible', qrPayload: 'B-02' },
+  { id: 'loc-b02', code: 'B-02', name: 'Barra Mostrador 02', type: 'mostrador', sectorId: 'sec-barra', sectorName: 'Barra de Tragos & Playa', capacity: 1, status: 'ocupada', currentGuestName: 'Pedido en marcha', qrPayload: 'B-02' },
+  { id: 'loc-b03', code: 'B-03', name: 'Barra Salón Cafetería', type: 'mostrador', sectorId: 'sec-barra', sectorName: 'Barra de Tragos & Playa', capacity: 1, status: 'disponible', qrPayload: 'B-03' },
 ];
 
 export const INITIAL_PRODUCTS: Product[] = [

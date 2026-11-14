@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { LocationItem, LocationStatus, LocationType } from '../types';
 import { QRCodeModal } from '../components/QRCodeModal';
+import { BalnearioFloorPlan } from '../components/BalnearioFloorPlan';
 import {
   QrCode,
   Edit2,
@@ -12,6 +13,9 @@ import {
   Utensils,
   Beer,
   Waves,
+  LayoutGrid,
+  Map,
+  Compass,
 } from 'lucide-react';
 
 export const getLocationTypeIcon = (type: LocationType, className = "w-4 h-4") => {
@@ -58,6 +62,9 @@ export const SectorsView: React.FC = () => {
   const { sectors, locations, updateLocationStatus, addLocation, setActiveView, setSelectedLocationCode } =
     useBalneario();
 
+  const [viewMode, setViewMode] = useState<'diagram' | 'grid'>('diagram');
+  const [selectedInspectorLoc, setSelectedInspectorLoc] = useState<LocationItem | null>(() => locations[0] || null);
+
   const [selectedSectorFilter, setSelectedSectorFilter] = useState<string>('todos');
   const [selectedLocationForQR, setSelectedLocationForQR] = useState<LocationItem | null>(null);
   const [editingLocation, setEditingLocation] = useState<LocationItem | null>(null);
@@ -86,7 +93,17 @@ export const SectorsView: React.FC = () => {
   const handleSaveStatus = () => {
     if (!editingLocation) return;
     updateLocationStatus(editingLocation.id, editStatus, editGuestName.trim() || undefined);
+    if (selectedInspectorLoc?.id === editingLocation.id) {
+      setSelectedInspectorLoc((prev) => prev ? { ...prev, status: editStatus, currentGuestName: editGuestName.trim() || undefined } : null);
+    }
     setEditingLocation(null);
+  };
+
+  const handleQuickChangeStatus = (locId: string, newStatus: LocationStatus) => {
+    updateLocationStatus(locId, newStatus);
+    if (selectedInspectorLoc?.id === locId) {
+      setSelectedInspectorLoc((prev) => prev ? { ...prev, status: newStatus } : null);
+    }
   };
 
   const handleCreateLocation = (e: React.FormEvent) => {
@@ -132,168 +149,223 @@ export const SectorsView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-black text-[#0F172A] tracking-tight">
-              Mapa & Sectores del Balneario
+              Mapa de Sectores & Distribución de Playa
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E0F2FE] text-[#0369A1]">
               {locations.length} UBICACIONES
             </span>
           </div>
           <p className="text-xs text-[#64748B] mt-0.5">
-            Organización de zonas de playa, carpas, sombrillas y restaurante con códigos QR vinculados.
+            Diagrama esquemático en vivo con monitoreo de ocupación, comandas y códigos QR.
           </p>
         </div>
 
-        <button
-          onClick={() => setShowNewLocationModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs shadow-sm transition"
-        >
-          <Plus className="w-4 h-4 text-white" />
-          <span>Agregar Ubicación</span>
-        </button>
-      </div>
-
-      {/* Sectors Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {sectors.map((sec) => {
-          const locsInSector = locations.filter((l) => l.sectorId === sec.id);
-          const occupied = locsInSector.filter((l) => l.status === 'ocupada' || l.status === 'reservada').length;
-          const isSelected = selectedSectorFilter === sec.id;
-
-          return (
+        {/* View Switcher + New Location */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* View mode toggle pill */}
+          <div className="flex items-center gap-1 bg-[#F0F4F8] p-1 rounded-2xl border border-[#E2E8F0]">
             <button
-              key={sec.id}
-              onClick={() => setSelectedSectorFilter(isSelected ? 'todos' : sec.id)}
-              className={`p-3 rounded-2xl border text-left transition flex flex-col justify-between ${
-                isSelected
-                  ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-sm ring-2 ring-[#0284C7]/30 font-bold'
-                  : 'bg-white hover:bg-[#F0F4F8] text-[#0F172A] border-[#E2E8F0]'
+              onClick={() => setViewMode('diagram')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                viewMode === 'diagram'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
               }`}
+              title="Ver en formato plano arquitectónico interactivo"
             >
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className={`p-1 rounded-lg ${isSelected ? 'bg-[#0284C7]/15 text-[#0369A1]' : 'bg-[#FEF3C7] text-[#92400E]'}`}>
-                    {getLocationTypeIcon(sec.type, "w-3 h-3")}
-                  </span>
-                  <span className={`text-[10px] font-black uppercase tracking-wider truncate ${isSelected ? 'text-[#0369A1]' : 'text-[#64748B]'}`}>
-                    {getLocationTypeLabel(sec.type)}
-                  </span>
-                </div>
-                <h4 className="font-extrabold text-xs mt-1.5 leading-snug line-clamp-1 text-[#0F172A]">
-                  {sec.name}
-                </h4>
-              </div>
-              <div className="mt-3 flex items-center justify-between text-[11px] font-semibold">
-                <span className={isSelected ? 'text-[#0369A1]' : 'text-[#64748B]'}>Ocupación</span>
-                <span className="font-black text-[#0F172A]">{occupied}/{locsInSector.length}</span>
-              </div>
+              <Compass className="w-3.5 h-3.5" />
+              <span>Diagrama Arquitectónico</span>
             </button>
-          );
-        })}
-      </div>
 
-      {/* Filter and Status Legend */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-[#E2E8F0] shadow-sm text-xs">
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#64748B]" />
-          <span className="font-bold text-[#64748B]">Filtrando:</span>
-          <span className="font-black text-[#0369A1] bg-[#E0F2FE] px-2.5 py-0.5 rounded-md border border-[#BAE6FD]">
-            {selectedSectorFilter === 'todos' ? 'Todos los sectores' : sectors.find((s) => s.id === selectedSectorFilter)?.name}
-          </span>
-          {selectedSectorFilter !== 'todos' && (
             <button
-              onClick={() => setSelectedSectorFilter('todos')}
-              className="text-[#0284C7] underline text-xs font-bold hover:text-[#0369A1]"
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
+                  : 'text-[#64748B] hover:text-[#0F172A]'
+              }`}
+              title="Ver en formato de tarjetas cuadrícula"
             >
-              Limpiar filtro
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Vista Tarjetas</span>
             </button>
-          )}
-        </div>
+          </div>
 
-        {/* Legend */}
-        <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium text-[#0F172A]">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-emerald-600" /> Disponible
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Ocupada
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 border border-sky-600" /> Reservada
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-amber-500" /> Limpieza
-          </span>
+          <button
+            onClick={() => setShowNewLocationModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F2942] hover:bg-[#1E3A5F] text-white font-black text-xs shadow-sm transition cursor-pointer"
+          >
+            <Plus className="w-4 h-4 text-cyan-300" />
+            <span>Agregar Ubicación</span>
+          </button>
         </div>
       </div>
 
-      {/* Locations Interactive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredLocations.map((loc) => {
-          return (
-            <div
-              key={loc.id}
-              className="bg-white rounded-3xl border border-[#E2E8F0] p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-[#0F172A] shrink-0 border border-gray-200">
-                      {getLocationTypeIcon(loc.type, "w-4 h-4 text-[#0F172A]")}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-black text-[#0F172A]">{loc.code}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase ${getStatusColor(loc.status)}`}>
-                          {loc.status}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-gray-500 font-medium block">{getLocationTypeLabel(loc.type)}</span>
-                    </div>
-                  </div>
+      {/* ============================================================ */}
+      {/* VIEW MODE 1: ARCHITECTURAL FLOOR PLAN DIAGRAM */}
+      {/* ============================================================ */}
+      {viewMode === 'diagram' ? (
+        <BalnearioFloorPlan
+          locations={locations}
+          selectedLocation={selectedInspectorLoc}
+          onSelectLocation={(loc) => setSelectedInspectorLoc(loc)}
+          onOpenStatusModal={(loc) => handleOpenStatusEdit(loc)}
+          onOpenPOS={(loc) => {
+            setSelectedLocationCode(loc.code);
+            setActiveView('pos');
+          }}
+          onOpenQR={(loc) => setSelectedLocationForQR(loc)}
+          onQuickChangeStatus={handleQuickChangeStatus}
+        />
+      ) : (
+        /* ============================================================ */
+        /* VIEW MODE 2: CLASSIC CARDS & SECTORS GRID */
+        /* ============================================================ */
+        <div className="space-y-6">
+          {/* Sectors Summary Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {sectors.map((sec) => {
+              const locsInSector = locations.filter((l) => l.sectorId === sec.id);
+              const occupied = locsInSector.filter((l) => l.status === 'ocupada' || l.status === 'reservada').length;
+              const isSelected = selectedSectorFilter === sec.id;
 
-                  <button
-                    onClick={() => setSelectedLocationForQR(loc)}
-                    className="p-1.5 rounded-xl bg-gray-100 hover:bg-[#E0F2FE] hover:text-[#0369A1] text-[#0F172A] transition"
-                    title="Ver Código QR Oficial"
-                  >
-                    <QrCode className="w-4 h-4 text-current" />
-                  </button>
-                </div>
-
-                <div className="text-xs font-bold text-[#0F172A] mt-1">{loc.name}</div>
-                <div className="text-[11px] text-[#64748B]">{loc.sectorName}</div>
-
-                {loc.currentGuestName && (
-                  <div className="mt-2 text-xs font-semibold text-[#92400E] bg-[#FFFBEB] p-2 rounded-xl border border-[#FDE68A]">
-                    Ocupante: <strong className="text-[#92400E] font-black">{loc.currentGuestName}</strong>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between gap-2">
+              return (
                 <button
-                  onClick={() => handleOpenStatusEdit(loc)}
-                  className="flex-1 py-1.5 px-2 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8] transition flex items-center justify-center gap-1"
+                  key={sec.id}
+                  onClick={() => setSelectedSectorFilter(isSelected ? 'todos' : sec.id)}
+                  className={`p-3 rounded-2xl border text-left transition flex flex-col justify-between cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#E0F2FE] text-[#0369A1] border-[#0284C7] shadow-sm ring-2 ring-[#0284C7]/30 font-bold'
+                      : 'bg-white hover:bg-[#F0F4F8] text-[#0F172A] border-[#E2E8F0]'
+                  }`}
                 >
-                  <Edit2 className="w-3.5 h-3.5 text-[#0F172A]" />
-                  <span>Estado</span>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`p-1 rounded-lg ${isSelected ? 'bg-[#0284C7]/15 text-[#0369A1]' : 'bg-[#FEF3C7] text-[#92400E]'}`}>
+                        {getLocationTypeIcon(sec.type, "w-3 h-3")}
+                      </span>
+                      <span className={`text-[10px] font-black uppercase tracking-wider truncate ${isSelected ? 'text-[#0369A1]' : 'text-[#64748B]'}`}>
+                        {getLocationTypeLabel(sec.type)}
+                      </span>
+                    </div>
+                    <h4 className="font-extrabold text-xs mt-1.5 leading-snug line-clamp-1 text-[#0F172A]">
+                      {sec.name}
+                    </h4>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between text-[11px] font-semibold">
+                    <span className={isSelected ? 'text-[#0369A1]' : 'text-[#64748B]'}>Ocupación</span>
+                    <span className="font-black text-[#0F172A]">{occupied}/{locsInSector.length}</span>
+                  </div>
                 </button>
+              );
+            })}
+          </div>
 
+          {/* Filter and Status Legend */}
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-[#E2E8F0] shadow-sm text-xs">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-[#64748B]" />
+              <span className="font-bold text-[#64748B]">Filtrando:</span>
+              <span className="font-black text-[#0369A1] bg-[#E0F2FE] px-2.5 py-0.5 rounded-md border border-[#BAE6FD]">
+                {selectedSectorFilter === 'todos' ? 'Todos los sectores' : sectors.find((s) => s.id === selectedSectorFilter)?.name}
+              </span>
+              {selectedSectorFilter !== 'todos' && (
                 <button
-                  onClick={() => {
-                    setSelectedLocationCode(loc.code);
-                    setActiveView('pos');
-                  }}
-                  className="flex-1 py-1.5 px-2 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs transition flex items-center justify-center gap-1 shadow-xs"
+                  onClick={() => setSelectedSectorFilter('todos')}
+                  className="text-[#0284C7] underline text-xs font-bold hover:text-[#0369A1]"
                 >
-                  <span>Abrir POS</span>
+                  Limpiar filtro
                 </button>
-              </div>
+              )}
             </div>
-          );
-        })}
-      </div>
+
+            {/* Legend with Gentle Blinking Beacons */}
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium text-[#0F172A]">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 beacon-pulse-available border border-emerald-600" /> Disponible
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 beacon-pulse-occupied" /> Ocupada
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 beacon-pulse-reserved border border-sky-600" /> Reservada
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 beacon-pulse-cleaning border border-amber-500" /> Limpieza
+              </span>
+            </div>
+          </div>
+
+          {/* Locations Interactive Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredLocations.map((loc) => {
+              return (
+                <div
+                  key={loc.id}
+                  className="bg-white rounded-3xl border border-[#E2E8F0] p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-[#0F172A] shrink-0 border border-gray-200">
+                          {getLocationTypeIcon(loc.type, "w-4 h-4 text-[#0F172A]")}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-black text-[#0F172A]">{loc.code}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase ${getStatusColor(loc.status)}`}>
+                              {loc.status}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-gray-500 font-medium block">{getLocationTypeLabel(loc.type)}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedLocationForQR(loc)}
+                        className="p-1.5 rounded-xl bg-gray-100 hover:bg-[#E0F2FE] hover:text-[#0369A1] text-[#0F172A] transition"
+                        title="Ver Código QR Oficial"
+                      >
+                        <QrCode className="w-4 h-4 text-current" />
+                      </button>
+                    </div>
+
+                    <div className="text-xs font-bold text-[#0F172A] mt-1">{loc.name}</div>
+                    <div className="text-[11px] text-[#64748B]">{loc.sectorName}</div>
+
+                    {loc.currentGuestName && (
+                      <div className="mt-2 text-xs font-semibold text-[#92400E] bg-[#FFFBEB] p-2 rounded-xl border border-[#FDE68A]">
+                        Ocupante: <strong className="text-[#92400E] font-black">{loc.currentGuestName}</strong>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => handleOpenStatusEdit(loc)}
+                      className="flex-1 py-1.5 px-2 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8] transition flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <Edit2 className="w-3.5 h-3.5 text-[#0F172A]" />
+                      <span>Estado</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setSelectedLocationCode(loc.code);
+                        setActiveView('pos');
+                      }}
+                      className="flex-1 py-1.5 px-2 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+                    >
+                      <span>Abrir POS</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Edit Location Status Modal */}
       {editingLocation && (
@@ -334,13 +406,13 @@ export const SectorsView: React.FC = () => {
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setEditingLocation(null)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-gray-100"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-gray-100 cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSaveStatus}
-                className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#0369A1] text-white"
+                className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#0369A1] text-white cursor-pointer"
               >
                 Guardar Cambios
               </button>
@@ -349,93 +421,101 @@ export const SectorsView: React.FC = () => {
         </div>
       )}
 
-      {/* Add New Location Modal */}
+      {/* New Location Modal */}
       {showNewLocationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F2942]/70 p-4">
-          <form
-            onSubmit={handleCreateLocation}
-            className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E8F0]"
-          >
-            <h3 className="font-black text-base text-[#0F172A]">Nueva Ubicación en Balneario</h3>
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl space-y-4 border border-[#E2E8F0]">
+            <h3 className="font-black text-base text-[#0F172A]">
+              Crear Nueva Ubicación en Balneario
+            </h3>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#0F172A]">Código Único (Ej: C-21, S-30, M-15):</label>
-              <input
-                type="text"
-                required
-                value={newCode}
-                onChange={(e) => setNewCode(e.target.value)}
-                placeholder="C-07"
-                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-mono font-bold text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
-              />
-            </div>
+            <form onSubmit={handleCreateLocation} className="space-y-3">
+              <div>
+                <label className="text-xs font-bold text-[#0F172A] block mb-1">Código Identificador:</label>
+                <input
+                  type="text"
+                  value={newCode}
+                  onChange={(e) => setNewCode(e.target.value)}
+                  placeholder="Ej: C-21, S-18, D-09..."
+                  className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-mono uppercase focus:outline-none focus:border-[#0284C7]"
+                  required
+                />
+              </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#0F172A]">Nombre descriptivo:</label>
-              <input
-                type="text"
-                required
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Carpa VIP 07"
-                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
-              />
-            </div>
+              <div>
+                <label className="text-xs font-bold text-[#0F172A] block mb-1">Nombre Descriptivo:</label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Ej: Carpa VIP 21 (Frente al mar)"
+                  className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs focus:outline-none focus:border-[#0284C7]"
+                  required
+                />
+              </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#0F172A]">Tipo de Ubicación:</label>
-              <select
-                value={newType}
-                onChange={(e) => setNewType(e.target.value as LocationType)}
-                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
-              >
-                <option value="carpa">⛺ Carpa de Playa</option>
-                <option value="sombrilla">🏖️ Sombrilla de Playa</option>
-                <option value="mesa_exterior">🍽️ Mesa Exterior / Deck</option>
-                <option value="mesa_interior">🍽️ Mesa Restaurante Interior</option>
-                <option value="mostrador">🍺 Mostrador / Barra</option>
-              </select>
-            </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-[#0F172A] block mb-1">Tipo:</label>
+                  <select
+                    value={newType}
+                    onChange={(e) => setNewType(e.target.value as LocationType)}
+                    className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-medium focus:outline-none focus:border-[#0284C7]"
+                  >
+                    <option value="carpa">Carpa</option>
+                    <option value="sombrilla">Sombrilla</option>
+                    <option value="mesa_exterior">Mesa Deck</option>
+                    <option value="mesa_interior">Mesa Salón</option>
+                    <option value="mostrador">Mostrador / Barra</option>
+                    <option value="pileta">Pileta</option>
+                  </select>
+                </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[#0F172A]">Sector de Asignación:</label>
-              <select
-                value={newSectorId}
-                onChange={(e) => setNewSectorId(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
-              >
-                {sectors.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <div>
+                  <label className="text-xs font-bold text-[#0F172A] block mb-1">Sector:</label>
+                  <select
+                    value={newSectorId}
+                    onChange={(e) => setNewSectorId(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-[#E2E8F0] text-xs font-medium focus:outline-none focus:border-[#0284C7]"
+                  >
+                    {sectors.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowNewLocationModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-gray-100"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#0369A1] text-white"
-              >
-                Crear Ubicación
-              </button>
-            </div>
-          </form>
+              <div className="flex items-center justify-end gap-2 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setShowNewLocationModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-gray-100 cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#0369A1] text-white cursor-pointer"
+                >
+                  Crear Ubicación
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* QR Modal */}
+      {/* QR Code Modal */}
       {selectedLocationForQR && (
         <QRCodeModal
-          location={selectedLocationForQR}
+          isOpen={true}
           onClose={() => setSelectedLocationForQR(null)}
+          code={selectedLocationForQR.code}
+          name={selectedLocationForQR.name}
+          sector={selectedLocationForQR.sectorName}
+          qrPayload={selectedLocationForQR.qrPayload}
         />
       )}
     </div>

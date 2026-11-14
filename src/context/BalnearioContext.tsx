@@ -217,12 +217,36 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const stored = loadStored<BalnearioConfig | null>('config', null);
     return stored?.branchName || INITIAL_CONFIG.branchName;
   });
-  const [sectors] = useState<Sector[]>(() =>
-    loadStored('sectors', INITIAL_SECTORS)
-  );
-  const [locations, setLocations] = useState<LocationItem[]>(() =>
-    loadStored('locations', INITIAL_LOCATIONS)
-  );
+  const [sectors] = useState<Sector[]>(() => {
+    const stored = loadStored<Sector[]>('sectors', INITIAL_SECTORS);
+    const existingIds = new Set(stored.map((s) => s.id));
+    const missing = INITIAL_SECTORS.filter((s) => !existingIds.has(s.id));
+    return missing.length > 0 ? [...stored, ...missing] : stored;
+  });
+  const [locations, setLocations] = useState<LocationItem[]>(() => {
+    const stored = loadStored<LocationItem[]>('locations', INITIAL_LOCATIONS);
+    const existingCodes = new Set(stored.map((l) => l.code));
+    const missing = INITIAL_LOCATIONS.filter((l) => !existingCodes.has(l.code));
+    let combined = missing.length > 0 ? [...stored, ...missing] : stored;
+    // ensure P-01..P-06 and SOL-01..SOL-02 have sectorId: 'sec-piscina'
+    combined = combined.map((loc) => {
+      if (
+        (loc.type === 'pileta' ||
+          loc.type === 'solarium' ||
+          loc.code.startsWith('P-') ||
+          loc.code.startsWith('SOL-')) &&
+        loc.sectorId !== 'sec-piscina'
+      ) {
+        return {
+          ...loc,
+          sectorId: 'sec-piscina',
+          sectorName: 'Sector Piscina & Solárium',
+        };
+      }
+      return loc;
+    });
+    return combined;
+  });
   const [categories, setCategories] = useState<Category[]>(() =>
     loadStored('categories', INITIAL_CATEGORIES)
   );

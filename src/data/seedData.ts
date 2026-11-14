@@ -60,6 +60,13 @@ export const INITIAL_SECTORS: Sector[] = [
     capacitySummary: '25 Sombrillas',
   },
   {
+    id: 'sec-piscina',
+    name: 'Sector Piscina & Solárium',
+    description: 'Área acuática con piscina climatizada 28°C, reposeras perimetrales y gazebos solárium VIP',
+    type: 'pileta',
+    capacitySummary: '6 Reposeras + 2 Gazebos',
+  },
+  {
     id: 'sec-deck',
     name: 'Deck & Terraza Marina',
     description: 'Mesas exteriores con toldo microperforado sobre tarima de madera',
@@ -108,11 +115,14 @@ export const INITIAL_LOCATIONS: LocationItem[] = [
   { id: 'loc-s08', code: 'S-08', name: 'Sombrilla 08', type: 'sombrilla', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'disponible', qrPayload: 'S-08' },
 
   // Pileta & Solárium
-  { id: 'loc-p01', code: 'P-01', name: 'Reposera Pileta 01', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'ocupada', currentGuestName: 'Florencia Vidal', qrPayload: 'P-01' },
-  { id: 'loc-p02', code: 'P-02', name: 'Reposera Pileta 02', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'disponible', qrPayload: 'P-02' },
-  { id: 'loc-p03', code: 'P-03', name: 'Reposera Pileta 03', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'disponible', qrPayload: 'P-03' },
-  { id: 'loc-p04', code: 'P-04', name: 'Reposera Pileta 04', type: 'pileta', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 2, status: 'limpieza', qrPayload: 'P-04' },
-  { id: 'loc-sol01', code: 'SOL-01', name: 'Gazebo Solárium 01', type: 'solarium', sectorId: 'sec-sombrillas', sectorName: 'Sector Sombrillas & Reposeras', capacity: 4, status: 'reservada', currentGuestName: 'Huésped VIP', qrPayload: 'SOL-01' },
+  { id: 'loc-p01', code: 'P-01', name: 'Reposera Borde Pileta 01', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'ocupada', currentGuestName: 'Florencia Vidal', qrPayload: 'P-01' },
+  { id: 'loc-p02', code: 'P-02', name: 'Reposera Borde Pileta 02', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'disponible', qrPayload: 'P-02' },
+  { id: 'loc-p03', code: 'P-03', name: 'Reposera Borde Pileta 03', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'disponible', qrPayload: 'P-03' },
+  { id: 'loc-p04', code: 'P-04', name: 'Reposera Borde Pileta 04', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'limpieza', qrPayload: 'P-04' },
+  { id: 'loc-p05', code: 'P-05', name: 'Reposera Borde Pileta 05', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'disponible', qrPayload: 'P-05' },
+  { id: 'loc-p06', code: 'P-06', name: 'Reposera Borde Pileta 06', type: 'pileta', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 2, status: 'ocupada', currentGuestName: 'Martín Palermo', qrPayload: 'P-06' },
+  { id: 'loc-sol01', code: 'SOL-01', name: 'Gazebo Solárium VIP 01', type: 'solarium', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 4, status: 'reservada', currentGuestName: 'Huésped VIP', qrPayload: 'SOL-01' },
+  { id: 'loc-sol02', code: 'SOL-02', name: 'Gazebo Solárium VIP 02', type: 'solarium', sectorId: 'sec-piscina', sectorName: 'Sector Piscina & Solárium', capacity: 4, status: 'disponible', qrPayload: 'SOL-02' },
 
   // Deck exterior
   { id: 'loc-d01', code: 'D-01', name: 'Deck Frente al Mar 01', type: 'mesa_exterior', sectorId: 'sec-deck', sectorName: 'Deck & Terraza Marina', capacity: 4, status: 'ocupada', currentGuestName: 'Mesa 4 comensales', qrPayload: 'D-01' },

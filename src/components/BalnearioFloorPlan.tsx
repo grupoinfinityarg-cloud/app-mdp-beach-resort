@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LocationItem, LocationStatus } from '../types';
+import { INITIAL_LOCATIONS } from '../data/seedData';
 import {
   Tent,
   Umbrella,
@@ -15,7 +16,9 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  Sparkle
+  Sparkle,
+  Sun,
+  ChevronRight,
 } from 'lucide-react';
 
 interface BalnearioFloorPlanProps {
@@ -28,7 +31,7 @@ interface BalnearioFloorPlanProps {
   onQuickChangeStatus?: (locId: string, newStatus: LocationStatus) => void;
 }
 
-export type DiagramSectorMode = 'playa' | 'deck' | 'salon' | 'integral';
+export type DiagramSectorMode = 'playa' | 'piscina' | 'deck' | 'salon' | 'integral';
 
 export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
   locations,
@@ -102,14 +105,16 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
     }
   };
 
-  // Find location by code helper
-  const findLoc = (code: string) => locations.find((l) => l.code === code);
+  // Find location by code helper (with robust fallback to seed data)
+  const findLoc = (code: string) =>
+    locations.find((l) => l.code === code) ||
+    INITIAL_LOCATIONS.find((l) => l.code === code);
 
   // Render a spot tile in the diagram
   const renderSpotTile = (
     code: string,
     label: string,
-    type: 'carpa' | 'sombrilla' | 'mesa' | 'pileta' | 'barra',
+    type: 'carpa' | 'sombrilla' | 'mesa' | 'pileta' | 'barra' | 'solarium',
     extraClasses = ''
   ) => {
     const loc = findLoc(code);
@@ -195,14 +200,25 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
             </div>
           )}
 
-          {type === 'pileta' && (
-            <div className={`w-9 h-7 rounded-md flex items-center justify-center border ${
+          {(type === 'pileta' || loc.type === 'pileta') && (
+            <div className={`w-9 h-7 rounded-md flex items-center justify-center border shadow-xs ${
               loc.status === 'ocupada' ? 'bg-rose-100 text-rose-700 border-rose-300' :
               loc.status === 'disponible' ? 'bg-emerald-100 text-emerald-700 border-emerald-300' :
               loc.status === 'reservada' ? 'bg-sky-100 text-sky-700 border-sky-300' :
               'bg-amber-100 text-amber-700 border-amber-300'
             }`}>
               <Waves className="w-4 h-4" />
+            </div>
+          )}
+
+          {(type === 'solarium' || loc.type === 'solarium') && (
+            <div className={`w-9 h-7 rounded-md flex items-center justify-center border shadow-xs ${
+              loc.status === 'ocupada' ? 'bg-rose-100 text-rose-700 border-rose-300' :
+              loc.status === 'disponible' ? 'bg-emerald-100 text-emerald-700 border-emerald-300' :
+              loc.status === 'reservada' ? 'bg-sky-100 text-sky-700 border-sky-300' :
+              'bg-amber-100 text-amber-700 border-amber-300'
+            }`}>
+              <Sun className="w-4 h-4" />
             </div>
           )}
 
@@ -278,6 +294,18 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
             </button>
 
             <button
+              onClick={() => setSectorMode('piscina')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                sectorMode === 'piscina'
+                  ? 'bg-[#0284C7] text-white shadow-sm'
+                  : 'text-[#64748B] hover:text-[#0F172A] hover:bg-white/60'
+              }`}
+            >
+              <Waves className="w-3.5 h-3.5 text-cyan-400" />
+              <span>2. Piscina & Solárium</span>
+            </button>
+
+            <button
               onClick={() => setSectorMode('deck')}
               className={`px-3 py-1.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 sectorMode === 'deck'
@@ -286,7 +314,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
               }`}
             >
               <Utensils className="w-3.5 h-3.5 text-cyan-400" />
-              <span>2. Deck & Terraza Marina</span>
+              <span>3. Deck & Terraza Marina</span>
             </button>
 
             <button
@@ -298,18 +326,18 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
               }`}
             >
               <Beer className="w-3.5 h-3.5 text-emerald-400" />
-              <span>3. Salón & Barra Interior</span>
+              <span>4. Salón & Barra Interior</span>
             </button>
 
             <button
               onClick={() => setSectorMode('integral')}
               className={`px-3 py-1.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 sectorMode === 'integral'
-                  ? 'bg-[#0284C7] text-white shadow-sm'
+                  ? 'bg-[#0F2942] text-white shadow-sm ring-2 ring-[#0284C7]'
                   : 'text-[#64748B] hover:text-[#0F172A] hover:bg-white/60'
               }`}
             >
-              <Maximize2 className="w-3.5 h-3.5 text-white" />
+              <Maximize2 className="w-3.5 h-3.5 text-cyan-400" />
               <span>Plano Maestro</span>
             </button>
           </div>
@@ -522,38 +550,63 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
                   </div>
 
                   {/* Right: SWIMMING POOL & SOLARIUM (EXACTLY AS IN MORPHI PHOTO) */}
-                  <div className="md:col-span-5 rounded-2xl bg-gradient-to-br from-sky-400 via-cyan-500 to-blue-600 p-3.5 border-4 border-white shadow-md relative overflow-hidden flex flex-col justify-between text-white">
-                    {/* Pool Water Shimmer Background */}
-                    <div className="absolute inset-0 bg-[radial-gradient(#ffffff30_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
-
-                    <div className="relative z-10 flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-1.5">
-                        <Waves className="w-4 h-4 text-cyan-100 animate-pulse" />
-                        <span className="font-heading font-black text-xs uppercase tracking-wider text-white">
-                          Piscina Climatizada & Solárium
+                  <div className="md:col-span-5 rounded-2xl bg-[#0F2942] p-4 border-2 border-[#1E3A5F] shadow-md relative overflow-hidden flex flex-col justify-between text-white">
+                    <div className="flex items-center justify-between mb-2 relative z-10">
+                      <div className="flex items-center gap-2">
+                        <span className="p-1.5 rounded-lg bg-[#0284C7] text-white">
+                          <Waves className="w-4 h-4" />
                         </span>
+                        <div>
+                          <h4 className="font-heading font-black text-xs uppercase tracking-wider text-white">
+                            Piscina Climatizada & Solárium
+                          </h4>
+                          <span className="text-[10px] text-cyan-200 font-mono">
+                            Agua a 28°C · Nado & Chapoteadero
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-[9px] bg-white/20 px-2 py-0.5 rounded-full font-mono font-bold">
-                        Zona Acuática
-                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSectorMode('piscina')}
+                        className="text-[10px] font-bold bg-[#0284C7] hover:bg-[#0369A1] text-white px-2 py-1 rounded-lg transition flex items-center gap-1 shadow-xs cursor-pointer"
+                        title="Ver plano CAD ampliado de la piscina"
+                      >
+                        <span>Ver Plano</span>
+                        <ChevronRight className="w-3 h-3" />
+                      </button>
                     </div>
 
-                    {/* Water Basin Center Area */}
-                    <div className="my-2 p-3 rounded-xl bg-sky-200/20 border border-white/30 text-center relative z-10">
-                      <span className="text-[11px] font-mono font-bold tracking-wider text-sky-100">
-                        🏊‍♂️ Espejo de Agua (Carril de Nado & Área Niños)
-                      </span>
+                    {/* Realistic CAD Swimming Pool Water Basin with Roman Steps (Morphi CAD reference) */}
+                    <div className="relative my-2 rounded-2xl bg-gradient-to-b from-[#0284C7] via-[#0284C7] to-[#0369A1] border-4 border-white shadow-inner p-3 overflow-hidden text-center ring-2 ring-[#0F2942]">
+                      {/* Water shimmer effect */}
+                      <div className="absolute inset-0 bg-[radial-gradient(#ffffff30_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
+
+                      {/* Roman Curved Steps into Pool (Top-Right Corner like Morphi photo) */}
+                      <div className="absolute top-0 right-2 w-12 h-6 border-b-2 border-l-2 border-white/80 rounded-bl-full bg-white/20 pointer-events-none" />
+                      <div className="absolute top-0 right-3 w-8 h-4 border-b-2 border-l-2 border-white/90 rounded-bl-full bg-white/30 pointer-events-none" />
+
+                      <div className="relative z-10 py-1">
+                        <div className="text-xs font-black tracking-wider text-white uppercase drop-shadow-sm flex items-center justify-center gap-1.5">
+                          <span>🏊‍♂️ Espejo de Agua Principal</span>
+                        </div>
+                        <div className="text-[10px] text-cyan-100 font-mono mt-0.5">
+                          Profundidad 1.40m · Carril Boyado
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Sun loungers along the pool perimeter */}
-                    <div className="relative z-10 pt-2 border-t border-white/20">
-                      <div className="text-[10px] text-sky-100 font-mono mb-1.5">Reposeras de Borde & Gazebo:</div>
-                      <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+                    {/* Perimeter Sun Loungers & Gazebo */}
+                    <div className="relative z-10 pt-2 border-t border-[#1E3A5F]">
+                      <div className="flex items-center justify-between text-[10px] text-slate-300 font-mono mb-2">
+                        <span>Reposeras de Borde (P-01 a P-04) & Gazebo:</span>
+                        <span className="text-cyan-300 font-bold">Solárium Deck</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                         {renderSpotTile('P-01', 'Pileta 01', 'pileta', '!p-1.5')}
                         {renderSpotTile('P-02', 'Pileta 02', 'pileta', '!p-1.5')}
                         {renderSpotTile('P-03', 'Pileta 03', 'pileta', '!p-1.5')}
                         {renderSpotTile('P-04', 'Pileta 04', 'pileta', '!p-1.5')}
-                        {renderSpotTile('SOL-01', 'Gazebo', 'pileta', '!p-1.5')}
+                        {renderSpotTile('SOL-01', 'Gazebo', 'solarium', '!p-1.5')}
                       </div>
                     </div>
                   </div>
@@ -563,7 +616,169 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
           )}
 
           {/* ========================================================== */}
-          {/* DIAGRAM 2: DECK & TERRAZA MARINA */}
+          {/* DIAGRAM 2: PISCINA CLIMATIZADA & COMPLEJO SOLARIUM VIP */}
+          {/* ========================================================== */}
+          {(sectorMode === 'piscina' || sectorMode === 'integral') && (
+            <div className={`space-y-4 ${sectorMode === 'integral' ? 'mt-8 pt-8 border-t-2 border-slate-200' : ''}`}>
+              {/* Solarium Travertine Deck Container with Architectural Boundary */}
+              <div className="rounded-3xl bg-[#F0F7FB] border-4 border-[#0F2942] p-5 sm:p-7 relative overflow-hidden shadow-md">
+                
+                {/* Architectural Blueprint Grid Pattern */}
+                <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px] opacity-30 pointer-events-none" />
+
+                {/* Section Header */}
+                <div className="flex items-center justify-between mb-5 relative z-10 border-b-2 border-slate-300 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="p-2 rounded-xl bg-[#0284C7] text-white shadow-xs">
+                      <Waves className="w-5 h-5" />
+                    </span>
+                    <div>
+                      <h4 className="font-heading font-black text-sm sm:text-base text-[#0F2942] uppercase tracking-wide flex items-center gap-2">
+                        <span>Complejo Piscina Climatizada & Solárium VIP</span>
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold border border-emerald-300">
+                          Operativa 28°C
+                        </span>
+                      </h4>
+                      <p className="text-[11px] text-[#64748B]">
+                        Distribución de espejo de agua, reposeras de borde perimetral y gazebos VIP
+                      </p>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-[#0F2942] text-white text-xs font-black uppercase font-mono tracking-wider hidden sm:inline">
+                    Zona 2 · Piscina
+                  </span>
+                </div>
+
+                {/* Specs Bar (Control de Calidad de Agua & Guardavidas) */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5 relative z-10 text-xs font-mono">
+                  <div className="p-2.5 rounded-xl bg-white border border-[#CBD5E1] shadow-xs flex items-center gap-2">
+                    <span className="text-base">🌡️</span>
+                    <div>
+                      <div className="text-[10px] text-slate-500 font-bold uppercase">Agua Climatizada</div>
+                      <strong className="text-[#0F172A] text-xs">28°C Constante</strong>
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-[#CBD5E1] shadow-xs flex items-center gap-2">
+                    <span className="text-base">🦺</span>
+                    <div>
+                      <div className="text-[10px] text-slate-500 font-bold uppercase">Seguridad</div>
+                      <strong className="text-emerald-700 text-xs">Guardavidas Activo</strong>
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-[#CBD5E1] shadow-xs flex items-center gap-2">
+                    <span className="text-base">🏊‍♂️</span>
+                    <div>
+                      <div className="text-[10px] text-slate-500 font-bold uppercase">Profundidad</div>
+                      <strong className="text-[#0284C7] text-xs">0.50m a 1.40m</strong>
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-[#CBD5E1] shadow-xs flex items-center gap-2">
+                    <span className="text-base">🍹</span>
+                    <div>
+                      <div className="text-[10px] text-slate-500 font-bold uppercase">Servicio en Reposera</div>
+                      <strong className="text-[#92400E] text-xs">QR Pedidos Directo</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* MAIN ARCHITECTURAL CAD POOL & SOLARIUM LAYOUT (MORPHI PHOTO SCHEME) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10 items-center">
+                  
+                  {/* CENTRAL / LEFT: LARGE SWIMMING POOL BASIN */}
+                  <div className="lg:col-span-8 rounded-3xl bg-gradient-to-br from-[#0284C7] via-[#0284C7] to-[#0369A1] p-6 border-6 border-white shadow-xl relative overflow-hidden min-h-[260px] flex flex-col justify-between text-white ring-4 ring-[#0F2942]">
+                    
+                    {/* Water Shimmer Texture Overlay */}
+                    <div className="absolute inset-0 bg-[radial-gradient(#ffffff35_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
+
+                    {/* Semicircular Roman Steps (Curved staircase inside the pool like Morphi photo) */}
+                    <div className="absolute top-0 right-6 w-24 h-12 border-b-4 border-l-4 border-white/80 rounded-bl-full bg-white/20 pointer-events-none flex items-center justify-center">
+                      <span className="text-[9px] font-mono text-white/90 font-bold rotate-[-15deg]">Escalera Romana</span>
+                    </div>
+                    <div className="absolute top-0 right-8 w-16 h-8 border-b-2 border-l-2 border-white/90 rounded-bl-full bg-white/30 pointer-events-none" />
+
+                    {/* Water Basin Top Info */}
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Waves className="w-5 h-5 text-white animate-pulse" />
+                        <span className="font-heading font-black text-sm uppercase tracking-wider text-white drop-shadow-md">
+                          🏊‍♂️ Piscina Central Balneario (20m x 8m)
+                        </span>
+                      </div>
+                      <span className="text-[10px] bg-black/25 px-3 py-1 rounded-full font-mono font-black border border-white/20">
+                        Área de Nado Libre & Recreación
+                      </span>
+                    </div>
+
+                    {/* Center Lane Line Markers with depth division */}
+                    <div className="my-6 relative z-10 grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="p-3 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-xs text-center">
+                        <span className="block text-[10px] font-mono text-cyan-100 font-bold uppercase">Sector Infantil</span>
+                        <strong className="text-sm font-black text-white">0.50m Chapoteadero</strong>
+                      </div>
+                      <div className="p-3 rounded-2xl bg-white/20 border-2 border-white/40 backdrop-blur-xs text-center shadow-inner">
+                        <span className="block text-[10px] font-mono text-white font-bold uppercase">Carril Central</span>
+                        <strong className="text-sm font-black text-white">1.20m Nado Recreativo</strong>
+                      </div>
+                      <div className="p-3 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-xs text-center">
+                        <span className="block text-[10px] font-mono text-cyan-100 font-bold uppercase">Carril Profundo</span>
+                        <strong className="text-sm font-black text-white">1.40m Nado Libre</strong>
+                      </div>
+                    </div>
+
+                    {/* Bottom Basin Footer */}
+                    <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-cyan-100 border-t border-white/20 pt-2">
+                      <span>🌊 Recirculación continua con skimmers de superficie</span>
+                      <span className="font-bold text-white">Piso atérmico y antideslizante</span>
+                    </div>
+                  </div>
+
+                  {/* RIGHT / PERIMETER: SUN LOUNGERS & VIP GAZEBOS */}
+                  <div className="lg:col-span-4 space-y-4">
+                    {/* Borde Solárium: Reposeras P-01 a P-06 */}
+                    <div className="bg-white p-4 rounded-2xl border-2 border-[#CBD5E1] shadow-xs space-y-3">
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                        <div className="flex items-center gap-1.5">
+                          <Waves className="w-4 h-4 text-[#0284C7]" />
+                          <strong className="text-xs font-black text-[#0F172A] uppercase">
+                            Reposeras de Borde (P-01 a P-06)
+                          </strong>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-500 font-bold">Solárium Húmedo</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {renderSpotTile('P-01', 'Pileta 01', 'pileta')}
+                        {renderSpotTile('P-02', 'Pileta 02', 'pileta')}
+                        {renderSpotTile('P-03', 'Pileta 03', 'pileta')}
+                        {renderSpotTile('P-04', 'Pileta 04', 'pileta')}
+                        {renderSpotTile('P-05', 'Pileta 05', 'pileta')}
+                        {renderSpotTile('P-06', 'Pileta 06', 'pileta')}
+                      </div>
+                    </div>
+
+                    {/* Gazebos VIP Solárium */}
+                    <div className="bg-[#FFFBEB] p-4 rounded-2xl border-2 border-[#FDE68A] shadow-xs space-y-3">
+                      <div className="flex items-center justify-between border-b border-[#FDE68A] pb-2">
+                        <div className="flex items-center gap-1.5">
+                          <Sun className="w-4 h-4 text-amber-600" />
+                          <strong className="text-xs font-black text-[#92400E] uppercase">
+                            Gazebos Solárium VIP
+                          </strong>
+                        </div>
+                        <span className="text-[10px] font-mono text-amber-700 font-bold">Pérgola Techo Sombra</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {renderSpotTile('SOL-01', 'Gazebo 01', 'solarium')}
+                        {renderSpotTile('SOL-02', 'Gazebo 02', 'solarium')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================== */}
+          {/* DIAGRAM 3: DECK & TERRAZA MARINA */}
           {/* ========================================================== */}
           {(sectorMode === 'deck' || sectorMode === 'integral') && (
             <div className={`space-y-4 ${sectorMode === 'integral' ? 'mt-8 pt-8 border-t-2 border-slate-200' : ''}`}>
@@ -588,7 +803,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
                     </div>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#E0F2FE] border border-[#BAE6FD] text-[#0369A1] text-[10px] font-black uppercase font-mono">
-                    Zona 2 · Deck
+                    Zona 3 · Deck
                   </span>
                 </div>
 
@@ -678,7 +893,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
                     </div>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#0F2942] text-white text-[10px] font-black uppercase font-mono">
-                    Zona 3 · Salón
+                    Zona 4 · Salón
                   </span>
                 </div>
 

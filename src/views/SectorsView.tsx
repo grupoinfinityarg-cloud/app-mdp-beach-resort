@@ -223,7 +223,7 @@ export const SectorsView: React.FC = () => {
         /* ============================================================ */
         <div className="space-y-6">
           {/* Sectors Summary Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
             {sectors.map((sec) => {
               const locsInSector = locations.filter((l) => l.sectorId === sec.id);
               const occupied = locsInSector.filter((l) => l.status === 'ocupada' || l.status === 'reservada').length;
@@ -307,8 +307,16 @@ export const SectorsView: React.FC = () => {
                   <div>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-[#0F172A] shrink-0 border border-gray-200">
-                          {getLocationTypeIcon(loc.type, "w-4 h-4 text-[#0F172A]")}
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${
+                          loc.type === 'pileta' || loc.type === 'solarium'
+                            ? 'bg-[#E0F2FE] text-[#0284C7] border-[#BAE6FD]'
+                            : loc.type === 'carpa'
+                            ? 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]'
+                            : loc.type === 'sombrilla'
+                            ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
+                            : 'bg-gray-100 text-[#0F172A] border-gray-200'
+                        }`}>
+                          {getLocationTypeIcon(loc.type, "w-4 h-4 text-current")}
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
@@ -467,7 +475,8 @@ export const SectorsView: React.FC = () => {
                     <option value="mesa_exterior">Mesa Deck</option>
                     <option value="mesa_interior">Mesa Salón</option>
                     <option value="mostrador">Mostrador / Barra</option>
-                    <option value="pileta">Pileta</option>
+                    <option value="pileta">Pileta / Reposera</option>
+                    <option value="solarium">Solárium VIP / Gazebo</option>
                   </select>
                 </div>
 

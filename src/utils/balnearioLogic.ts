@@ -222,6 +222,7 @@ export function parseLocationCode(code: string): {
   else if (prefix === 'E' || prefix === 'D') type = 'mesa_exterior';
   else if (prefix === 'B') type = 'mostrador';
   else if (prefix === 'P') type = 'pileta';
+  else if (prefix === 'SOL') type = 'solarium';
 
   return { type, number: num, isValid: true };
 }

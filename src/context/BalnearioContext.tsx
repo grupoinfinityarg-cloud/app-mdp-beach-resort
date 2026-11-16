@@ -36,7 +36,6 @@ import { findDemoPreset } from '../data/demoPresets';
 export type ActiveView =
   | 'panel'
   | 'sectores'
-  | 'carpas'
   | 'carta'
   | 'personalizar'
   | 'comandas'

@@ -12,7 +12,6 @@ import { isSupabaseConfigured, supabase, supabaseBusinessSlug } from './utils/su
 // Carga diferida (React.lazy) de vistas administrativas y operativas
 const DashboardView = lazy(() => import('./views/DashboardView').then(m => ({ default: m.DashboardView })));
 const SectorsView = lazy(() => import('./views/SectorsView').then(m => ({ default: m.SectorsView })));
-const BeachSpotsView = lazy(() => import('./views/BeachSpotsView').then(m => ({ default: m.BeachSpotsView })));
 const OrderManagementView = lazy(() => import('./views/OrderManagementView').then(m => ({ default: m.OrderManagementView })));
 const KitchenKDSView = lazy(() => import('./views/KitchenKDSView').then(m => ({ default: m.KitchenKDSView })));
 const PosView = lazy(() => import('./views/PosView').then(m => ({ default: m.PosView })));
@@ -95,7 +94,11 @@ const AppContent: React.FC = () => {
       setSelectedLocationCode(mesaParam.toUpperCase());
       setActiveView('carta');
     } else if (viewParam) {
-      setActiveView(viewParam as any);
+      if (viewParam === 'carpas') {
+        setActiveView('sectores');
+      } else {
+        setActiveView(viewParam as any);
+      }
     }
   }, [setActiveView, setSelectedLocationCode]);
 
@@ -245,7 +248,6 @@ const AppContent: React.FC = () => {
           <Suspense fallback={<ViewLoadingFallback />}>
             {visibleView === 'panel' && <DashboardView />}
             {visibleView === 'sectores' && <SectorsView />}
-            {visibleView === 'carpas' && <BeachSpotsView />}
             {visibleView === 'carta' && <DigitalMenuView />}
             {visibleView === 'personalizar' && <CartView />}
             {visibleView === 'comandas' && <OrderManagementView />}

@@ -595,7 +595,7 @@ export const DashboardView: React.FC = () => {
                 return (
                   <button
                     key={loc.id}
-                    onClick={() => setActiveView('carpas')}
+                    onClick={() => setActiveView('sectores')}
                     className={`p-2 rounded-xl text-center border text-[10px] font-bold transition hover:scale-105 active:scale-95 ${
                       isOccupied
                         ? 'bg-[#EF4444] text-white border-[#EF4444]'

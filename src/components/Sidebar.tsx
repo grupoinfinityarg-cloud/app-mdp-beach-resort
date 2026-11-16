@@ -4,7 +4,6 @@ import { PWAInstallButton } from './PWAInstallButton';
 import {
   LayoutDashboard,
   Map,
-  Umbrella,
   Smartphone,
   ClipboardList,
   ChefHat,
@@ -48,7 +47,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpenMobile, onCloseMobile })
   const navItems: { id: ActiveView; label: string; icon: React.ReactNode; badge?: number; badgeColor?: string }[] = [
     { id: 'panel', label: 'Inicio', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'sectores', label: 'Sectores', icon: <Map className="w-4 h-4" /> },
-    { id: 'carpas', label: 'Carpas & Sombrillas', icon: <Umbrella className="w-4 h-4" /> },
     { id: 'carta', label: 'Carta Digital', icon: <Smartphone className="w-4 h-4" /> },
     {
       id: 'comandas',

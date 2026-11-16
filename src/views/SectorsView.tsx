@@ -519,12 +519,8 @@ export const SectorsView: React.FC = () => {
       {/* QR Code Modal */}
       {selectedLocationForQR && (
         <QRCodeModal
-          isOpen={true}
+          location={selectedLocationForQR}
           onClose={() => setSelectedLocationForQR(null)}
-          code={selectedLocationForQR.code}
-          name={selectedLocationForQR.name}
-          sector={selectedLocationForQR.sectorName}
-          qrPayload={selectedLocationForQR.qrPayload}
         />
       )}
     </div>

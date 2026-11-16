@@ -65,6 +65,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       case 'disponible':
         return {
           bg: 'bg-emerald-500/15 text-emerald-950 border-emerald-500',
+          border: 'border-emerald-500',
           badge: 'bg-emerald-500 text-white',
           dot: 'bg-emerald-500 beacon-pulse-available',
           label: 'Disponible',
@@ -73,6 +74,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       case 'ocupada':
         return {
           bg: 'bg-rose-500/15 text-rose-950 border-rose-500',
+          border: 'border-rose-500',
           badge: 'bg-rose-500 text-white',
           dot: 'bg-rose-500 beacon-pulse-occupied',
           label: 'Ocupada',
@@ -81,6 +83,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       case 'reservada':
         return {
           bg: 'bg-sky-500/15 text-sky-950 border-sky-500',
+          border: 'border-sky-500',
           badge: 'bg-sky-500 text-white',
           dot: 'bg-sky-500 beacon-pulse-reserved',
           label: 'Reservada',
@@ -89,6 +92,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       case 'limpieza':
         return {
           bg: 'bg-amber-500/15 text-amber-950 border-amber-500',
+          border: 'border-amber-500',
           badge: 'bg-amber-400 text-slate-950',
           dot: 'bg-amber-400 beacon-pulse-cleaning',
           label: 'Limpieza',
@@ -97,6 +101,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       default:
         return {
           bg: 'bg-gray-100 text-gray-900 border-gray-300',
+          border: 'border-gray-300',
           badge: 'bg-gray-400 text-white',
           dot: 'bg-gray-400',
           label: status,

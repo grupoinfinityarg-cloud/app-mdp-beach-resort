@@ -280,19 +280,14 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
       {/* ============================================================ */}
       <div className="bg-white rounded-3xl border border-[#E2E8F0] p-4 shadow-sm space-y-4">
         {/* Schema Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-start gap-3 sm:gap-5 border-b border-[#E2E8F0] pb-3">
+          <div className="flex items-center gap-2.5 shrink-0">
             <span className="p-2 rounded-xl bg-[#E0F2FE] text-[#0284C7]">
               <Compass className="w-4 h-4" />
             </span>
-            <div>
-              <h3 className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight">
-                DISTRIBUCIÓN
-              </h3>
-              <p className="text-xs sm:text-sm text-[#64748B]">
-                Seleccioná el diagrama para inspeccionar las zonas operativas.
-              </p>
-            </div>
+            <h3 className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight">
+              DISTRIBUCIÓN
+            </h3>
           </div>
 
           {/* Diagram Selector Tabs */}
@@ -360,8 +355,8 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
         </div>
 
         {/* Status Filters with Gentle Blinking Beacon Lights */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
-          <div className="flex items-center gap-2 text-sm font-bold text-[#64748B]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-start gap-3 pt-1">
+          <div className="flex items-center gap-2 text-sm font-bold text-[#64748B] shrink-0">
             <span>Filtro de Estado en Vivo:</span>
           </div>
 

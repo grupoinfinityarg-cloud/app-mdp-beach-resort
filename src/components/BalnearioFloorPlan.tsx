@@ -355,13 +355,12 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
         </div>
 
         {/* Status Filters with Gentle Blinking Beacon Lights */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-start gap-3 pt-1">
-          <div className="flex items-center gap-2 text-sm font-bold text-[#64748B] shrink-0">
-            <span>Filtro de Estado en Vivo:</span>
-          </div>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 pt-1">
+          <span className="text-sm font-bold text-[#64748B] shrink-0 mr-1">
+            Filtro de Estado en Vivo:
+          </span>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Botón Disponible */}
+          {/* Botón Disponible */}
             <button
               type="button"
               onClick={() => setActiveStatusFilter(activeStatusFilter === 'disponible' ? 'todos' : 'disponible')}
@@ -441,7 +440,6 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
             >
               Ver Todos ({counts.todos})
             </button>
-          </div>
         </div>
       </div>
 

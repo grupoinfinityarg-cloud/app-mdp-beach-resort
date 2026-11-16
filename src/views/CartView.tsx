@@ -595,11 +595,11 @@ export const CartView: React.FC = () => {
                         : 'border-[#E2E8F0]'
                     }`}
                   />
-                  <div className="flex items-center justify-between text-[10px] text-[#64748B] pt-0.5">
-                    <span>Válido para celulares de Mar del Plata (+54 9 223...) o todo el país.</span>
+                  <div className="flex items-center justify-between text-xs text-[#64748B] pt-0.5">
+                    <span>Válido para celulares de todo el país.</span>
                     {customerPhone.trim() && isPhoneValid && (
                       <span className="text-emerald-700 font-bold flex items-center gap-0.5">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         Formato válido
                       </span>
                     )}

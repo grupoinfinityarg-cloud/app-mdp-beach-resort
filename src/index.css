@@ -52,6 +52,7 @@
 @layer base {
   :root {
     color-scheme: light;
+    font-size: 16px;
   }
 
   body {
@@ -59,6 +60,8 @@
     -webkit-tap-highlight-color: transparent;
     background-color: #F0F4F8;
     color: #0F172A;
+    font-size: 0.9375rem; /* 15px base text scale */
+    line-height: 1.5;
   }
 
   input, textarea, select {

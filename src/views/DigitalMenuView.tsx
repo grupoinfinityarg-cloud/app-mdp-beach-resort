@@ -332,21 +332,10 @@ export const DigitalMenuView: React.FC = () => {
                 <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight leading-tight mt-0.5">
                   {visibleConfig.branchName.toUpperCase()}
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-sm text-gray-500 font-medium">
                   {visibleConfig.slogan || 'Sector Playa Grande • Mar del Plata'}
                 </p>
               </div>
-            </div>
-
-            {/* Rating badge */}
-            <div className="px-3 py-2 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] text-center shrink-0 shadow-xs">
-              <div className="flex items-center justify-center gap-1 text-[#92400E] font-black text-base leading-none">
-                <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
-                <span>4.9</span>
-              </div>
-              <span className="text-[10px] font-black text-[#B45309] mt-0.5 block">
-                1.2k+ reseñas
-              </span>
             </div>
           </div>
 
@@ -499,16 +488,16 @@ export const DigitalMenuView: React.FC = () => {
         </div>
 
         {/* Horizontal Categories Scroll */}
-        <div className="bg-white px-4 py-2.5 border-b border-[#E2E8F0] overflow-x-auto flex items-center gap-2 scrollbar-none">
+        <div className="bg-white px-4 py-3 border-b border-[#E2E8F0] overflow-x-auto flex items-center gap-2.5 scrollbar-none">
           <button
             onClick={() => setSelectedCategory('todos')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-2 rounded-xl text-sm font-black whitespace-nowrap transition flex items-center gap-2 ${
               selectedCategory === 'todos'
                 ? 'bg-[#0284C7] text-white shadow-xs border border-[#0284C7]'
                 : 'bg-white text-[#64748B] border border-[#E2E8F0] hover:bg-[#F0F4F8] hover:text-[#0F172A]'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-current" />
+            <Sparkles className="w-4 h-4 text-current" />
             <span>Destacados</span>
           </button>
 
@@ -518,13 +507,13 @@ export const DigitalMenuView: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+                className={`px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition flex items-center gap-2 ${
                   isSelected
                     ? 'bg-[#0284C7] text-white font-black shadow-xs border border-[#0284C7]'
                     : 'bg-white text-[#64748B] border border-[#E2E8F0] hover:bg-[#F0F4F8] hover:text-[#0F172A]'
                 }`}
               >
-                <span>{cat.emoji}</span>
+                <span className="text-base">{cat.emoji}</span>
                 <span>{cat.name}</span>
               </button>
             );
@@ -540,13 +529,13 @@ export const DigitalMenuView: React.FC = () => {
                   ★
                 </span>
                 <div>
-                  <h3 className="text-sm font-black text-[#92400E] tracking-tight leading-tight">
+                  <h3 className="text-base font-black text-[#92400E] tracking-tight leading-tight">
                     LOS 5 MÁS ELEGIDOS DEL BALNEARIO
                   </h3>
-                  <p className="text-[10px] text-[#B45309] font-bold">
+                  <p className="text-xs text-[#B45309] font-semibold">
                     {isDemonstrationOnly
-                      ? 'Ranking recomendado por los chefs del parador'
-                      : 'Calculado en vivo según unidades vendidas y valoraciones'}
+                      ? 'Platos y bebidas más pedidos por los clientes'
+                      : 'Calculado en vivo según pedidos despachados'}
                   </p>
                 </div>
               </div>
@@ -580,26 +569,26 @@ export const DigitalMenuView: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="p-3 flex-1 flex flex-col justify-between">
+                  <div className="p-3.5 flex-1 flex flex-col justify-between">
                     <div>
-                      <h4 className="font-black text-xs text-[#0F172A] line-clamp-1">
+                      <h4 className="font-black text-sm text-[#0F172A] line-clamp-1">
                         {item.name}
                       </h4>
-                      <p className="text-[10px] text-[#64748B] line-clamp-2 mt-0.5 font-medium">
+                      <p className="text-xs text-[#64748B] line-clamp-2 mt-1 font-medium leading-relaxed">
                         {item.description}
                       </p>
                     </div>
 
                     <div className="mt-3 flex items-center justify-between pt-2 border-t border-[#E2E8F0]">
-                      <span className="font-black text-xs text-[#0F172A]">
+                      <span className="font-black text-sm text-[#0F172A]">
                         {formatCurrencyARS(item.price)}
                       </span>
                       <button
                         onClick={() => setProductBeingCustomized(item)}
-                        className="px-2.5 py-1 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-[11px] font-black shadow-xs flex items-center gap-1 active:scale-95 transition"
+                        className="px-3 py-1.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-black shadow-xs flex items-center gap-1 active:scale-95 transition cursor-pointer"
                       >
-                        <Plus className="w-3 h-3 stroke-[3]" />
-                        <span>AGREGAR</span>
+                        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                        <span>Pedir</span>
                       </button>
                     </div>
                   </div>
@@ -649,26 +638,22 @@ export const DigitalMenuView: React.FC = () => {
                 <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div>
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-black text-sm sm:text-base text-[#0F172A] leading-snug line-clamp-2">
+                      <h3 className="font-black text-base sm:text-lg text-[#0F172A] leading-snug line-clamp-2">
                         {product.name}
                       </h3>
-                      <div className="flex items-center gap-1 text-[11px] font-black text-[#92400E] bg-[#FFFBEB] px-2 py-0.5 rounded-md shrink-0 border border-[#FDE68A]">
-                        <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
-                        <span>{product.rating}</span>
-                      </div>
                     </div>
 
-                    <p className="text-xs text-[#64748B] line-clamp-2 mt-1 leading-relaxed font-medium">
+                    <p className="text-sm text-[#475569] line-clamp-2 mt-1 leading-relaxed font-medium">
                       {product.description}
                     </p>
                   </div>
 
                   <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-[#E2E8F0]">
                     <div>
-                      <span className="font-black text-sm sm:text-base text-[#0F172A]">
+                      <span className="font-black text-base sm:text-lg text-[#0F172A]">
                         {formatCurrencyARS(product.price)}
                       </span>
-                      <span className="text-[10px] text-gray-400 block -mt-0.5 font-medium">
+                      <span className="text-xs text-gray-500 block mt-0.5 font-medium">
                         {product.prepTimeMinutes} min preparación
                       </span>
                     </div>

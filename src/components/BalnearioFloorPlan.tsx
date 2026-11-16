@@ -156,12 +156,23 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
         }}
         title={`${loc.code}: ${loc.name} (${loc.status})`}
       >
-        {/* Top Header: Code & Gentle Blinking Status Dot */}
+        {/* Top Header: Code, QR button & Gentle Blinking Status Dot */}
         <div className="flex items-center justify-between gap-1 w-full">
-          <span className="font-heading font-black text-xs sm:text-sm text-[#0F172A] tracking-tight">
+          <span className="font-heading font-black text-sm sm:text-base text-[#0F172A] tracking-tight">
             {loc.code}
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenQR(loc);
+              }}
+              className="p-1 rounded-lg bg-[#F0F4F8] hover:bg-[#0284C7] hover:text-white text-[#0284C7] border border-[#CBD5E1] shadow-xs transition hover:scale-110 active:scale-95 cursor-pointer"
+              title={`Escanear QR de ${loc.code}`}
+            >
+              <QrCode className="w-3.5 h-3.5" />
+            </button>
             {/* Gentle Blinking Status Dot */}
             <span
               className={`w-2.5 h-2.5 rounded-full shrink-0 ${cfg.dot}`}
@@ -242,11 +253,11 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
         {/* Footer info: guest or capacity */}
         <div className="w-full text-center truncate">
           {loc.currentGuestName ? (
-            <span className="text-[10px] font-bold text-slate-800 truncate block">
+            <span className="text-xs font-bold text-slate-800 truncate block">
               {loc.currentGuestName}
             </span>
           ) : (
-            <span className="text-[10px] text-slate-500 font-medium">
+            <span className="text-xs text-slate-500 font-semibold">
               Cap: {loc.capacity}p
             </span>
           )}
@@ -254,7 +265,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
 
         {/* Status pill bottom */}
         <div className="mt-1 w-full text-center">
-          <span className={`inline-block px-1.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${cfg.badge}`}>
+          <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider ${cfg.badge}`}>
             {loc.status}
           </span>
         </div>
@@ -275,10 +286,10 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
               <Compass className="w-4 h-4" />
             </span>
             <div>
-              <h3 className="font-heading font-black text-sm text-[#0F172A] tracking-tight">
-                Distribución Arquitectónica del Balneario
+              <h3 className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight">
+                DISTRIBUCIÓN
               </h3>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-xs sm:text-sm text-[#64748B]">
                 Seleccioná el diagrama para inspeccionar las zonas operativas.
               </p>
             </div>
@@ -350,11 +361,8 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
 
         {/* Status Filters with Gentle Blinking Beacon Lights */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#64748B]">
+          <div className="flex items-center gap-2 text-sm font-bold text-[#64748B]">
             <span>Filtro de Estado en Vivo:</span>
-            <span className="text-[11px] font-normal text-slate-500 hidden sm:inline">
-              (las luces parpadean suavemente; al filtrar, el diagrama permanece intacto)
-            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

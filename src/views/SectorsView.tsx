@@ -148,14 +148,14 @@ export const SectorsView: React.FC = () => {
       <div className="bg-white p-5 rounded-3xl border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#0F172A] tracking-tight">
-              Mapa de Sectores & Distribución de Playa
+            <h1 className="text-xl sm:text-2xl font-black text-[#0F172A] tracking-tight">
+              Mapa de Sectores & Distribución
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-[#E0F2FE] text-[#0369A1]">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#E0F2FE] text-[#0369A1]">
               {locations.length} UBICACIONES
             </span>
           </div>
-          <p className="text-xs text-[#64748B] mt-0.5">
+          <p className="text-sm text-[#64748B] mt-0.5">
             Diagrama esquemático en vivo con monitoreo de ocupación, comandas y códigos QR.
           </p>
         </div>
@@ -350,6 +350,14 @@ export const SectorsView: React.FC = () => {
 
                   {/* Action Buttons */}
                   <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => setSelectedLocationForQR(loc)}
+                      className="p-2 rounded-xl border border-[#CBD5E1] bg-[#F0F4F8] hover:bg-[#E0F2FE] text-[#0284C7] font-bold text-xs transition flex items-center justify-center cursor-pointer shadow-xs hover:scale-105"
+                      title={`Ver y escanear QR de ${loc.code}`}
+                    >
+                      <QrCode className="w-4 h-4" />
+                    </button>
+
                     <button
                       onClick={() => handleOpenStatusEdit(loc)}
                       className="flex-1 py-1.5 px-2 rounded-xl border border-[#E2E8F0] text-[#0F172A] font-bold text-xs hover:bg-[#F0F4F8] transition flex items-center justify-center gap-1 cursor-pointer"

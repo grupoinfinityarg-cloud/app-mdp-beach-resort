@@ -152,13 +152,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpenMobile, onCloseMobile })
               <button
                 key={item.id}
                 onClick={() => handleSelectNav(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all ${
                   isActive
                     ? 'bg-[#E0F2FE] text-[#0369A1] font-black border-l-4 border-l-[#0284C7] border-y border-r border-sky-100 shadow-xs'
                     : 'text-[#64748B] font-semibold hover:text-[#0F172A] hover:bg-[#F0F4F8] border border-transparent'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3">
                   <span className={isActive ? 'text-[#0284C7]' : 'text-[#64748B]'}>
                     {item.icon}
                   </span>

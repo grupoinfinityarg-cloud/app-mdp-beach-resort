@@ -240,8 +240,8 @@ const AppContent: React.FC = () => {
           />
         )}
 
-        {/* Dynamic Main View with sand texture */}
-        <main className="flex-1 overflow-x-hidden min-w-0 sand-textured-bg">
+        {/* Dynamic Main View */}
+        <main className="flex-1 overflow-x-hidden min-w-0">
           <Suspense fallback={<ViewLoadingFallback />}>
             {visibleView === 'panel' && <DashboardView />}
             {visibleView === 'sectores' && <SectorsView />}

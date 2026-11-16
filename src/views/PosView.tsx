@@ -590,12 +590,14 @@ export const PosView: React.FC = () => {
             {filteredProducts.map((p) => (
               <div
                 key={p.id}
-                className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition group"
+                className="perf-card bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition group"
               >
                 <div className="relative h-28 sm:h-32 w-full bg-gray-100 overflow-hidden">
                   <img
                     src={p.image}
                     alt={p.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   {p.tag && (

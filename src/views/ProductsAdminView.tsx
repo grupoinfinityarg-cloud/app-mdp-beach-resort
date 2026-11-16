@@ -238,6 +238,8 @@ export const ProductsAdminView: React.FC = () => {
                         <img
                           src={p.image}
                           alt={p.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-10 h-10 rounded-xl object-cover bg-gray-100 shrink-0"
                         />
                         <div>

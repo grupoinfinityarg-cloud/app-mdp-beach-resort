@@ -619,13 +619,15 @@ export const DigitalMenuView: React.FC = () => {
             {filteredProducts.map((product) => (
               <article
                 key={product.id}
-                className="bg-white rounded-3xl border border-[#E2E8F0] p-3 sm:p-3.5 shadow-xs hover:shadow-md transition flex gap-3.5 items-stretch"
+                className="perf-card bg-white rounded-3xl border border-[#E2E8F0] p-3 sm:p-3.5 shadow-xs hover:shadow-md transition flex gap-3.5 items-stretch"
               >
                 {/* Gastronomic Photo Protagonist */}
                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
                   <img
                     src={product.image}
                     alt={product.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                   {product.tag && (

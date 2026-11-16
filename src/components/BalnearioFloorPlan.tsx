@@ -68,7 +68,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
           badge: 'bg-emerald-500 text-white',
           dot: 'bg-emerald-500 beacon-pulse-available',
           label: 'Disponible',
-          glow: 'ring-emerald-400/60 shadow-[0_0_12px_rgba(16,185,129,0.35)]',
+          glow: 'ring-2 ring-emerald-400/80',
         };
       case 'ocupada':
         return {
@@ -76,7 +76,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
           badge: 'bg-rose-500 text-white',
           dot: 'bg-rose-500 beacon-pulse-occupied',
           label: 'Ocupada',
-          glow: 'ring-rose-400/60 shadow-[0_0_12px_rgba(239,68,68,0.35)]',
+          glow: 'ring-2 ring-rose-400/80',
         };
       case 'reservada':
         return {
@@ -84,7 +84,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
           badge: 'bg-sky-500 text-white',
           dot: 'bg-sky-500 beacon-pulse-reserved',
           label: 'Reservada',
-          glow: 'ring-sky-400/60 shadow-[0_0_12px_rgba(2,132,199,0.35)]',
+          glow: 'ring-2 ring-sky-400/80',
         };
       case 'limpieza':
         return {
@@ -92,7 +92,7 @@ export const BalnearioFloorPlan: React.FC<BalnearioFloorPlanProps> = ({
           badge: 'bg-amber-400 text-slate-950',
           dot: 'bg-amber-400 beacon-pulse-cleaning',
           label: 'Limpieza',
-          glow: 'ring-amber-400/60 shadow-[0_0_12px_rgba(245,158,11,0.35)]',
+          glow: 'ring-2 ring-amber-400/80',
         };
       default:
         return {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { Order, OrderStatus, CartItem, Product } from '../types';
 import {
@@ -82,15 +82,17 @@ export const OrderManagementView: React.FC = () => {
     setTimeout(() => setWhatsAppToast(null), 4000);
   };
 
-  const filteredOrders = orders.filter((o) => {
-    if (activeTab === 'pendientes') return o.status === 'pendiente_confirmacion';
-    if (activeTab === 'cocina')
-      return o.status === 'confirmado_en_cocina' || o.status === 'en_preparacion';
-    if (activeTab === 'listos') return o.status === 'listo_para_entrega';
-    if (activeTab === 'entregados') return o.status === 'entregado';
-    if (activeTab === 'cobrados') return o.paymentStatus === 'cobrado';
-    return true;
-  });
+  const filteredOrders = useMemo(() => {
+    return orders.filter((o) => {
+      if (activeTab === 'pendientes') return o.status === 'pendiente_confirmacion';
+      if (activeTab === 'cocina')
+        return o.status === 'confirmado_en_cocina' || o.status === 'en_preparacion';
+      if (activeTab === 'listos') return o.status === 'listo_para_entrega';
+      if (activeTab === 'entregados') return o.status === 'entregado';
+      if (activeTab === 'cobrados') return o.paymentStatus === 'cobrado';
+      return true;
+    });
+  }, [orders, activeTab]);
 
   const handleConfirmCancel = () => {
     if (!cancellationOrderId) return;
@@ -294,7 +296,7 @@ export const OrderManagementView: React.FC = () => {
           return (
             <div
               key={ord.id}
-              className={`bg-white rounded-3xl p-5 border shadow-xs flex flex-col justify-between transition hover:shadow-md ${
+              className={`perf-card bg-white rounded-3xl p-5 border shadow-xs flex flex-col justify-between transition hover:shadow-md ${
                 isPending
                   ? 'border-[#F59E0B] ring-2 ring-[#F59E0B]/20'
                   : isReady

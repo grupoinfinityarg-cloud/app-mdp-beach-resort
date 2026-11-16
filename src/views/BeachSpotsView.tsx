@@ -131,7 +131,7 @@ export const BeachSpotsView: React.FC = () => {
           return (
             <div
               key={spot.id}
-              className={`p-4 rounded-3xl border shadow-sm bg-white transition hover:shadow-md flex flex-col justify-between space-y-3 ${
+              className={`perf-card p-4 rounded-3xl border shadow-sm bg-white transition hover:shadow-md flex flex-col justify-between space-y-3 ${
                 isOccupied
                   ? 'border-rose-400 ring-2 ring-rose-400/20'
                   : isReserved

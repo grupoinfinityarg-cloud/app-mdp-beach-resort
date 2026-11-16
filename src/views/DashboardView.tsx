@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useBalneario } from '../context/BalnearioContext';
 import { formatCurrencyARS, calculateTop5Products } from '../utils/balnearioLogic';
 import {
@@ -36,62 +36,91 @@ export const DashboardView: React.FC = () => {
     cancelOrder,
   } = useBalneario();
 
-  // 1. Sales & Revenue metrics
-  const totalSalesToday = orders
-    .filter((o) => o.paymentStatus === 'cobrado')
-    .reduce((sum, o) => sum + o.total, 0);
+  // 1. Sales & Revenue metrics (Memoized for high scroll performance)
+  const { totalSalesToday, cashSales, mpSales, cardSales, expectedCashInDrawer } = useMemo(() => {
+    const totalSales = orders
+      .filter((o) => o.paymentStatus === 'cobrado')
+      .reduce((sum, o) => sum + o.total, 0);
 
-  const cashSales = cashMovements
-    .filter((m) => m.type === 'venta' && m.paymentMethod === 'efectivo')
-    .reduce((s, m) => s + m.amount, 0);
+    const cash = cashMovements
+      .filter((m) => m.type === 'venta' && m.paymentMethod === 'efectivo')
+      .reduce((s, m) => s + m.amount, 0);
 
-  const mpSales = orders
-    .filter((o) => o.paymentStatus === 'cobrado' && o.paymentMethod === 'mercadopago_qr')
-    .reduce((s, o) => s + o.total, 0);
+    const mp = orders
+      .filter((o) => o.paymentStatus === 'cobrado' && o.paymentMethod === 'mercadopago_qr')
+      .reduce((s, o) => s + o.total, 0);
 
-  const cardSales = orders
-    .filter(
-      (o) =>
-        o.paymentStatus === 'cobrado' &&
-        (o.paymentMethod === 'tarjeta_debito' || o.paymentMethod === 'tarjeta_credito')
-    )
-    .reduce((s, o) => s + o.total, 0);
+    const card = orders
+      .filter(
+        (o) =>
+          o.paymentStatus === 'cobrado' &&
+          (o.paymentMethod === 'tarjeta_debito' || o.paymentMethod === 'tarjeta_credito')
+      )
+      .reduce((s, o) => s + o.total, 0);
 
-  // Expected cash in drawer
-  const manualInflows = cashMovements
-    .filter((m) => m.type === 'ingreso')
-    .reduce((s, m) => s + m.amount, 0);
-  const manualOutflows = cashMovements
-    .filter((m) => m.type === 'egreso')
-    .reduce((s, m) => s + m.amount, 0);
-  const expectedCashInDrawer =
-    cashRegister.initialCash + cashSales + manualInflows - manualOutflows;
+    const manualInflows = cashMovements
+      .filter((m) => m.type === 'ingreso')
+      .reduce((s, m) => s + m.amount, 0);
+    const manualOutflows = cashMovements
+      .filter((m) => m.type === 'egreso')
+      .reduce((s, m) => s + m.amount, 0);
+    const expectedDrawer = cashRegister.initialCash + cash + manualInflows - manualOutflows;
 
-  // 2. Orders by operational state
-  const pendingApprovalOrders = orders.filter((o) => o.status === 'pendiente_confirmacion');
-  const kitchenPreparingOrders = orders.filter(
-    (o) => o.status === 'confirmado_en_cocina' || o.status === 'en_preparacion'
+    return {
+      totalSalesToday: totalSales,
+      cashSales: cash,
+      mpSales: mp,
+      cardSales: card,
+      expectedCashInDrawer: expectedDrawer,
+    };
+  }, [orders, cashMovements, cashRegister.initialCash]);
+
+  // 2. Orders by operational state (Memoized)
+  const { pendingApprovalOrders, kitchenPreparingOrders, readyOrders, totalAttentionNeeded } = useMemo(() => {
+    const pending = orders.filter((o) => o.status === 'pendiente_confirmacion');
+    const preparing = orders.filter(
+      (o) => o.status === 'confirmado_en_cocina' || o.status === 'en_preparacion'
+    );
+    const ready = orders.filter((o) => o.status === 'listo_para_entrega');
+    return {
+      pendingApprovalOrders: pending,
+      kitchenPreparingOrders: preparing,
+      readyOrders: ready,
+      totalAttentionNeeded: pending.length + preparing.length,
+    };
+  }, [orders]);
+
+  // 3. Beach & Sector Occupancy (Memoized)
+  const { tents, occupiedTents, umbrellas, occupiedUmbrellas, tables, occupiedTables, totalShadows, occupiedShadows, occupancyPercentage } = useMemo(() => {
+    const t = locations.filter((l) => l.type === 'carpa');
+    const occTents = t.filter((l) => l.status === 'ocupada' || l.status === 'reservada');
+    const u = locations.filter((l) => l.type === 'sombrilla');
+    const occUmbrellas = u.filter((l) => l.status === 'ocupada' || l.status === 'reservada');
+    const tbls = locations.filter((l) => l.type === 'mesa_interior' || l.type === 'mesa_exterior');
+    const occTables = tbls.filter((l) => l.status === 'ocupada' || l.status === 'reservada');
+
+    const totShadows = t.length + u.length;
+    const occShadows = occTents.length + occUmbrellas.length;
+    const occPct = totShadows > 0 ? Math.round((occShadows / totShadows) * 100) : 0;
+
+    return {
+      tents: t,
+      occupiedTents: occTents,
+      umbrellas: u,
+      occupiedUmbrellas: occUmbrellas,
+      tables: tbls,
+      occupiedTables: occTables,
+      totalShadows: totShadows,
+      occupiedShadows: occShadows,
+      occupancyPercentage: occPct,
+    };
+  }, [locations]);
+
+  // 4. Dynamic Top 5 (Memoized)
+  const { products: top5Products, isDemonstrationOnly } = useMemo(
+    () => calculateTop5Products(products, orders),
+    [products, orders]
   );
-  const readyOrders = orders.filter((o) => o.status === 'listo_para_entrega');
-  const totalAttentionNeeded = pendingApprovalOrders.length + kitchenPreparingOrders.length;
-
-  // 3. Beach & Sector Occupancy
-  const tents = locations.filter((l) => l.type === 'carpa');
-  const occupiedTents = tents.filter((l) => l.status === 'ocupada' || l.status === 'reservada');
-  const umbrellas = locations.filter((l) => l.type === 'sombrilla');
-  const occupiedUmbrellas = umbrellas.filter(
-    (l) => l.status === 'ocupada' || l.status === 'reservada'
-  );
-  const tables = locations.filter((l) => l.type === 'mesa_interior' || l.type === 'mesa_exterior');
-  const occupiedTables = tables.filter((l) => l.status === 'ocupada' || l.status === 'reservada');
-
-  const totalShadows = tents.length + umbrellas.length;
-  const occupiedShadows = occupiedTents.length + occupiedUmbrellas.length;
-  const occupancyPercentage =
-    totalShadows > 0 ? Math.round((occupiedShadows / totalShadows) * 100) : 0;
-
-  // 4. Dynamic Top 5
-  const { products: top5Products, isDemonstrationOnly } = calculateTop5Products(products, orders);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[#0F172A]">

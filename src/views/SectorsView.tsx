@@ -302,7 +302,7 @@ export const SectorsView: React.FC = () => {
               return (
                 <div
                   key={loc.id}
-                  className="bg-white rounded-3xl border border-[#E2E8F0] p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
+                  className="perf-card bg-white rounded-3xl border border-[#E2E8F0] p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2">

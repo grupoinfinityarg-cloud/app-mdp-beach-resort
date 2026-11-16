@@ -111,7 +111,10 @@ export const DigitalMenuView: React.FC = () => {
   const totalCartAmount = cart.reduce((sum, item) => sum + item.subtotal, 0);
 
   // Enlace directo al WhatsApp del balneario / parador
-  const whatsAppPhoneTarget = (visibleConfig.whatsappPhone || visibleConfig.phone || '5492236779934').replace(/[^0-9]/g, '');
+  const rawTarget = (visibleConfig.whatsappPhone || visibleConfig.phone || '5492236779934').replace(/[^0-9]/g, '');
+  const whatsAppPhoneTarget = (rawTarget.includes('5408890') || rawTarget.includes('408890') || !rawTarget)
+    ? '5492236779934'
+    : rawTarget;
   const whatsAppGreeting = encodeURIComponent(
     `Hola ${visibleConfig.branchName}! Estoy viendo la carta digital en ${activeLocationCode} y tengo una consulta sobre mi pedido.`
   );

@@ -173,6 +173,13 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [config, setConfig] = useState<BalnearioConfig>(() => {
     const base = loadStored('config', INITIAL_CONFIG);
+    if (base && (base.phone?.includes('5408890') || base.phone?.includes('540-8890') || base.whatsappPhone?.includes('5408890') || !base.whatsappPhone)) {
+      base.phone = '+54 9 223 677-9934';
+      base.whatsappPhone = '5492236779934';
+      try {
+        localStorage.setItem('balneario_config', JSON.stringify(base));
+      } catch {}
+    }
     if (typeof window === 'undefined') return base;
     try {
       const params = new URLSearchParams(window.location.search);

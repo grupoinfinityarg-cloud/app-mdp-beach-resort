@@ -137,7 +137,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpenMobile, onCloseMobile })
         <div className="px-3 pt-3">
           <button
             onClick={handleQuickNewSale}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-xs shadow-xs border border-[#0284C7] transition group active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-sm shadow-xs border border-[#0284C7] transition group active:scale-[0.98]"
           >
             <PlusCircle className="w-4 h-4 text-white group-hover:rotate-90 transition-transform duration-200" />
             <span>Abrir Mesa / Venta POS</span>

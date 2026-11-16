@@ -661,9 +661,9 @@ export const DigitalMenuView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setProductBeingCustomized(product)}
-                      className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs shadow-xs active:scale-95 transition"
+                      className="flex items-center gap-1.5 py-2 px-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-sm shadow-xs active:scale-95 transition cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                      <Plus className="w-4 h-4 stroke-[3]" />
                       <span>AGREGAR</span>
                     </button>
                   </div>

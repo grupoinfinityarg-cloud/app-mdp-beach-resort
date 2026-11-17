@@ -215,43 +215,6 @@ export const DemoRoleSwitcherBar: React.FC = () => {
               <span>Contratar</span>
             </a>
 
-            {/* Botón de Tutorial Demo por Planes */}
-            <button
-              type="button"
-              onClick={() => setShowTutorialModal(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black transition shadow-xs text-xs cursor-pointer"
-              title="Abrir tutorial interactivo de cómo mostrar los planes Oro, Platino y Diamante"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Tutorial Demo</span>
-            </button>
-
-            {/* Botón de Dossier Comercial PDF */}
-            <a
-              href="/Dossier_Comercial_Balnearios_GrupoInfinity.pdf"
-              download="Dossier_Comercial_Balnearios_GrupoInfinity.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369A1] text-white font-black transition shadow-xs text-xs cursor-pointer"
-              title="Descargar Dossier Comercial Oficial 2026/2027 en PDF"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Dossier PDF</span>
-            </a>
-
-            {/* Botón de Manual de Startup PDF */}
-            <a
-              href="/Manual_Startup_Balnearios_GrupoInfinity.pdf"
-              download="Manual_Startup_Balnearios_GrupoInfinity.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black transition shadow-xs text-xs cursor-pointer"
-              title="Descargar Manual de Startup, Operaciones & Respuestas Rápidas en PDF"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Startup PDF</span>
-            </a>
-
             <button
               type="button"
               onClick={handleOpenQrModal}

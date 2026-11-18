@@ -97,9 +97,9 @@ export const SettingsView: React.FC = () => {
       id: 'DEMO',
       name: 'Plan Demostración Completa',
       tag: 'ACTIVO ACTUALMENTE',
-      priceMonth: 'Gratis en Demo',
-      priceSeason: 'Sin costo',
-      priceAnnual: 'Para pruebas',
+      priceMonth: 'CONSULTAR',
+      priceSeason: 'CONSULTAR',
+      priceAnnual: 'CONSULTAR',
       features: [
         'Acceso total a todos los módulos',
         'Carta Digital QR interactiva',
@@ -113,9 +113,9 @@ export const SettingsView: React.FC = () => {
       id: 'ORO',
       name: 'Plan ORO (Básico / Paradores)',
       tag: 'PARADORES ÁGILES',
-      priceMonth: '$ 140.000 / mes',
-      priceSeason: '$ 450.000 temporada (4 meses)',
-      priceAnnual: '$ 990.000 pago anual',
+      priceMonth: 'CONSULTAR',
+      priceSeason: 'CONSULTAR',
+      priceAnnual: 'CONSULTAR',
       features: [
         'Carta Digital interactiva QR por carpa/sombrilla',
         'Pedidos ilimitados del cliente al WhatsApp/mostrador',
@@ -130,9 +130,9 @@ export const SettingsView: React.FC = () => {
       id: 'PLATINO',
       name: 'Plan PLATINO (Intermedio / Recomendado)',
       tag: 'MÁS ELEGIDO',
-      priceMonth: '$ 260.000 / mes',
-      priceSeason: '$ 850.000 temporada (4 meses)',
-      priceAnnual: '$ 1.850.000 pago anual',
+      priceMonth: 'CONSULTAR',
+      priceSeason: 'CONSULTAR',
+      priceAnnual: 'CONSULTAR',
       features: [
         'Todo lo incluido en el Plan ORO',
         'Punto de Venta táctil (POS Cajero) para personal',
@@ -148,9 +148,9 @@ export const SettingsView: React.FC = () => {
       id: 'DIAMANTE',
       name: 'Plan DIAMANTE (Full Empresarial)',
       tag: 'FULL COMPLEJO',
-      priceMonth: '$ 420.000 / mes',
-      priceSeason: '$ 1.390.000 temporada (4 meses)',
-      priceAnnual: '$ 2.990.000 pago anual',
+      priceMonth: 'CONSULTAR',
+      priceSeason: 'CONSULTAR',
+      priceAnnual: 'CONSULTAR',
       features: [
         'Todo lo del Plan PLATINO sin ningún límite',
         'Mapa interactivo de playa (Carpas VIP, Sombrillas, Mesas)',
@@ -300,7 +300,7 @@ export const SettingsView: React.FC = () => {
               <h2 className="text-base font-black text-[#0F172A]">Planes Comerciales de Temporada</h2>
             </div>
             <p className="text-xs text-[#64748B] mt-0.5">
-              Valores sugeridos para contratación mensual, temporada (4 meses) y anual.
+              Modalidades de contratación mensual, temporada (4 meses) y anual.
             </p>
           </div>
         </div>
@@ -336,18 +336,22 @@ export const SettingsView: React.FC = () => {
                   </div>
 
                   {/* Precios */}
-                  <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200 space-y-1 text-xs">
+                  <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200 space-y-1.5 text-xs">
                     <div className="flex justify-between items-center font-bold">
                       <span className="text-gray-600">Por Mes:</span>
-                      <span className="text-[#0F172A] font-black">{p.priceMonth}</span>
+                      <span className={p.priceMonth === 'CONSULTAR' ? 'text-emerald-700 font-black tracking-wide' : 'text-[#0F172A] font-black'}>
+                        {p.priceMonth}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center font-bold">
                       <span className="text-gray-600">Temporada (4m):</span>
-                      <span className="text-emerald-700 font-black">{p.priceSeason}</span>
+                      <span className="text-emerald-700 font-black tracking-wide">{p.priceSeason}</span>
                     </div>
-                    <div className="flex justify-between items-center text-[11px] text-gray-500 font-semibold">
-                      <span>Pago Anual:</span>
-                      <span>{p.priceAnnual}</span>
+                    <div className="flex justify-between items-center font-bold text-xs">
+                      <span className="text-gray-600">Pago Anual:</span>
+                      <span className={p.priceAnnual === 'CONSULTAR' ? 'text-emerald-700 font-black tracking-wide' : 'text-gray-500 font-semibold'}>
+                        {p.priceAnnual}
+                      </span>
                     </div>
                   </div>
 

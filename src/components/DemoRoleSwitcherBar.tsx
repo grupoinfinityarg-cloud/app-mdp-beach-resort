@@ -489,7 +489,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
                   <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-1.5">
                     <span className="font-black text-cyan-700">Paso D: Argumento de venta Platino:</span>
                     <p className="text-emerald-800 font-medium text-[11px] bg-emerald-50 p-2 rounded-lg border border-emerald-200">
-                      "Eliminás los papelitos de comanda perdidos, el cocinero sabe exactamente qué sacar primero y el mozo no corre buscando la carpa. Se pagan los $850.000 de la temporada con 2 mesas recuperadas al mediodía."
+                      "Eliminás los papelitos de comanda perdidos, el cocinero sabe exactamente qué sacar primero y el mozo no corre buscando la carpa. El plan se amortiza en la temporada con mesas recuperadas al mediodía."
                     </p>
                   </div>
                 </div>
@@ -559,7 +559,7 @@ export const DemoRoleSwitcherBar: React.FC = () => {
                   <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-1.5">
                     <span className="font-black text-purple-700">4. Argumento de venta Diamante:</span>
                     <p className="text-emerald-800 font-medium text-[11px] bg-emerald-50 p-2 rounded-lg border border-emerald-200">
-                      "Una sola carpa en Playa Grande o Cariló se alquila a $4.500.000 por temporada. El Plan Diamante completo cuesta $1.390.000: con un tercio de lo que cobran por UNA carpa, tienen todo el balneario funcionando en piloto automático todo el año."
+                      "Una sola carpa en Playa Grande o Cariló cubre con creces el sistema: con una fracción mínima tienen todo el balneario funcionando en piloto automático todo el año."
                     </p>
                   </div>
                 </div>

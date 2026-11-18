@@ -160,6 +160,19 @@ const BalnearioContext = createContext<BalnearioContextType | null>(null);
 
 const STORAGE_KEY = 'gestion_balnearia_v1.0';
 
+export const isMedicalOrInvalidBrand = (text?: string | null): boolean => {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return (
+    lower.includes('consultorio') ||
+    lower.includes('médic') ||
+    lower.includes('medico') ||
+    lower.includes('médica') ||
+    lower.includes('medica') ||
+    lower.includes('del sol')
+  );
+};
+
 export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load from local storage or defaults
   const loadStored = <T,>(key: string, fallback: T): T => {
@@ -173,20 +186,42 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [config, setConfig] = useState<BalnearioConfig>(() => {
     const base = loadStored('config', INITIAL_CONFIG);
+    let shouldSave = false;
+
+    // Sanitize any previous medical / clinic branding cached in localStorage
+    if (
+      base &&
+      (isMedicalOrInvalidBrand(base.name) || isMedicalOrInvalidBrand(base.branchName))
+    ) {
+      base.name = INITIAL_CONFIG.name;
+      base.branchName = INITIAL_CONFIG.branchName;
+      base.slogan = INITIAL_CONFIG.slogan;
+      shouldSave = true;
+    }
+
     if (base && (base.phone?.includes('5408890') || base.phone?.includes('540-8890') || base.whatsappPhone?.includes('5408890') || !base.whatsappPhone)) {
       base.phone = '+54 9 223 677-9934';
       base.whatsappPhone = '5492236779934';
+      shouldSave = true;
+    }
+
+    if (shouldSave) {
       try {
+        localStorage.setItem(`${STORAGE_KEY}_config`, JSON.stringify(base));
         localStorage.setItem('balneario_config', JSON.stringify(base));
       } catch {}
     }
+
     if (typeof window === 'undefined') return base;
     try {
       const params = new URLSearchParams(window.location.search);
       const presetKey = params.get('preset') || params.get('demo');
       const preset = findDemoPreset(presetKey);
 
-      const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      let negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      if (negocio && isMedicalOrInvalidBrand(negocio)) {
+        negocio = INITIAL_CONFIG.branchName;
+      }
       const slogan = params.get('slogan') || preset?.slogan;
       const logo = params.get('logo') || params.get('logourl') || preset?.logoUrl;
       const wa = params.get('wa') || params.get('whatsapp') || params.get('telefono') || preset?.whatsappPhone;
@@ -196,7 +231,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           ...base,
           name: negocio || base.name,
           branchName: negocio || base.branchName,
-          slogan: slogan || base.slogan,
+          slogan: (negocio && negocio === INITIAL_CONFIG.branchName ? INITIAL_CONFIG.slogan : slogan) || base.slogan,
           logoUrl: logo || base.logoUrl,
           whatsappPhone: wa || base.whatsappPhone,
           phone: wa || base.phone,
@@ -215,13 +250,16 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         const presetKey = params.get('preset') || params.get('demo');
         const preset = findDemoPreset(presetKey);
         const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
-        if (negocio) return negocio;
+        if (negocio && !isMedicalOrInvalidBrand(negocio)) return negocio;
       } catch {
         // Ignorar
       }
     }
     const stored = loadStored<BalnearioConfig | null>('config', null);
-    return stored?.branchName || INITIAL_CONFIG.branchName;
+    if (stored?.branchName && !isMedicalOrInvalidBrand(stored.branchName)) {
+      return stored.branchName;
+    }
+    return INITIAL_CONFIG.branchName;
   });
   const [sectors] = useState<Sector[]>(() => {
     const stored = loadStored<Sector[]>('sectors', INITIAL_SECTORS);
@@ -296,7 +334,10 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const presetKey = params.get('preset') || params.get('demo');
       const preset = findDemoPreset(presetKey);
 
-      const negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      let negocio = params.get('negocio') || params.get('nombre') || params.get('cliente') || preset?.name;
+      if (negocio && isMedicalOrInvalidBrand(negocio)) {
+        negocio = INITIAL_CONFIG.branchName;
+      }
       const slogan = params.get('slogan') || preset?.slogan;
       const logo = params.get('logo') || params.get('logourl') || preset?.logoUrl;
       const wa = params.get('wa') || params.get('whatsapp') || params.get('telefono') || preset?.whatsappPhone;
@@ -306,7 +347,7 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           ...prev,
           name: negocio || prev.name,
           branchName: negocio || prev.branchName,
-          slogan: slogan || prev.slogan,
+          slogan: (negocio && negocio === INITIAL_CONFIG.branchName ? INITIAL_CONFIG.slogan : slogan) || prev.slogan,
           logoUrl: logo || prev.logoUrl,
           whatsappPhone: wa || prev.whatsappPhone,
           phone: wa || prev.phone,
@@ -331,8 +372,9 @@ export const BalnearioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         .from('businesses').select('id,name').eq('slug', supabaseBusinessSlug).maybeSingle();
       if (!alive || !business?.id) return;
       if (business.name) {
-        setBusinessDisplayName(business.name);
-        setConfig((current) => ({ ...current, branchName: business.name }));
+        const safeName = isMedicalOrInvalidBrand(business.name) ? INITIAL_CONFIG.branchName : business.name;
+        setBusinessDisplayName(safeName);
+        setConfig((current) => ({ ...current, branchName: safeName }));
       }
       businessId = business.id;
 

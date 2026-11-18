@@ -11,7 +11,7 @@ import {
 } from '../types';
 
 export const INITIAL_CONFIG: BalnearioConfig = {
-  name: 'GESTIÓN BALNEARIA',
+  name: 'MDP BEACH & RESORT',
   branchName: 'MDP BEACH & RESORT',
   slogan: 'Tu parador exclusivo frente al mar en Playa Grande',
   address: 'Paseo Victoria Ocampo 1240, Playa Grande',

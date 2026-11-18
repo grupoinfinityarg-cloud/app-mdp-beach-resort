@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useBalneario } from '../context/BalnearioContext';
+import { useBalneario, isMedicalOrInvalidBrand } from '../context/BalnearioContext';
 import { ProductCustomizeModal } from './ProductCustomizeModal';
 import { Product } from '../types';
 import { Category, Promotion, BalnearioConfig } from '../types';
@@ -82,11 +82,14 @@ export const DigitalMenuView: React.FC = () => {
   const visibleProducts = isQrAccess ? (qrMenu?.products ?? []) : products;
   const visibleCategories = isQrAccess ? (qrMenu?.categories ?? []) : categories;
   const visiblePromotions = isQrAccess ? (qrMenu?.promotions ?? []) : [];
+  const rawBusinessName = qrMenu?.business?.name || businessDisplayName;
+  const cleanBusinessName =
+    rawBusinessName && !isMedicalOrInvalidBrand(rawBusinessName) ? rawBusinessName : 'MDP BEACH & RESORT';
   const visibleConfig = {
     ...config,
     ...(qrMenu?.business ?? {}),
-    name: qrMenu?.business?.name || businessDisplayName,
-    branchName: qrMenu?.business?.name || businessDisplayName,
+    name: cleanBusinessName,
+    branchName: cleanBusinessName,
   };
 
   // Dynamic Top 5 ranking
